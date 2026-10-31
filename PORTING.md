@@ -39,6 +39,13 @@ runtime.
 * widening a method that an inaccessible subclass overrides will break NFRT's recompile step; widen
   the subtype (or drop the entry) instead.
 
+## Configuration
+
+Settings are a NeoForge `ModConfigSpec` (`platform/ConfigSpecs`) registered as a client config, so
+the file is the standard `config/clientcommands-client.toml`. `Configs` keeps the mutable static
+fields used by the rest of the mod and syncs them from the spec on load/reload; `/cconfig` writes
+through to the spec. The built-in `ConfigurationScreen` is registered as the in-game config GUI.
+
 ## Dependencies
 
 The seedfinding libraries are bundled with NeoForge JarJar through the `jarJar` configuration.
