@@ -126,7 +126,8 @@ public final class Flag<T> {
 
     @SuppressWarnings("unchecked")
     public static <S> S getActualSource(CommandContext<S> ctx) {
-        if (ctx.getRootNode() == Objects.requireNonNull(Minecraft.getInstance().getConnection()).getCommands().getRoot()) {
+        if (ctx.getSource() instanceof CClientCommandSource
+            && ctx.getRootNode() == Objects.requireNonNull(Minecraft.getInstance().getConnection()).getCommands().getRoot()) {
             // we're in the completion dispatcher, reparse using the real dispatcher to get the redirects
             return (S) getActualSource(Objects.requireNonNull(getActiveDispatcher()).parse(
                 StringRange.encompassing(ctx.getRange(), ctx.getLastChild().getRange()).get(ctx.getInput()),
