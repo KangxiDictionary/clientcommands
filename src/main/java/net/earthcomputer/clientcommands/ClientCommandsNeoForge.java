@@ -26,6 +26,7 @@ public class ClientCommandsNeoForge {
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> {
             ClientCommands.setupScrambleWindowTitle();
             net.earthcomputer.clientcommands.compat.ClientCommandManager.ensureRegistered(Minecraft.getInstance());
+            net.earthcomputer.clientcommands.compat.ClientCommandManager.mergeIntoConnection(Minecraft.getInstance());
             CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance());
         });
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event ->

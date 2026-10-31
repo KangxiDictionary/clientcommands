@@ -85,6 +85,21 @@ public final class ClientCommandManager {
     }
 
     /**
+     * Keeps the vanilla dispatcher in sync while in game, independent of the injection
+     * ordering of {@code ClientPacketListener#getCommands()}.
+     */
+    public static void mergeIntoConnection(Minecraft client) {
+        if (client.getConnection() == null) {
+            return;
+        }
+        ensureRegistered(client);
+        if (!registered) {
+            return;
+        }
+        registerInto(client.getConnection().getCommands());
+    }
+
+    /**
      * @return true if the command was a client command and has been handled
      */
     public static boolean handleCommand(String command) {
