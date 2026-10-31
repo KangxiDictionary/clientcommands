@@ -45,7 +45,6 @@
     "rngevents.LocalPlayerMixin",
     "rngevents.MultiPlayerGameModeMixin",
     "rngevents.MushroomCowSheepAndSnowGolemMixin",
-    "rngevents.PlayerMixin",
     "rngevents.PumpkinBlockMixin",
     "rngevents.ServerboundContainerClosePacketMixin",
     "rngevents.ShearsItemMixin",
