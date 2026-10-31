@@ -33,6 +33,122 @@ public class Configs {
         return CPlatform.INSTANCE.getConfigDir().resolve("clientcommands").resolve("config.json");
     }
 
+
+    // ------------------------------------------------------------------
+    // Option access used by /cconfig
+    // ------------------------------------------------------------------
+
+    public static java.util.List<String> getOptionNames() {
+        java.util.List<String> names = new java.util.ArrayList<>();
+        for (Field field : Configs.class.getDeclaredFields()) {
+            if (!isOption(field)) {
+                continue;
+            }
+            names.add(field.getName());
+        }
+        names.sort(String::compareTo);
+        return names;
+    }
+
+    private static boolean isOption(Field field) {
+        int mods = field.getModifiers();
+        return Modifier.isStatic(mods) && !Modifier.isTransient(mods) && !field.isSynthetic()
+            && !NOT_PERSISTED.contains(field.getName());
+    }
+
+    private static Field findOption(String name) {
+        try {
+            Field field = Configs.class.getDeclaredField(name);
+            return isOption(field) ? field : null;
+        } catch (NoSuchFieldException e) {
+            return null;
+        }
+    }
+
+    public static String getOptionValue(String name) {
+        Field field = findOption(name);
+        if (field == null) {
+            return null;
+        }
+        try {
+            return String.valueOf(field.get(null));
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Sets an option, honouring an existing setter and the {@code onChangeX} hook when present.
+     *
+     * @return {@code null} on success, otherwise a human readable error
+     */
+    public static String setOptionValue(String name, String rawValue) {
+        Field field = findOption(name);
+        if (field == null) {
+            return "Unknown option: " + name;
+        }
+        Object newValue;
+        try {
+            newValue = parseValue(field.getType(), rawValue);
+        } catch (RuntimeException e) {
+            return "Invalid value for " + name + ": " + rawValue;
+        }
+        try {
+            Object oldValue = field.get(null);
+            java.lang.reflect.Method setter = findMethod("set" + capitalize(name), field.getType());
+            if (setter != null) {
+                setter.invoke(null, newValue);
+            } else {
+                field.set(null, newValue);
+            }
+            java.lang.reflect.Method onChange = findMethod("onChange" + capitalize(name), field.getType(), field.getType());
+            if (onChange != null) {
+                onChange.invoke(null, oldValue, newValue);
+            }
+            save();
+            return null;
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            return "Failed to set " + name + ": " + e;
+        }
+    }
+
+    private static String capitalize(String name) {
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    }
+
+    private static java.lang.reflect.Method findMethod(String name, Class<?>... parameterTypes) {
+        try {
+            java.lang.reflect.Method method = Configs.class.getDeclaredMethod(name, parameterTypes);
+            return Modifier.isStatic(method.getModifiers()) ? method : null;
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private static Object parseValue(Class<?> type, String raw) {
+        if (type == boolean.class || type == Boolean.class) {
+            if (!raw.equalsIgnoreCase("true") && !raw.equalsIgnoreCase("false")) {
+                throw new IllegalArgumentException("not a boolean");
+            }
+            return Boolean.parseBoolean(raw);
+        } else if (type == int.class || type == Integer.class) {
+            return Integer.parseInt(raw);
+        } else if (type == float.class || type == Float.class) {
+            return Float.parseFloat(raw);
+        } else if (type == double.class || type == Double.class) {
+            return Double.parseDouble(raw);
+        } else if (type == long.class || type == Long.class) {
+            return Long.parseLong(raw);
+        } else if (type == String.class) {
+            return raw;
+        } else if (type.isEnum()) {
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            Object value = Enum.valueOf((Class<? extends Enum>) type, raw.toUpperCase(Locale.ROOT));
+            return value;
+        }
+        throw new IllegalArgumentException("unsupported type " + type);
+    }
+
     public static void save() {
         Map<String, Object> values = new LinkedHashMap<>();
         for (Field field : Configs.class.getDeclaredFields()) {

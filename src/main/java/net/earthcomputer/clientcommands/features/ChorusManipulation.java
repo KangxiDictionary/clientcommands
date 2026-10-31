@@ -60,7 +60,7 @@ public class ChorusManipulation {
             Component component = Component.translatable("chorusManip.needChorusManipulation")
                     .withStyle(ChatFormatting.RED)
                     .append(" ")
-                    .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig clientcommands chorusManipulation set true"));
+                    .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig set chorusManipulation true"));
             sendFeedback(component);
             return 0;
         }

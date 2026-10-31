@@ -34,7 +34,7 @@ public class FishCommand {
         Component.translatable("commands.cfish.needFishingManipulation")
             .withStyle(style -> style.withColor(ChatFormatting.RED))
             .append(" ")
-            .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig clientcommands fishingManipulation set MANUAL")));
+            .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig set fishingManipulation manual")));
 
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         if (MultiVersionCompat.INSTANCE.getProtocolVersion() >= MultiVersionCompat.V1_20) {

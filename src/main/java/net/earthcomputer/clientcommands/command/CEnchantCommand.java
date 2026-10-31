@@ -59,7 +59,7 @@ public class CEnchantCommand {
             Component component = Component.translatable("commands.cenchant.needEnchantingPrediction")
                     .withStyle(ChatFormatting.RED)
                     .append(" ")
-                    .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig clientcommands enchantingPrediction set true"));
+                    .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig set enchantingPrediction true"));
             source.sendFeedback(component);
             return Command.SINGLE_SUCCESS;
         }
