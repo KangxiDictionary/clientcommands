@@ -14,7 +14,7 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.util.BrigadierRemover;
 import net.earthcomputer.clientcommands.interfaces.IClientSuggestionsProvider_Alias;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -37,7 +37,7 @@ public class AliasCommand {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final Path ALIAS_PATH = FabricLoader.getInstance().getConfigDir().resolve("clientcommands").resolve("alias_list.json");
+    private static final Path ALIAS_PATH = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands").resolve("alias_list.json");
 
     private static final SimpleCommandExceptionType ILLEGAL_FORMAT_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.calias.illegalFormatException"));
 

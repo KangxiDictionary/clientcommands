@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.logging.LogUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -51,7 +51,7 @@ public abstract sealed class MultiVersionCompat {
 
     public static final MultiVersionCompat INSTANCE = Util.make(() -> {
         try {
-            FabricLoader loader = FabricLoader.getInstance();
+            CPlatform loader = CPlatform.INSTANCE;
             if (loader.isModLoaded("viafabric")) {
                 return new ViaFabric();
             } else if (loader.isModLoaded("viafabricplus")) {

@@ -1,0 +1,180 @@
+package dev.xpple.clientarguments.arguments;
+
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.ResourceOrIdArgument;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.dialog.Dialog;
+import net.minecraft.util.parsing.packrat.commands.Grammar;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+public class CResourceOrIdArgument<T> implements ArgumentType<Holder<T>> {
+    static final Collection<String> EXAMPLES = List.of("foo", "foo:bar", "012", "{}", "true");
+    private final HolderLookup.Provider registryLookup;
+    private final Optional<? extends HolderLookup.RegistryLookup<T>> elementLookup;
+    private final Codec<T> codec;
+    private final Grammar<ResourceOrIdArgument.Result<T, Tag>> grammar;
+    private final ResourceKey<? extends Registry<T>> registryKey;
+
+    protected CResourceOrIdArgument(CommandBuildContext registryLookup, ResourceKey<? extends Registry<T>> registryKey, Codec<T> codec) {
+        this.registryLookup = registryLookup;
+        this.elementLookup = registryLookup.lookup(registryKey);
+        this.registryKey = registryKey;
+        this.codec = codec;
+        this.grammar = ResourceOrIdArgument.createGrammar(registryKey, ResourceOrIdArgument.OPS);
+    }
+
+    public static LootTableArgument lootTable(CommandBuildContext buildContext) {
+        return new LootTableArgument(buildContext);
+    }
+
+    public static Holder<LootTable> getLootTable(final CommandContext<CClientCommandSource> context, final String argument) throws CommandSyntaxException {
+        return getArgument(context, argument);
+    }
+
+    public static LootModifierArgument lootModifier(CommandBuildContext buildContext) {
+        return new LootModifierArgument(buildContext);
+    }
+
+    public static Holder<LootItemFunction> getLootModifier(final CommandContext<CClientCommandSource> context, final String argument) {
+        return getArgument(context, argument);
+    }
+
+    public static LootPredicateArgument lootPredicate(CommandBuildContext buildContext) {
+        return new LootPredicateArgument(buildContext);
+    }
+
+    public static Holder<LootItemCondition> getLootPredicate(final CommandContext<CClientCommandSource> context, final String argument) {
+        return getArgument(context, argument);
+    }
+
+    public static ContextFloatProviderArgument floatProvider(final CommandBuildContext context) {
+        return new ContextFloatProviderArgument(context);
+    }
+
+    public static Holder<ContextFloatProvider> getFloatProvider(final CommandContext<CClientCommandSource> context, final String name) {
+        return getArgument(context, name);
+    }
+
+    public static ContextIntProviderArgument intProvider(final CommandBuildContext context) {
+        return new ContextIntProviderArgument(context);
+    }
+
+    public static Holder<ContextIntProvider> getIntProvider(final CommandContext<CClientCommandSource> context, final String name) {
+        return getArgument(context, name);
+    }
+
+    public static FeatureArgument feature(final CommandBuildContext context) {
+        return new FeatureArgument(context);
+    }
+
+    public static Holder<Feature> getFeature(final CommandContext<CClientCommandSource> context, final String name) throws CommandSyntaxException {
+        return getArgument(context, name);
+    }
+
+    public static DialogArgument dialog(CommandBuildContext buildContext) {
+        return new DialogArgument(buildContext);
+    }
+
+    public static Holder<Dialog> getDialog(final CommandContext<CClientCommandSource> context, final String argument) {
+        return getArgument(context, argument);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Holder<T> getArgument(final CommandContext<CClientCommandSource> context, final String argument) {
+        return (Holder<T>) context.getArgument(argument, Holder.class);
+    }
+
+    @Nullable
+    public Holder<T> parse(final StringReader reader) throws CommandSyntaxException {
+        return this.parse(reader, this.grammar, ResourceOrIdArgument.OPS);
+    }
+
+    @Nullable
+    private <O> Holder<T> parse(StringReader reader, Grammar<ResourceOrIdArgument.Result<T, O>> grammar, DynamicOps<O> ops) throws CommandSyntaxException {
+        ResourceOrIdArgument.Result<T, O> result = grammar.parseForCommands(reader);
+        return this.elementLookup.isEmpty()
+            ? null
+            : result.parse(reader, this.registryLookup, ops, this.codec, this.elementLookup.get());
+    }
+
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+        return SharedSuggestionProvider.listSuggestions(context, builder, this.registryKey, SharedSuggestionProvider.ElementSuggestionType.ELEMENTS);
+    }
+
+    @Override
+    public Collection<String> getExamples() {
+        return EXAMPLES;
+    }
+
+    public static class ContextFloatProviderArgument extends ResourceOrIdArgument<ContextFloatProvider> {
+        protected ContextFloatProviderArgument(final CommandBuildContext context) {
+            super(context, Registries.CONTEXT_FLOAT_PROVIDER, ContextFloatProviders.DIRECT_CODEC);
+        }
+    }
+
+    public static class ContextIntProviderArgument extends ResourceOrIdArgument<ContextIntProvider> {
+        protected ContextIntProviderArgument(final CommandBuildContext context) {
+            super(context, Registries.CONTEXT_INT_PROVIDER, ContextIntProviders.DIRECT_CODEC);
+        }
+    }
+
+    public static class DialogArgument extends CResourceOrIdArgument<Dialog> {
+        protected DialogArgument(CommandBuildContext context) {
+            super(context, Registries.DIALOG, Dialog.DIRECT_CODEC);
+        }
+    }
+
+    public static class FeatureArgument extends ResourceOrIdArgument<Feature> {
+        protected FeatureArgument(final CommandBuildContext context) {
+            super(context, Registries.FEATURE, Feature.DIRECT_CODEC);
+        }
+    }
+
+    public static class LootPredicateArgument extends CResourceOrIdArgument<LootItemCondition> {
+        protected LootPredicateArgument(CommandBuildContext buildContext) {
+            super(buildContext, Registries.PREDICATE, LootItemCondition.DIRECT_CODEC);
+        }
+    }
+
+    public static class LootModifierArgument extends CResourceOrIdArgument<LootItemFunction> {
+        protected LootModifierArgument(CommandBuildContext buildContext) {
+            super(buildContext, Registries.ITEM_MODIFIER, LootItemFunctions.DIRECT_CODEC);
+        }
+    }
+
+    public static class LootTableArgument extends CResourceOrIdArgument<LootTable> {
+        protected LootTableArgument(CommandBuildContext buildContext) {
+            super(buildContext, Registries.LOOT_TABLE, LootTable.DIRECT_CODEC);
+        }
+    }
+}

@@ -1,6 +1,5 @@
 package net.earthcomputer.clientcommands.features;
 
-import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
@@ -63,7 +62,7 @@ public class TwoPlayerGame<T, S extends Screen> {
     private final GameFactory<T> gameFactory;
     private final ScreenFactory<T, S> screenFactory;
 
-    TwoPlayerGame(@Translatable String translationKey, String command, Identifier id, GameFactory<T> gameFactory, ScreenFactory<T, S> screenFactory) {
+    TwoPlayerGame(String translationKey, String command, Identifier id, GameFactory<T> gameFactory, ScreenFactory<T, S> screenFactory) {
         this.translation = Component.translatable(translationKey);
         this.command = command;
         this.id = id;

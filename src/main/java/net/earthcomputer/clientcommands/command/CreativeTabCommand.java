@@ -11,7 +11,7 @@ import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
@@ -57,7 +57,7 @@ public class CreativeTabCommand {
     private static final DynamicCommandExceptionType ILLEGAL_CHARACTER_EXCEPTION = new DynamicCommandExceptionType(arg -> Component.translatable("commands.ccreativetab.addTab.illegalCharacter", arg));
     private static final DynamicCommandExceptionType ALREADY_EXISTS_EXCEPTION = new DynamicCommandExceptionType(arg -> Component.translatable("commands.ccreativetab.addTab.alreadyExists", arg));
 
-    private static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("clientcommands");
+    private static final Path configPath = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands");
 
     private static final Map<String, Tab> tabs = new HashMap<>();
 

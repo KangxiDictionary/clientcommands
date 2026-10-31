@@ -5,7 +5,7 @@ import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
@@ -60,7 +60,7 @@ public class RenderQueue {
     );
 
     static {
-        ClientTickEvents.START_CLIENT_TICK.register(RenderQueue::tick);
+        CClientTickEvents.START_CLIENT_TICK.register(RenderQueue::tick);
 
         LevelExtractionEvents.END_EXTRACTION.register(context -> {
             EnumMap<Layer, List<Shape.RenderState>> renderStates = new EnumMap<>(Layer.class);

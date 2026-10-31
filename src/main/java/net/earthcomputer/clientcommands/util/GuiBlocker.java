@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.util;
 
 import net.earthcomputer.clientcommands.event.MoreScreenEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.jspecify.annotations.Nullable;
@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class GuiBlocker {
     static {
         MoreScreenEvents.BEFORE_ADD.register(GuiBlocker::onOpenGui);
-        ClientTickEvents.START_CLIENT_TICK.register(GuiBlocker::tick);
+        CClientTickEvents.START_CLIENT_TICK.register(GuiBlocker::tick);
     }
 
     private static final List<GuiBlocker> blockers = new ArrayList<>();

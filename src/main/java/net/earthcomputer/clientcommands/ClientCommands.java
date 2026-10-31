@@ -18,12 +18,11 @@ import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.features.Waypoints;
 import net.earthcomputer.clientcommands.render.RenderQueue;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import org.slf4j.Logger;
@@ -37,9 +36,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ClientCommands implements ClientModInitializer {
+public class ClientCommands {
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve("clientcommands");
+    public static final Path CONFIG_DIR = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands");
     private static final Set<String> clientcommandsCommands = new HashSet<>();
     private static final Set<String> COMMANDS_TO_NOT_SEND_TO_SERVER = Set.of("cwe", "cnote"); // could contain private information
 
@@ -51,7 +50,6 @@ public class ClientCommands implements ClientModInitializer {
         "c3bca648-b8ce-491d-bf6a-36bb42c5a70b" // Y99
     );
 
-    @Override
     public void onInitializeClient() {
         RenderQueue.register();
 

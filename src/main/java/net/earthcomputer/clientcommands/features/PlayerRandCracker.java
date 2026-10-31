@@ -1,6 +1,5 @@
 package net.earthcomputer.clientcommands.features;
 
-import com.demonwav.mcdev.annotations.Translatable;
 import net.earthcomputer.clientcommands.Configs;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
@@ -529,7 +528,7 @@ public class PlayerRandCracker {
             private final boolean success;
             private final Function<Object[], List<MutableComponent>> messageCreator;
 
-            Type(boolean success, @Translatable String translationKey) {
+            Type(boolean success, String translationKey) {
                 this(success, args -> List.of(Component.translatable(translationKey, args).withStyle(ChatFormatting.RED)));
             }
 
@@ -552,10 +551,10 @@ public class PlayerRandCracker {
 
         private final String name;
         private final boolean knowsSeed;
-        CrackState(@Translatable(prefix = "playerManip.state.") String name) {
+        CrackState(String name) {
             this(name, false);
         }
-        CrackState(@Translatable(prefix = "playerManip.state.") String name, boolean knowsSeed) {
+        CrackState(String name, boolean knowsSeed) {
             this.name = name;
             this.knowsSeed = knowsSeed;
         }
@@ -632,7 +631,7 @@ public class PlayerRandCracker {
         ;
 
         private final Component resetMessage;
-        RNGCallType(@Translatable(prefix = "playerManip.reset.") String resetMessage) {
+        RNGCallType(String resetMessage) {
             this.resetMessage = Component.translatable("playerManip.reset." + resetMessage);
         }
 

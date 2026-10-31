@@ -1,6 +1,5 @@
 package net.earthcomputer.clientcommands.command;
 
-import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.brigadier.context.CommandContext;
 import net.earthcomputer.clientcommands.interfaces.IClientSuggestionsProvider;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
@@ -30,7 +29,7 @@ public class ClientCommandHelper {
         sendFeedback(Component.literal("").append(help).withStyle(ChatFormatting.AQUA));
     }
 
-    public static void sendFeedback(@Translatable String message, Object... args) {
+    public static void sendFeedback(String message, Object... args) {
         sendFeedback(Component.translatable(message, args));
     }
 

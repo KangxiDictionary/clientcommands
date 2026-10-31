@@ -1,6 +1,5 @@
 package net.earthcomputer.clientcommands.util;
 
-import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
@@ -78,7 +77,7 @@ public final class CComponentUtil {
         return getCommandTextComponent(Component.translatable("commands.client.glow"), "/cglow entities " + entity.getStringUUID());
     }
 
-    public static Component getCommandTextComponent(@Translatable String translationKey, String command) {
+    public static Component getCommandTextComponent(String translationKey, String command) {
         return getCommandTextComponent(Component.translatable(translationKey), command);
     }
 
@@ -99,7 +98,7 @@ public final class CComponentUtil {
         return new ClickEvent.RunCommand("/ccallback " + callbackId);
     }
 
-    public static Component getLinkTextComponent(@Translatable String translationKey, String url) {
+    public static Component getLinkTextComponent(String translationKey, String url) {
         return getLinkTextComponent(Component.translatable(translationKey), url);
     }
 

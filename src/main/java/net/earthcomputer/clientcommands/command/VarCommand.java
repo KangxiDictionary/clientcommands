@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ public class VarCommand {
     private static final DynamicCommandExceptionType ALREADY_EXISTS_EXCEPTION = new DynamicCommandExceptionType(arg -> Component.translatable("commands.cvar.add.alreadyExists", arg));
     private static final DynamicCommandExceptionType NOT_FOUND_EXCEPTION = new DynamicCommandExceptionType(arg -> Component.translatable("commands.cvar.notFound", arg));
 
-    private static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("clientcommands");
+    private static final Path configPath = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands");
 
     private static final Map<String, String> variables = new HashMap<>();
 

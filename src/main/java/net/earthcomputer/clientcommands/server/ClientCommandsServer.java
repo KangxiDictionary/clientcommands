@@ -4,7 +4,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.netty.buffer.ByteBuf;
 import net.earthcomputer.clientcommands.util.BuildInfo;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,7 +18,7 @@ import net.minecraft.server.permissions.Permissions;
 
 import java.net.URI;
 
-public class ClientCommandsServer implements ModInitializer {
+public class ClientCommandsServer {
     private static final URI WHY_URI = URI.create("https://github.com/Earthcomputer/clientcommands/blob/" + BuildInfo.COMMIT_HASH + "/docs/server_installation.md");
     private static final SimpleCommandExceptionType MUST_BE_INSTALLED_EXCEPTION = new SimpleCommandExceptionType(
         Component.translatable(
@@ -29,7 +28,6 @@ public class ClientCommandsServer implements ModInitializer {
         )
     );
 
-    @Override
     public void onInitialize() {
         PayloadTypeRegistry.serverboundPlay().register(OptInPayload.TYPE, OptInPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(OptInPayload.TYPE, (_, _) -> {});

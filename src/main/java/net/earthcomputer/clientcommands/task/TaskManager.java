@@ -6,8 +6,8 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CClientTickEvents;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class TaskManager {
         new Dynamic2CommandExceptionType((conflictingTask, cancel) -> Component.translatable("commands.ctask.conflicting", conflictingTask, cancel));
 
     static {
-        ClientTickEvents.START_CLIENT_TICK.register(TaskManager::tick);
+        CClientTickEvents.START_CLIENT_TICK.register(TaskManager::tick);
         ClientLevelEvents.UNLOAD_LEVEL.register(TaskManager::onLevelUnload);
     }
 
@@ -77,7 +77,7 @@ public class TaskManager {
                 break;
             }
 
-            if (FabricLoader.getInstance().isDevelopmentEnvironment() && ++iterationCount == 1000) {
+            if (CPlatform.INSTANCE.isDevelopmentEnvironment() && ++iterationCount == 1000) {
                 LOGGER.warn("A LongTask is taking an exceptionally long time. Task list: {}", tasks);
                 LOGGER.warn("Remember you can use ctrl+F2 in IntelliJ to terminate the game while it has your cursor grabbed.");
             }

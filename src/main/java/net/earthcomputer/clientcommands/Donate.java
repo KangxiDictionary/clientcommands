@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands;
 
 import net.earthcomputer.clientcommands.command.ClientCommandHelper;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.earthcomputer.clientcommands.compat.CConnectionEvents;
 import net.minecraft.network.chat.Component;
 
 public final class Donate {
@@ -10,7 +10,7 @@ public final class Donate {
     }
 
     public static void registerEvents() {
-        ClientPlayConnectionEvents.JOIN.register((_, _, _) -> run());
+        CConnectionEvents.JOIN.register((_, _, _) -> run());
     }
 
     private static void run() {

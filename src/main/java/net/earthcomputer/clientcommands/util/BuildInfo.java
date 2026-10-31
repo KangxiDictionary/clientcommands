@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
-import net.fabricmc.loader.api.FabricLoader;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -24,7 +24,7 @@ public final class BuildInfo {
     static {
         String version, branch, shortCommitHash, commitHash;
         version = branch = shortCommitHash = commitHash = "unknown";
-        try (BufferedReader reader = Files.newBufferedReader(FabricLoader.getInstance()
+        try (BufferedReader reader = Files.newBufferedReader(CPlatform.INSTANCE
             .getModContainer("clientcommands").orElseThrow()
             .findPath("build_info.json").orElseThrow())
         ) {
