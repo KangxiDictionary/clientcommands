@@ -53,6 +53,14 @@ Transitive libraries must be listed explicitly: JarJar requires Maven coordinate
 jar and rejects bare file dependencies. Do not shade dependencies into the main jar (it used to
 shadow Kotlin and other classes).
 
+## Tests
+
+`./gradlew test` runs the JUnit suite (25 tests): the markdown parser, the mixin applicability check
+and the entity random call-hierarchy regression tests. `ReferencesFinder` locates the Minecraft
+classes through their code source, so it works both when the game is an exploded directory and when
+ModDevGradle supplies a patched jar. Expectations live in `regressionTests/`; a mismatch prints a
+diff and fails the build.
+
 ## Verification
 
 `PlatformSelfCheck` runs once on the first client tick and logs whether the access transformer was

@@ -3,8 +3,6 @@ package net.earthcomputer.clientcommands.test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -37,6 +35,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.stream.Stream;
 
 public final class ReferencesFinder {
@@ -55,53 +55,100 @@ public final class ReferencesFinder {
         return instance;
     }
 
-    private final ModContainer minecraft = FabricLoader.getInstance()
-        .getModContainer("minecraft")
-        .orElseThrow(() -> new IllegalStateException("Mod \"minecraft\" has not been initialized"));
+    /** Root of the Minecraft classes: a directory in some dev setups, a jar under ModDevGradle. */
+    private final Path minecraftPath = minecraftPath();
+    private ZipFile minecraftZip;
+
+    private static Path minecraftPath() {
+        try {
+            return Path.of(net.minecraft.SharedConstants.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not locate the Minecraft classes", e);
+        }
+    }
+
+    private boolean isArchive() {
+        return !Files.isDirectory(this.minecraftPath);
+    }
+
+    private ZipFile zip() throws IOException {
+        if (this.minecraftZip == null) {
+            this.minecraftZip = new ZipFile(this.minecraftPath.toFile());
+        }
+        return this.minecraftZip;
+    }
     private final Map<String, @Nullable ClassInfo> index = new HashMap<>();
 
     private void buildIndex() {
         // use an interner to save memory on all the duplicate strings we'll be seeing
         Interner<String> interner = Interners.newStrongInterner();
 
-        for (Path jarFile : minecraft.getRootPaths()) {
-            try (Stream<Path> files = Files.walk(jarFile)) {
-                for (Path file : (Iterable<Path>) files::iterator) {
-                    String className = file.toString();
-                    if (className.endsWith(".class")) {
+        try {
+            if (this.isArchive()) {
+                ZipFile zip = this.zip();
+                var entries = zip.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
+                    String name = entry.getName();
+                    if (!name.endsWith(".class")) {
+                        continue;
+                    }
+                    indexClass(interner, name.substring(0, name.length() - 6), zip.getInputStream(entry));
+                }
+            } else {
+                try (Stream<Path> files = Files.walk(this.minecraftPath)) {
+                    for (Path file : (Iterable<Path>) files::iterator) {
+                        String className = file.toString();
+                        if (!className.endsWith(".class")) {
+                            continue;
+                        }
                         className = className.substring(0, className.length() - 6);
                         if (className.startsWith("/")) {
                             className = className.substring(1);
                         }
-
-                        // prevent recursive reading of the same file
-                        ClassInfo classInfo = getOrCreateClassInfo(interner, className);
-                        if (classInfo == null) {
-                            throw new AssertionError("Failed to get class info for class " + className);
-                        }
-
                         try (InputStream in = Files.newInputStream(file)) {
-                            ClassReader classReader = new ClassReader(in);
-                            classReader.accept(new IndexerClassVisitor(interner), ClassReader.SKIP_FRAMES);
+                            indexClass(interner, className, in);
                         }
                     }
                 }
-            } catch (IOException e) {
-                throw new AssertionError("Failed to build index", e);
             }
+        } catch (IOException e) {
+            throw new AssertionError("Failed to build index", e);
+        }
+    }
+
+    private void indexClass(Interner<String> interner, String className, InputStream in) throws IOException {
+        // prevent recursive reading of the same file
+        ClassInfo classInfo = getOrCreateClassInfo(interner, className);
+        if (classInfo == null) {
+            throw new AssertionError("Failed to get class info for class " + className);
+        }
+        try (InputStream stream = in) {
+            ClassReader classReader = new ClassReader(stream);
+            classReader.accept(new IndexerClassVisitor(interner), ClassReader.SKIP_FRAMES);
         }
     }
 
     private boolean getClassData(String className, ClassVisitor classVisitor, int readerFlags) {
-        for (Path jarFile : minecraft.getRootPaths()) {
-            try (InputStream in = Files.newInputStream(jarFile.resolve(className + ".class"))) {
-                ClassReader reader = new ClassReader(in);
+        try {
+            InputStream in;
+            if (this.isArchive()) {
+                ZipEntry entry = this.zip().getEntry(className + ".class");
+                if (entry == null) {
+                    return false;
+                }
+                in = this.zip().getInputStream(entry);
+            } else {
+                in = Files.newInputStream(this.minecraftPath.resolve(className + ".class"));
+            }
+            try (InputStream stream = in) {
+                ClassReader reader = new ClassReader(stream);
                 reader.accept(classVisitor, readerFlags);
                 return true;
-            } catch (NoSuchFileException ignore) {
-            } catch (IOException e) {
-                throw new AssertionError("Failed to read class " + className, e);
             }
+        } catch (NoSuchFileException ignore) {
+        } catch (IOException e) {
+            throw new AssertionError("Failed to read class " + className, e);
         }
         return false;
     }

@@ -24,6 +24,10 @@ loader-facing code lives in `src/main/java/net/earthcomputer/clientcommands/plat
    ./gradlew build
    ```
    The mod JAR may be found in the `build/libs` directory
+1. Run the test suite
+   ```
+   ./gradlew test
+   ```
 1. [Create a pull request](https://help.github.com/en/articles/creating-a-pull-request)
    so that your changes can be integrated into clientcommands
     - Note: for large contributions, create an issue before doing all that

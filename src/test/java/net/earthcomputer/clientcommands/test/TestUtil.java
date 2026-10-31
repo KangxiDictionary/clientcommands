@@ -27,6 +27,7 @@ public final class TestUtil {
             expectedValue = Files.readString(file);
         } catch (NoSuchFileException e) {
             try {
+                Files.createDirectories(file.getParent());
                 Files.writeString(file, value);
             } catch (IOException e1) {
                 throw new AssertionError("Failed to write regression test file", e1);

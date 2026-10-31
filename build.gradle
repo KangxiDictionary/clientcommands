@@ -41,6 +41,11 @@ neoForge {
 			sourceSet sourceSets.main
 		}
 	}
+
+	unitTest {
+		enable()
+		testedMod = mods.clientcommands
+	}
 }
 
 java {
@@ -95,11 +100,28 @@ tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
-// Test sources still reference the Fabric loader (ReferencesFinder); porting them to NeoForge is
-// tracked separately, so keep them out of the build for now.
-tasks.named('compileTestJava') {
-	enabled = false
+
+dependencies {
+	testImplementation "org.junit.jupiter:junit-jupiter:5.11.4"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+	testImplementation "org.ow2.asm:asm:9.8"
+	testImplementation "org.ow2.asm:asm-tree:9.8"
+	testImplementation "org.ow2.asm:asm-analysis:9.8"
+	testImplementation "org.ow2.asm:asm-util:9.8"
+	testImplementation "org.apache.commons:commons-lang3:3.17.0"
+	testImplementation "com.code-intelligence:jazzer-junit:0.30.0"
 }
+
 tasks.named('test') {
-	enabled = false
+	useJUnitPlatform()
+	systemProperty 'clientcommands.regressionTestDir', file('regressionTests').absolutePath
+}
+
+// NFRT tasks default to a Java 21 toolchain; the project targets Java 25 and a 21 JDK is not
+// necessarily installed, so point them at the project toolchain instead.
+tasks.withType(net.neoforged.nfrtgradle.NeoFormRuntimeTask).configureEach {
+	javaExecutable.set(providers.provider {
+		javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }.get()
+			.executablePath.asFile.absolutePath
+	})
 }
