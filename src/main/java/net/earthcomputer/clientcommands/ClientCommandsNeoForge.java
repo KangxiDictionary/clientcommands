@@ -13,8 +13,12 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(value = ClientCommandsNeoForge.MOD_ID, dist = Dist.CLIENT)
 public class ClientCommandsNeoForge {
     public static final String MOD_ID = "clientcommands";
+    private static int tickCount;
+
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
     public ClientCommandsNeoForge(IEventBus modBus) {
+        LOGGER.info("[clientcommands] constructing mod entrypoint");
         new ClientCommands().onInitializeClient();
         new ClientCommandsServer().onInitialize();
 
@@ -24,6 +28,10 @@ public class ClientCommandsNeoForge {
         });
 
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> {
+            if (tickCount++ == 0) {
+                LOGGER.info("[clientcommands] first client tick, level={}",
+                    Minecraft.getInstance().level != null);
+            }
             ClientCommands.setupScrambleWindowTitle();
             net.earthcomputer.clientcommands.compat.ClientCommandManager.ensureRegistered(Minecraft.getInstance());
             net.earthcomputer.clientcommands.compat.ClientCommandManager.mergeIntoConnection(Minecraft.getInstance());
