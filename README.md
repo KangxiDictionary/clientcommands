@@ -1,22 +1,43 @@
-# clientcommands
-Adds several useful client-side commands to Minecraft
+# clientcommands (NeoForge port)
 
-## Social
-Discord: https://discord.gg/Jg7Bun7
-Patreon: https://www.patreon.com/earthcomputer
+Adds several useful client-side commands to Minecraft.
+
+This repository is the **NeoForge port** of [Earthcomputer/clientcommands](https://github.com/Earthcomputer/clientcommands).
+The command and algorithm code is kept from upstream; the loader-facing layer was rebuilt against NeoForge
+(see [PORTING.md](PORTING.md) for the architecture and the verification protocol).
+
+- Minecraft: **26.3**
+- NeoForge: **26.3.0.99**
+- Branch: `neoforge-clean`
 
 ## Installation
-1. Download and run the [Fabric installer](https://fabricmc.net/use).
-   - Click the "vanilla" button, leave the other settings as they are,
-     and click "download installer".
-   - Note: this step may vary if you aren't using the vanilla launcher
-     or an old version of Minecraft.
-1. Download [Fabric API](https://minecraft.curseforge.com/projects/fabric)
-   and move it to the mods folder (`.minecraft/mods`).
-1. Download clientcommands from the [releases page](https://github.com/Earthcomputer/clientcommands/releases) or from [Modrinth](https://modrinth.com/mod/client-commands)
-   and move it to the mods folder (`.minecraft/mods`).
+
+1. Install [NeoForge](https://neoforged.net/) for Minecraft 26.3.
+2. Put `clientcommands-<version>.jar` into the `mods` folder.
+   - The seedfinding libraries are bundled with NeoForge JarJar, so no extra downloads are required.
+
+## Building
+
+```sh
+./gradlew build
+```
+
+The mod jar is written to `build/libs`. Java 25 is required to build and run.
+
+## Credits
+
+- **Earthcomputer** — original author of clientcommands.
+- **KangxiDictionary** — NeoForge port.
+
+Upstream project: <https://github.com/Earthcomputer/clientcommands>
 
 ## Contributing
+
 To contribute translations, see the [translation contribution guidelines](docs/TRANSLATING.md).
 
 For other contributions, see the [contribution guidelines](docs/CONTRIBUTING.md).
+
+## Social
+
+Upstream Discord: https://discord.gg/Jg7Bun7
+Upstream Patreon: https://www.patreon.com/earthcomputer

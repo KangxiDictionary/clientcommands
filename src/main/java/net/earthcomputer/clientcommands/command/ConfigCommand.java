@@ -103,25 +103,20 @@ public final class ConfigCommand {
         MutableComponent namePart = Component.literal(name).withStyle(style -> style
             .withColor(ChatFormatting.AQUA)
             .withClickEvent(new ClickEvent.RunCommand("/cconfig get " + name))
-            .withHoverEvent(new HoverEvent.ShowText(Component.translatable("commands.cconfig.hover.name", name))));
+            .withHoverEvent(new HoverEvent.ShowText(Component.translatable("commands.cconfig.desc." + name))));
         return Component.literal("- ").append(namePart).append(" = ").append(renderValue(name, value));
     }
 
     private static Component renderValue(String name, String value) {
-        List<String> choices = Configs.getOptionChoices(name);
-        Style style = Style.EMPTY.withColor(ChatFormatting.WHITE);
-        if (choices.isEmpty()) {
-            style = style
-                .withClickEvent(new ClickEvent.SuggestCommand("/cconfig set " + name + " "))
-                .withHoverEvent(new HoverEvent.ShowText(Component.translatable("commands.cconfig.hover.suggest", name)));
-        } else {
-            String next = nextChoice(choices, value);
-            if (next != null) {
-                style = style
-                    .withClickEvent(new ClickEvent.RunCommand("/cconfig set " + name + " " + next))
-                    .withHoverEvent(new HoverEvent.ShowText(Component.translatable("commands.cconfig.hover.value", name, next)));
-            }
-        }
+        // Every value behaves the same way: clicking prefills the command instead of silently
+        // applying something, so the player always sees what is about to be executed.
+        String suggestion = nextChoice(Configs.getOptionChoices(name), value);
+        String command = suggestion == null ? "/cconfig set " + name + " " : "/cconfig set " + name + " " + suggestion;
+        Style style = Style.EMPTY.withColor(ChatFormatting.WHITE)
+            .withClickEvent(new ClickEvent.SuggestCommand(command))
+            .withHoverEvent(new HoverEvent.ShowText(suggestion == null
+                ? Component.translatable("commands.cconfig.hover.suggest", name)
+                : Component.translatable("commands.cconfig.hover.prefill", name, suggestion)));
         return Component.literal(value).withStyle(style);
     }
 
@@ -142,6 +137,7 @@ public final class ConfigCommand {
             return 0;
         }
         String type = Configs.getOptionTypeName(option);
+        source.sendFeedback(Component.translatable("commands.cconfig.desc." + option));
         source.sendFeedback(Component.translatable("commands.cconfig.get", option, value, type == null ? "?" : type));
         List<String> choices = Configs.getOptionChoices(option);
         if (!choices.isEmpty()) {

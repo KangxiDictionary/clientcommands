@@ -29,13 +29,11 @@ public class CommandSuggestionsMixin {
     private CompletableFuture<Suggestions> filterSuggestions(CompletableFuture<Suggestions> original) {
         assert currentParse != null;
         return original.thenApply(suggestions -> {
-            SharedSuggestionProvider source = Flag.getActualSource(this.currentParse);
-            if (source instanceof IClientSuggestionsProvider mySource) {
-                List<Suggestion> newSuggestions = mySource.clientcommands_filterSuggestions(suggestions.getList());
-                return newSuggestions == null ? suggestions : new Suggestions(suggestions.getRange(), newSuggestions);
-            } else {
-                return suggestions;
-            }
+            String input = this.currentParse.getReader().getString();
+            List<Suggestion> filtered = Flag.filterSuggestions(input, suggestions.getList());
+            return filtered.size() == suggestions.getList().size()
+                ? suggestions
+                : new Suggestions(suggestions.getRange(), filtered);
         });
     }
 }

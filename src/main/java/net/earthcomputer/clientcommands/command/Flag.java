@@ -140,6 +140,35 @@ public final class Flag<T> {
      * Rejects any non-repeatable flag that occurs more than once in the raw command input.
      * Called once per command execution.
      */
+    /**
+     * Removes suggestions for non-repeatable flags that already appear in the command line, so
+     * completion never offers something the dispatcher would reject.
+     */
+    public static java.util.List<com.mojang.brigadier.suggestion.Suggestion> filterSuggestions(
+        String input, java.util.List<com.mojang.brigadier.suggestion.Suggestion> suggestions
+    ) {
+        java.util.Set<String> used = new java.util.HashSet<>();
+        for (Flag<?> flag : ALL_FLAGS) {
+            if (flag.repeatable) {
+                continue;
+            }
+            int count = countFlagOccurrences(input, "--" + flag.name);
+            if (flag.shortName != null) {
+                count += countFlagOccurrences(input, "-" + flag.shortName);
+            }
+            if (count > 0) {
+                used.add("--" + flag.name);
+                if (flag.shortName != null) {
+                    used.add("-" + flag.shortName);
+                }
+            }
+        }
+        if (used.isEmpty()) {
+            return suggestions;
+        }
+        return suggestions.stream().filter(suggestion -> !used.contains(suggestion.getText())).toList();
+    }
+
     public static void checkForRepeatedFlags(String input) throws CommandSyntaxException {
         for (Flag<?> flag : ALL_FLAGS) {
             int count = countFlagOccurrences(input, "--" + flag.name);

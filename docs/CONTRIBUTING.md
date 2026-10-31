@@ -1,8 +1,13 @@
 # Contributing
 ## In short
+
+This repository is the NeoForge port of clientcommands. Work happens on the `neoforge-clean` branch; the
+loader-facing code lives in `src/main/java/net/earthcomputer/clientcommands/platform`, and
+[PORTING.md](../PORTING.md) explains how command registration, the access transformer and JarJar work.
+
 1. Clone the repository
    ```
-   git clone https://github.com/Earthcomputer/clientcommands
+   git clone https://github.com/KangxiDictionary/clientcommands
    cd clientcommands
    ```
 1. Generate the Minecraft source code
