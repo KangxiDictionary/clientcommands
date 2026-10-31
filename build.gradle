@@ -86,4 +86,6 @@ jar {
 		configurations.embed.collect { zipTree(it) }
 	}
 	exclude 'META-INF/MANIFEST.MF', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+	// Do not shadow Kotlin's own classes (KotlinLangForge provides them).
+	exclude 'kotlin/**', 'META-INF/*.kotlin_module'
 }

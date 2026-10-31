@@ -5,8 +5,6 @@ import dev.xpple.clientarguments.arguments.CEntitySelector;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientSuggestionProvider;
-import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -45,7 +43,7 @@ public class RenderSettings {
         if (minecraft.player == null) {
             return;
         }
-        CClientCommandSource source = (CClientCommandSource) new ClientSuggestionProvider(minecraft.getConnection(), minecraft, PermissionSet.ALL_PERMISSIONS);
+        CClientCommandSource source = new CClientCommandSource(minecraft.getConnection(), minecraft);
 
         disabledEntities.clear();
         for (var filter : entityRenderSelectors) {

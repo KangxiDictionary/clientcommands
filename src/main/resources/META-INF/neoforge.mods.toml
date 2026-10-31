@@ -8,8 +8,11 @@ modId="clientcommands"
 version="${mod_version}"
 displayName="Client Commands"
 authors="Earthcomputer"
+credits="NeoForge port: KangxiDictionary"
 description='''
-Useful client-side commands. NeoForge port.
+Useful client-side commands: RNG cracking and prediction, entity/item finding, schematic and world tools, and more.
+\
+Unofficial NeoForge port of Earthcomputer's Client Commands. The command and algorithm layers keep the upstream implementation; only the loader-specific code has been replaced.
 '''
 
 [[mixins]]
