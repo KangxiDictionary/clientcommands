@@ -1,48 +1,79 @@
 plugins {
-	id 'dev.architectury.loom-no-remap'
+	id 'java'
 	id 'maven-publish'
+	id 'net.neoforged.moddev' version '2.0.148'
 }
 
 group = 'net.earthcomputer'
 base {
 	archivesName = 'clientcommands'
 }
+version = project.version
 
 repositories {
 	mavenCentral()
-	maven { url = 'https://maven.neoforged.net/releases/' }
 	maven { url = 'https://maven.seedfinding.com' }
 	maven { url = 'https://maven.latticg.com' }
 	maven { url = 'https://maven.xpple.dev/maven2' }
 }
 
-configurations {
-	embed
+neoForge {
+	version = project.neoforge_version
+
+	// NeoForge reads the access transformer from the mod jar at runtime; declaring it here also
+	// makes it available in the development environment.
+	accessTransformers.from 'src/main/resources/META-INF/accesstransformer.cfg'
+
+	runs {
+		client {
+			client()
+			systemProperty 'neoforge.enabledGameTestNamespaces', 'clientcommands'
+		}
+		server {
+			server()
+			programArgument '--nogui'
+			systemProperty 'neoforge.enabledGameTestNamespaces', 'clientcommands'
+		}
+	}
+
+	mods {
+		clientcommands {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(25)
+	withSourcesJar()
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	neoForge "net.neoforged:neoforge:${project.neoforge_version}"
-
 	implementation "com.seedfinding:mc_core:${project.seedfinding_core_version}"
 	implementation "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
 	implementation "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
 	implementation "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
 	implementation "com.seedfinding:latticg:${project.latticg_version}:rt"
 
-	embed "com.seedfinding:mc_core:${project.seedfinding_core_version}"
-	embed "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
-	embed "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
-	embed "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
-	embed "com.seedfinding:latticg:${project.latticg_version}:rt"
-}
-
-loom {
-	accessWidenerPath = file('src/main/resources/clientcommands.aw')
-}
-
-java {
-	withSourcesJar()
+	jarJar "com.seedfinding:mc_core:${project.seedfinding_core_version}"
+	jarJar "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
+	jarJar "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
+	jarJar "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
+	jarJar "com.seedfinding:latticg:${project.latticg_version}:rt"
+	// Transitive seedfinding dependencies must be declared explicitly: JarJar validates that every
+	// embedded jar has Maven coordinates (a bare file dependency has none).
+	jarJar "com.seedfinding:mc_math:1.171.0"
+	jarJar "com.seedfinding:mc_noise:1.171.1"
+	jarJar "com.seedfinding:mc_terrain:1.171.1"
+	jarJar "net.lecousin.compression:gzip:0.1.10"
+	jarJar "net.lecousin.compression:deflate:0.1.10"
+	jarJar "net.lecousin:core:0.20.0"
+	jarJar "org.jetbrains:annotations:13.0"
+	// The seedfinding libraries are compiled against Kotlin; NeoForge's JarJar selector will pick a
+	// single kotlin-stdlib if the pack already ships KotlinLangForge.
+	jarJar "org.jetbrains.kotlin:kotlin-stdlib:2.2.10"
+	jarJar "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0"
+	jarJar "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0"
 }
 
 processResources {
@@ -58,73 +89,17 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
+	// Minecraft 26.3 and NeoForge run on Java 25; build class file 69 even on a newer JDK.
+	options.release = 25
 	options.compilerArgs += ['-Xmaxerrs', '2000']
+	options.encoding = 'UTF-8'
 }
 
-// Test sources still target the Fabric loader; disabled until ported.
+// Test sources still reference the Fabric loader (ReferencesFinder); porting them to NeoForge is
+// tracked separately, so keep them out of the build for now.
 tasks.named('compileTestJava') {
 	enabled = false
 }
-
-// TODO: validate the added 26.3 widening entries and re-enable
-tasks.named('validateAccessWidener') {
+tasks.named('test') {
 	enabled = false
 }
-
-// Minecraft 26.3 / NeoForge run on Java 25; build to class file 69 even when
-// Gradle itself runs on a newer JDK.
-tasks.withType(JavaCompile).configureEach {
-	options.release = 25
-}
-
-
-// NeoForge JarJar: bundle the seedfinding/latticg libraries as nested jars instead of
-// shading them into the mod jar. Fabric's "include" has no equivalent on NeoForge, and
-// shading used to shadow unrelated classes such as Kotlin's stdlib.
-def jarJarOutput = layout.buildDirectory.dir('jarjar')
-
-tasks.register('prepareJarJar') {
-    description = 'Stages nested jars and META-INF/jarjar/metadata.json for JarJar.'
-    def embedConfig = configurations.embed
-    inputs.files(embedConfig)
-    outputs.dir(jarJarOutput)
-    doLast {
-        File outDir = jarJarOutput.get().dir('META-INF/jarjar').asFile
-        outDir.deleteDir()
-        outDir.mkdirs()
-        def entries = []
-        embedConfig.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-            def id = artifact.moduleVersion.id
-            File target = new File(outDir, artifact.file.name)
-            target.bytes = artifact.file.bytes
-            entries << [
-                group   : id.group,
-                artifact: id.name,
-                version : id.version,
-                path    : "META-INF/jarjar/${artifact.file.name}"
-            ]
-        }
-        def builder = new groovy.json.JsonBuilder([
-            jars: entries.collect { entry ->
-                [
-                    identifier  : [group: entry.group, artifact: entry.artifact],
-                    version     : [range: "[${entry.version},)".toString(), artifactVersion: entry.version],
-                    path        : entry.path,
-                    isObfuscated: false
-                ]
-            }
-        ])
-        new File(outDir, 'metadata.json').text = builder.toPrettyString()
-    }
-}
-
-jar {
-    dependsOn 'prepareJarJar'
-    // Dev-only inputs: NeoForge reads the generated access transformer instead.
-    exclude 'clientcommands.aw'
-    from(jarJarOutput) {
-        include 'META-INF/jarjar/**'
-    }
-}
-
-

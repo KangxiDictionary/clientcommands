@@ -22,7 +22,10 @@ The command and algorithm code is kept from upstream; the loader-facing layer wa
 ./gradlew build
 ```
 
-The mod jar is written to `build/libs`. Java 25 is required to build and run.
+The mod jar is written to `build/libs`. A Java 25 toolchain is required (Gradle can auto-detect one,
+or point `org.gradle.java.installations.paths` at a JDK 25 installation).
+
+For development, `./gradlew runClient` and `./gradlew runServer` start a dev environment.
 
 ## Credits
 

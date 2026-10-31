@@ -7,7 +7,7 @@ upstream command and algorithm code. Read this before touching the platform code
 
 | Path | Responsibility |
 | --- | --- |
-| `platform/` | The only place that talks to NeoForge for commands. `CClientCommandSource` (interface), `ClientCommandRegistrar`, `SimpleClientCommandSource`, `PlatformSelfCheck`. |
+| `platform/` | The only place that talks to NeoForge. `CClientCommandSource` (interface), `ClientCommandRegistrar`, `SimpleClientCommandSource`, `PlatformSelfCheck`. |
 | `mixin/platform/` | Makes NeoForge's `ClientCommandSourceStack` and `ClientSuggestionProvider` implement the mod's source interface, and carries flag/alias state. |
 | `command/`, `features/`, `render/` | Upstream implementations. Logic is unchanged; only the source accessors were renamed. |
 | `compat/` | Self-contained replacements for the small Fabric utilities upstream used (`CEvent`, `CNetworking`, `CPlatform`, tick/connection events). No Fabric imports remain. |
@@ -30,21 +30,21 @@ Do not reintroduce a private dispatcher for execution, and do not hook `sendComm
 
 ## Access transformer
 
-NeoForge ignores Fabric access wideners at runtime. `src/main/resources/clientcommands.aw` is still
-the source of truth for development, but the shipped jar needs
-`src/main/resources/META-INF/accesstransformer.cfg`, generated from it:
+`src/main/resources/META-INF/accesstransformer.cfg` is the single source of truth. It is declared to
+NeoForge in `build.gradle` (`accessTransformers.from`) so it applies in development as well as at
+runtime.
 
 * fields: `public <class> <name>`
-* methods: `public <class> <name>(<params>)<ret>` — the return type is mandatory for Loom's parser.
-* `mutable` becomes `public-f`.
-
-Regenerate with the conversion script described in the commit history whenever the AW changes.
+* methods: `public <class> <name>(<params>)<ret>` — the return type is mandatory for the parser.
+* widening a method that an inaccessible subclass overrides will break NFRT's recompile step; widen
+  the subtype (or drop the entry) instead.
 
 ## Dependencies
 
-The seedfinding libraries are bundled with NeoForge JarJar: `prepareJarJar` stages the jars plus
-`META-INF/jarjar/metadata.json`, and `jar` includes that directory. Do not shade dependencies into
-the main jar (it used to shadow Kotlin and other classes).
+The seedfinding libraries are bundled with NeoForge JarJar through the `jarJar` configuration.
+Transitive libraries must be listed explicitly: JarJar requires Maven coordinates for every embedded
+jar and rejects bare file dependencies. Do not shade dependencies into the main jar (it used to
+shadow Kotlin and other classes).
 
 ## Verification
 
@@ -52,6 +52,8 @@ the main jar (it used to shadow Kotlin and other classes).
 applied and whether both command sources expose the interface. Command registration logs
 `registered N root commands` and `merged N root commands into the client dispatcher`, and every
 command is registered in isolation so one failure cannot hide the rest.
+
+`./gradlew runClient` and `./gradlew runServer` launch the development client and server.
 
 Render code cannot be verified headlessly: it is reached through the `LevelRenderer.submitFeatures`
 injection, and logs once when a submission actually happens.
