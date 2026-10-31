@@ -39,6 +39,49 @@ public class Configs {
     // Option access used by /cconfig
     // ------------------------------------------------------------------
 
+
+    public static final String ERROR_UNKNOWN_OPTION = "unknown_option";
+    public static final String ERROR_INVALID_VALUE = "invalid_value";
+
+    public static @org.jspecify.annotations.Nullable String getOptionTypeName(String name) {
+        Field field = findOption(name);
+        if (field == null) {
+            return null;
+        }
+        Class<?> type = field.getType();
+        if (type == boolean.class) {
+            return "boolean";
+        } else if (type == int.class || type == long.class) {
+            return "integer";
+        } else if (type == float.class || type == double.class) {
+            return "number";
+        } else if (type == String.class) {
+            return "string";
+        } else if (type.isEnum()) {
+            return "enum";
+        }
+        return type.getSimpleName();
+    }
+
+    public static java.util.List<String> getOptionChoices(String name) {
+        Field field = findOption(name);
+        if (field == null) {
+            return java.util.List.of();
+        }
+        Class<?> type = field.getType();
+        if (type == boolean.class) {
+            return java.util.List.of("true", "false");
+        }
+        if (type.isEnum()) {
+            java.util.List<String> choices = new java.util.ArrayList<>();
+            for (Object constant : type.getEnumConstants()) {
+                choices.add(((Enum<?>) constant).name().toLowerCase(Locale.ROOT));
+            }
+            return choices;
+        }
+        return java.util.List.of();
+    }
+
     public static java.util.List<String> getOptionNames() {
         java.util.List<String> names = new java.util.ArrayList<>();
         for (Field field : Configs.class.getDeclaredFields()) {
@@ -93,13 +136,13 @@ public class Configs {
     public static String setOptionValue(String name, String rawValue) {
         Field field = findOption(name);
         if (field == null) {
-            return "Unknown option: " + name;
+            return ERROR_UNKNOWN_OPTION;
         }
         Object newValue;
         try {
             newValue = parseValue(field.getType(), rawValue);
         } catch (RuntimeException e) {
-            return "Invalid value for " + name + ": " + rawValue;
+            return ERROR_INVALID_VALUE;
         }
         try {
             Object oldValue = field.get(null);
@@ -116,7 +159,8 @@ public class Configs {
             save();
             return null;
         } catch (ReflectiveOperationException | RuntimeException e) {
-            return "Failed to set " + name + ": " + e;
+            LOGGER.warn("Failed to set option {}", name, e);
+            return ERROR_INVALID_VALUE;
         }
     }
 

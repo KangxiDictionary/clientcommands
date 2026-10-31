@@ -73,6 +73,7 @@
     "commands.findblock.ClientLevelMixin",
     "commands.fps.FramerateLimitTrackerMixin",
     "commands.fps.MinecraftMixin",
+    "commands.flag.CommandDispatcherMixin",
     "commands.generic.CommandSuggestionsMixin",
     "platform.ClientCommandSourceStackMixin",
     "platform.ClientCommandSourceStackFlagsMixin",

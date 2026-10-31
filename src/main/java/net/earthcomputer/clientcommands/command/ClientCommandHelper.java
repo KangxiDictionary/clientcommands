@@ -9,7 +9,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
 
 public class ClientCommandHelper {
-    public static <T> T getFlag(CommandContext<CClientCommandSource> ctx, Flag<T> flag) {
+    public static <T> T getFlag(CommandContext<CClientCommandSource> ctx, Flag<T> flag) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        flag.checkNotRepeated(ctx);
         return getFlag(Flag.getActualSource(ctx), flag);
     }
 

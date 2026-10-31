@@ -14,6 +14,7 @@ import net.earthcomputer.clientcommands.command.arguments.ExcludingArgument;
 import net.earthcomputer.clientcommands.mixin.commands.flag.ArgumentCommandNodeAccessor;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
@@ -37,6 +38,7 @@ public final class Flag<T> {
         this.shortName = shortName;
         this.defaultValue = defaultValue;
         this.repeatable = repeatable;
+        ALL_FLAGS.add(this);
     }
 
     public static <T> Flag.Builder<T> of(Class<T> type, String name) {
@@ -118,6 +120,59 @@ public final class Flag<T> {
         if (shortName != null) {
             addArgumentFlagToCommand(getShortFlag(), argument, dispatcher, baseNode);
         }
+    }
+
+    public static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType REPEATED_FLAG_EXCEPTION =
+        new com.mojang.brigadier.exceptions.DynamicCommandExceptionType(
+            flag -> Component.translatable("commands.client.flagRepeated", flag));
+
+    /**
+     * Rejects a non-repeatable flag that appears more than once in the input. Brigadier cannot
+     * express "at most once", so this is enforced when the command reads the flag.
+     */
+    private static final java.util.List<Flag<?>> ALL_FLAGS = new java.util.ArrayList<>();
+
+    static {
+        // no-op: flags register themselves in the constructor below
+    }
+
+    /**
+     * Rejects any non-repeatable flag that occurs more than once in the raw command input.
+     * Called once per command execution.
+     */
+    public static void checkForRepeatedFlags(String input) throws CommandSyntaxException {
+        for (Flag<?> flag : ALL_FLAGS) {
+            int count = countFlagOccurrences(input, "--" + flag.name);
+            if (flag.shortName != null) {
+                count += countFlagOccurrences(input, "-" + flag.shortName);
+            }
+            if (count > 1 && !flag.repeatable) {
+                throw REPEATED_FLAG_EXCEPTION.create("--" + flag.name);
+            }
+        }
+    }
+
+    public void checkNotRepeated(CommandContext<?> ctx) throws CommandSyntaxException {
+        if (this.repeatable) {
+            return;
+        }
+        String input = ctx.getInput();
+        int count = countFlagOccurrences(input, "--" + this.name);
+        if (this.shortName != null) {
+            count += countFlagOccurrences(input, "-" + this.shortName);
+        }
+        if (count > 1) {
+            throw REPEATED_FLAG_EXCEPTION.create("--" + this.name);
+        }
+    }
+
+    private static int countFlagOccurrences(String input, String token) {
+        java.util.regex.Matcher matcher = Pattern.compile("(?<![\\w-])" + Pattern.quote(token) + "(?![\\w-])").matcher(input);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
     }
 
     public static <S> S getActualSource(ParseResults<S> parse) {
