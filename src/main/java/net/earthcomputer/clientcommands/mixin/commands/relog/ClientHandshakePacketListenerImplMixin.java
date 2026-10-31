@@ -2,7 +2,6 @@ package net.earthcomputer.clientcommands.mixin.commands.relog;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.earthcomputer.clientcommands.features.Relogger;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
@@ -41,8 +40,6 @@ public class ClientHandshakePacketListenerImplMixin {
             connection.handleDisconnection();
             if (mc.gui.screen() instanceof DisconnectedScreen screen && Relogger.isRateLimitMessage(error)) {
                 Relogger.remainingTicks = Relogger.RETRY_DELAY_TICKS;
-                ScreenEvents.afterExtract(screen).register(Relogger::onDisconnectScreenRender);
-                ScreenEvents.afterTick(screen).register(Relogger::onDisconnectScreenTick);
             }
         });
     }

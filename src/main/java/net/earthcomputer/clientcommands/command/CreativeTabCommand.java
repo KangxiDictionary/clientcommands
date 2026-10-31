@@ -10,7 +10,6 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -28,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 import org.slf4j.Logger;
@@ -321,7 +321,7 @@ public class CreativeTabCommand {
 
     private record Tab(CompoundTag icon, ListTag items) {
         void registerCreativeTab(HolderLookup.Provider builtinLookupProvider, String key) {
-            Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath("clientcommands", key), FabricCreativeModeTab.builder()
+            Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath("clientcommands", key), CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                     .title(Component.literal(key))
                     .icon(() -> singleItemFromNbt(builtinLookupProvider, icon))
                     .displayItems((displayContext, entries) -> {
