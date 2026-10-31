@@ -57,7 +57,7 @@ public class CClientCommandSource extends ClientSuggestionProvider implements Co
     }
 
     public String getName() {
-        return this.getPlayer().getGameProfile().getName();
+        return this.client.getUser().getName();
     }
 
     public boolean isCreativePlayer() {
@@ -65,11 +65,11 @@ public class CClientCommandSource extends ClientSuggestionProvider implements Co
     }
 
     public void sendFeedback(Component message) {
-        this.getPlayer().displayClientMessage(message, false);
+        this.getPlayer().sendSystemMessage(message);
     }
 
     public void sendError(Component message) {
-        this.getPlayer().displayClientMessage(message.copy().withStyle(ChatFormatting.RED), false);
+        this.getPlayer().sendSystemMessage(message.copy().withStyle(ChatFormatting.RED));
     }
 
     @Override

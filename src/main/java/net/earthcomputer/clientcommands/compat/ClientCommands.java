@@ -1,5 +1,6 @@
 package net.earthcomputer.clientcommands.compat;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -22,5 +23,9 @@ public final class ClientCommands {
 
     public static CClientCommandSource getSource(CommandContext<CClientCommandSource> context) {
         return context.getSource();
+    }
+
+    public static CommandDispatcher<CClientCommandSource> getActiveDispatcher() {
+        return ClientCommandManager.getDispatcher();
     }
 }
