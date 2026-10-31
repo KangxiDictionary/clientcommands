@@ -120,6 +120,8 @@ tasks.register('prepareJarJar') {
 
 jar {
     dependsOn 'prepareJarJar'
+    // Dev-only inputs: NeoForge reads the generated access transformer instead.
+    exclude 'clientcommands.aw'
     from(jarJarOutput) {
         include 'META-INF/jarjar/**'
     }
