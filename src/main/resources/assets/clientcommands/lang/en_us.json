@@ -432,5 +432,14 @@
   "commands.cconfig.desc.maximumPacketFieldDepth": "Maximum field depth when dumping packets.",
   "commands.cconfig.desc.minimumReplyDelaySeconds": "Minimum delay before an automatic reply is sent.",
   "commands.cconfig.desc.overriddenFps": "Overrides the FPS limit (0 disables the override).",
-  "commands.cconfig.hover.prefill": "Click to prefill: %s = %s"
+  "commands.cconfig.hover.prefill": "Click to prefill: %s = %s",
+  "commands.cdiag.header": "clientcommands diagnostics",
+  "commands.cdiag.versions": "mod %s | Minecraft %s | NeoForge %s",
+  "commands.cdiag.platform": "commands: %s | execution source: %s | completion source: %s",
+  "commands.cdiag.accessTransformer": "access transformer: %s",
+  "commands.cdiag.meleeHook": "melee RNG hook: %s",
+  "commands.cdiag.config": "config: %s options at %s",
+  "commands.cdiag.rng": "rng: player seed %s | enchantment %s | maintenance %s",
+  "commands.cdiag.world": "world %s @ (%s, %s, %s), %s entities",
+  "commands.cdiag.noWorld": "world: not loaded"
 }

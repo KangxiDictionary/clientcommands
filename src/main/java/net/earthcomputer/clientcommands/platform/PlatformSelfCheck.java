@@ -32,6 +32,16 @@ public final class PlatformSelfCheck {
         LOGGER.info("[clientcommands] platform self check finished");
     }
 
+    /** @return whether NeoForge applied the access transformer to a known widened member */
+    public static boolean isAccessTransformerApplied() {
+        try {
+            Field field = ItemEntity.class.getDeclaredField("DATA_ITEM");
+            return Modifier.isPublic(field.getModifiers());
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
     private static void checkAccessTransformer() {
         try {
             Field field = ItemEntity.class.getDeclaredField("DATA_ITEM");

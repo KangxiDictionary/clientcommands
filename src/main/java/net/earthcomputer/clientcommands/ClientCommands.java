@@ -149,6 +149,7 @@ public class ClientCommands {
         safe("CParticleCommand", () -> CParticleCommand.register(dispatcher, context));
         safe("CPlaySoundCommand", () -> CPlaySoundCommand.register(dispatcher));
         safe("ConfigCommand", () -> ConfigCommand.register(dispatcher));
+        safe("DiagnosticsCommand", () -> DiagnosticsCommand.register(dispatcher));
         safe("CrackRNGCommand", () -> CrackRNGCommand.register(dispatcher));
         safe("CreativeTabCommand", () -> CreativeTabCommand.register(dispatcher, context));
         safe("CStopSoundCommand", () -> CStopSoundCommand.register(dispatcher));

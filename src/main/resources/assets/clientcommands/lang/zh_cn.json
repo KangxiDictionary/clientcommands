@@ -420,5 +420,14 @@
   "commands.cconfig.desc.maximumPacketFieldDepth": "转储数据包时的最大字段深度。",
   "commands.cconfig.desc.minimumReplyDelaySeconds": "发送自动回复前的最小延迟。",
   "commands.cconfig.desc.overriddenFps": "覆盖帧率上限（0 表示不覆盖）。",
-  "commands.cconfig.hover.prefill": "点击填充：%s = %s"
+  "commands.cconfig.hover.prefill": "点击填充：%s = %s",
+  "commands.cdiag.header": "clientcommands 诊断",
+  "commands.cdiag.versions": "模组 %s | Minecraft %s | NeoForge %s",
+  "commands.cdiag.platform": "已注册命令 %s 条 | 执行源 %s | 补全源 %s",
+  "commands.cdiag.accessTransformer": "访问转换器：%s",
+  "commands.cdiag.meleeHook": "近战 RNG 钩子：%s",
+  "commands.cdiag.config": "配置：%s 个选项，位于 %s",
+  "commands.cdiag.rng": "随机数：玩家种子 %s | 附魔 %s | 维护 %s",
+  "commands.cdiag.world": "世界 %s @ (%s, %s, %s)，实体 %s 个",
+  "commands.cdiag.noWorld": "世界：未加载"
 }
