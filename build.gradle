@@ -60,3 +60,9 @@ tasks.named('compileTestJava') {
 tasks.named('validateAccessWidener') {
 	enabled = false
 }
+
+// Minecraft 26.3 / NeoForge run on Java 25; build to class file 69 even when
+// Gradle itself runs on a newer JDK.
+tasks.withType(JavaCompile).configureEach {
+	options.release = 25
+}
