@@ -33,6 +33,8 @@ public class RenderQueue {
     private static final List<AddQueueEntry> addQueue = new ArrayList<>();
     private static final List<RemoveQueueEntry> removeQueue = new ArrayList<>();
     private static final EnumMap<Layer, Map<Object, Shape>> queue = new EnumMap<>(Layer.class);
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
+    private static boolean submitLogged;
 
     private static final RenderPipeline LINES_NO_DEPTH_PIPELINE = RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
         .withLocation(Identifier.fromNamespaceAndPath("clientcommands", "pipeline/lines_no_depth"))
@@ -125,6 +127,11 @@ public class RenderQueue {
      * where both the LevelRenderState and the SubmitNodeCollector are available.
      */
     public static void submit(PoseStack poseStack, SubmitNodeCollector collector, LevelRenderState levelState) {
+        if (!submitLogged) {
+            submitLogged = true;
+            int shapes = queue.values().stream().mapToInt(Map::size).sum();
+            LOGGER.info("[clientcommands] render submission reached, {} queued shape(s)", shapes);
+        }
         Minecraft mc = Minecraft.getInstance();
         CRenderContext context = new CRenderContext(poseStack, mc.gameRenderer.mainCamera(),
             mc.getDeltaTracker(), collector, levelState);

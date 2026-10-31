@@ -9,6 +9,7 @@ version="${mod_version}"
 displayName="Client Commands"
 authors="Earthcomputer"
 credits="NeoForge port: KangxiDictionary"
+displayTest="IGNORE_ALL_VERSION"
 description='''
 Useful client-side commands: RNG cracking and prediction, entity/item finding, schematic and world tools, and more.
 \
