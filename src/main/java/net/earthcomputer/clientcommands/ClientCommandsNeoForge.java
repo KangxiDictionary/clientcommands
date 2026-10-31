@@ -5,7 +5,12 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -16,10 +21,16 @@ public class ClientCommandsNeoForge {
 
     private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
-    public ClientCommandsNeoForge(IEventBus modBus) {
+    public ClientCommandsNeoForge(IEventBus modBus, ModContainer container) {
         LOGGER.info("[clientcommands] constructing mod entrypoint");
         new ClientCommands().onInitializeClient();
         new ClientCommandsServer().onInitialize();
+
+        container.registerConfig(ModConfig.Type.CLIENT, net.earthcomputer.clientcommands.platform.ConfigSpecs.SPEC);
+        container.registerExtensionPoint(IConfigScreenFactory.class,
+            (mod, parent) -> new ConfigurationScreen(mod, parent));
+        modBus.addListener(ModConfigEvent.Loading.class, event -> Configs.load());
+        modBus.addListener(ModConfigEvent.Reloading.class, event -> Configs.load());
 
         modBus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> {
             event.registrar("1").playToServer(CommandExecutionCustomPayload.TYPE, CommandExecutionCustomPayload.CODEC, (payload, context) -> {});

@@ -1,9 +1,7 @@
 package net.earthcomputer.clientcommands;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import net.earthcomputer.clientcommands.platform.CPlatform;
+import net.earthcomputer.clientcommands.platform.ConfigSpecs;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.earthcomputer.clientcommands.command.ReplyCommand;
 import net.earthcomputer.clientcommands.features.ChorusManipulation;
 import net.earthcomputer.clientcommands.features.EnchantmentCracker;
@@ -15,11 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,13 +22,7 @@ import java.util.Set;
 
 public class Configs {
     private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Set<String> NOT_PERSISTED = Set.of("calcAnswer", "enchCrackState", "playerCrackState");
-
-    private static Path configFile() {
-        return CPlatform.INSTANCE.getConfigDir().resolve("clientcommands").resolve("config.json");
-    }
-
 
     // ------------------------------------------------------------------
     // Option access used by /cconfig
@@ -202,63 +191,45 @@ public class Configs {
         throw new IllegalArgumentException("unsupported type " + type);
     }
 
+    /** Writes the current values into the NeoForge config and saves it. */
     public static void save() {
-        Map<String, Object> values = new LinkedHashMap<>();
-        for (Field field : Configs.class.getDeclaredFields()) {
-            if (!isOption(field)) {
+        if (!ConfigSpecs.SPEC.isLoaded()) {
+            return;
+        }
+        for (Map.Entry<String, ModConfigSpec.ConfigValue<?>> entry : ConfigSpecs.VALUES.entrySet()) {
+            Field field = findOption(entry.getKey());
+            if (field == null) {
                 continue;
             }
             try {
-                values.put(field.getName(), field.get(null));
+                @SuppressWarnings("unchecked")
+                ModConfigSpec.ConfigValue<Object> value = (ModConfigSpec.ConfigValue<Object>) entry.getValue();
+                value.set(field.get(null));
             } catch (IllegalAccessException e) {
                 // ignore
             }
         }
-        try {
-            Path file = configFile();
-            Files.createDirectories(file.getParent());
-            Files.writeString(file, GSON.toJson(values));
-        } catch (IOException | RuntimeException e) {
-            LOGGER.warn("Failed to save clientcommands config", e);
+        ConfigSpecs.SPEC.save();
+    }
+
+    /** Applies the values loaded from the NeoForge config to the runtime fields. */
+    public static void load() {
+        if (!ConfigSpecs.SPEC.isLoaded()) {
+            return;
+        }
+        for (Map.Entry<String, ModConfigSpec.ConfigValue<?>> entry : ConfigSpecs.VALUES.entrySet()) {
+            Field field = findOption(entry.getKey());
+            if (field == null) {
+                continue;
+            }
+            try {
+                field.set(null, entry.getValue().get());
+            } catch (IllegalAccessException e) {
+                // ignore
+            }
         }
     }
 
-    public static void load() {
-        Path file = configFile();
-        if (!Files.exists(file)) {
-            return;
-        }
-        try {
-            Map<String, Object> values = GSON.fromJson(Files.readString(file), new TypeToken<LinkedHashMap<String, Object>>() {}.getType());
-            if (values == null) {
-                return;
-            }
-            for (Map.Entry<String, Object> entry : values.entrySet()) {
-                try {
-                    Field field = Configs.class.getDeclaredField(entry.getKey());
-                    if (!Modifier.isStatic(field.getModifiers())) {
-                        continue;
-                    }
-                    Object value = entry.getValue();
-                    if (value instanceof Number number) {
-                        if (field.getType() == int.class) {
-                            value = number.intValue();
-                        } else if (field.getType() == float.class) {
-                            value = number.floatValue();
-                        } else if (field.getType() == double.class) {
-                            value = number.doubleValue();
-                        }
-                    }
-                    field.setAccessible(true);
-                    field.set(null, value);
-                } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
-                    // ignore unknown / stale entries
-                }
-            }
-        } catch (IOException | RuntimeException e) {
-            // ignore
-        }
-    }
     public static boolean donationMessage = true;
     public static double calcAnswer = 0;
     public static EnchantmentCracker.CrackState enchCrackState = EnchantmentCracker.CrackState.UNCRACKED;
