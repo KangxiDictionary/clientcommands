@@ -18,6 +18,7 @@ public final class ClientCommandManager {
     private static boolean registered;
     private static boolean registrationFailed;
     private static boolean loggedMerge;
+    private static int mergeAttempts;
     private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
     private ClientCommandManager() {
@@ -59,6 +60,10 @@ public final class ClientCommandManager {
             }
             ensureRegistered(client);
             if (!registered) {
+                if (mergeAttempts++ < 3) {
+                    LOGGER.warn("[clientcommands] cannot merge, registered=false failed={} level={}",
+                        registrationFailed, client.level != null);
+                }
                 return;
             }
             CommandDispatcher rawTarget = target;
