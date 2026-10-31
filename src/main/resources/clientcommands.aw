@@ -70,3 +70,9 @@ accessible method net/minecraft/world/entity/Entity isInvulnerableToBase (Lnet/m
 accessible field net/minecraft/world/entity/LivingEntity lastHurt F
 accessible field net/minecraft/world/entity/decoration/ArmorStand invisible Z
 accessible field net/minecraft/world/level/levelgen/LegacyRandomSource seed Ljava/util/concurrent/atomic/AtomicLong;
+
+# NeoForge port: 26.3 widened access
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
+accessible field net/minecraft/client/gui/GuiGraphicsExtractor scissorStack Lnet/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack;
+accessible class net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack
+accessible method net/minecraft/network/chat/contents/TranslatableContents getArgument (I)Lnet/minecraft/network/chat/FormattedText;

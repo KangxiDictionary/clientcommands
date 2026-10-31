@@ -14,7 +14,6 @@ import net.earthcomputer.clientcommands.features.PlayerRandCracker;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.render.RenderQueue;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.earthcomputer.clientcommands.compat.CNetworking;
 
@@ -64,7 +63,6 @@ public class ClientCommands {
         CreativeTabCommand.registerCreativeTabs();
 
         // Events
-        ClientCommandRegistrationCallback.EVENT.register(ClientCommands::registerCommands);
         Donate.registerEvents();
         EnchantmentCracker.registerEvents();
         FishingCracker.registerEvents();
