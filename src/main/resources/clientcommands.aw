@@ -76,3 +76,5 @@ accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Ln
 accessible field net/minecraft/client/gui/GuiGraphicsExtractor scissorStack Lnet/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack;
 accessible class net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack
 accessible method net/minecraft/network/chat/contents/TranslatableContents getArgument (I)Lnet/minecraft/network/chat/FormattedText;
+accessible method net/minecraft/client/renderer/RenderPipelines register (Lnet/minecraft/client/renderer/RenderPipeline;)Lnet/minecraft/client/renderer/RenderPipeline;
+accessible method net/minecraft/world/level/Level getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
