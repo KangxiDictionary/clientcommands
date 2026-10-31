@@ -430,4 +430,10 @@ public class CEntitySelectorOptions {
 
 	record SelectorOption(SelectorHandler handler, Predicate<CEntitySelectorParser> condition, Component description) {
 	}
+
+	static {
+		// The option table is lazily filled here: the port used to rely on a loader entrypoint
+		// that no longer exists, which left every `[option=value]` parse failing.
+		register();
+	}
 }
