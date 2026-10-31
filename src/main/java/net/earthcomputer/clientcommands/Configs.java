@@ -1,9 +1,9 @@
 package net.earthcomputer.clientcommands;
 
-import com.google.common.base.Suppliers;
-import dev.xpple.betterconfig.api.BetterConfigAPI;
-import dev.xpple.betterconfig.api.Config;
-import dev.xpple.betterconfig.api.ModConfig;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.earthcomputer.clientcommands.command.ReplyCommand;
 import net.earthcomputer.clientcommands.features.ChorusManipulation;
 import net.earthcomputer.clientcommands.features.EnchantmentCracker;
@@ -15,29 +15,88 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.function.Supplier;
+import java.util.Map;
+import java.util.Set;
 
 public class Configs {
-    private static final Supplier<ModConfig<Component>> CONFIG_REF = Suppliers.memoize(() -> BetterConfigAPI.getInstance().getModConfig("clientcommands"));
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Set<String> NOT_PERSISTED = Set.of("calcAnswer", "enchCrackState", "playerCrackState");
 
-    public static void save() {
-        CONFIG_REF.get().save();
+    private static Path configFile() {
+        return CPlatform.INSTANCE.getConfigDir().resolve("clientcommands").resolve("config.json");
     }
 
-    @Config(readOnly = true)
+    public static void save() {
+        Map<String, Object> values = new LinkedHashMap<>();
+        for (Field field : Configs.class.getDeclaredFields()) {
+            if (!Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+            if (NOT_PERSISTED.contains(field.getName())) {
+                continue;
+            }
+            try {
+                values.put(field.getName(), field.get(null));
+            } catch (IllegalAccessException e) {
+                // ignore
+            }
+        }
+        try {
+            Path file = configFile();
+            Files.createDirectories(file.getParent());
+            Files.writeString(file, GSON.toJson(values));
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
+    public static void load() {
+        Path file = configFile();
+        if (!Files.exists(file)) {
+            return;
+        }
+        try {
+            Map<String, Object> values = GSON.fromJson(Files.readString(file), new TypeToken<LinkedHashMap<String, Object>>() {}.getType());
+            if (values == null) {
+                return;
+            }
+            for (Map.Entry<String, Object> entry : values.entrySet()) {
+                try {
+                    Field field = Configs.class.getDeclaredField(entry.getKey());
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        continue;
+                    }
+                    Object value = entry.getValue();
+                    if (value instanceof Number number) {
+                        if (field.getType() == int.class) {
+                            value = number.intValue();
+                        } else if (field.getType() == float.class) {
+                            value = number.floatValue();
+                        } else if (field.getType() == double.class) {
+                            value = number.doubleValue();
+                        }
+                    }
+                    field.setAccessible(true);
+                    field.set(null, value);
+                } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
+                    // ignore unknown / stale entries
+                }
+            }
+        } catch (IOException | RuntimeException e) {
+            // ignore
+        }
+    }
     public static boolean donationMessage = true;
-
-    @Config(readOnly = true, temporary = true)
     public static double calcAnswer = 0;
-
-    @Config(readOnly = true, temporary = true)
     public static EnchantmentCracker.CrackState enchCrackState = EnchantmentCracker.CrackState.UNCRACKED;
-
-    @Config(readOnly = true, temporary = true)
     public static PlayerRandCracker.CrackState playerCrackState = PlayerRandCracker.CrackState.UNCRACKED;
-
-    @Config(onChange = "onChangeEnchantingPrediction", temporary = true)
     public static boolean enchantingPrediction = false;
     private static void onChangeEnchantingPrediction(boolean oldEnchantingPrediction, boolean enchantingPrediction) {
         if (enchantingPrediction) {
@@ -61,8 +120,6 @@ public class Configs {
             return this != OFF;
         }
     }
-
-    @Config(onChange = "onChangeFishingManipulation", temporary = true, condition = "conditionLessThan1_20")
     public static FishingManipulation fishingManipulation = FishingManipulation.OFF;
     private static void onChangeFishingManipulation(FishingManipulation oldFishingManipulation, FishingManipulation fishingManipulation) {
         if (fishingManipulation.isEnabled()) {
@@ -71,14 +128,8 @@ public class Configs {
             FishingCracker.reset();
         }
     }
-
-    @Config(temporary = true)
     public static boolean playerRNGMaintenance = true;
-
-    @Config
     public static boolean toolBreakWarning = false;
-
-    @Config(setter = @Config.Setter("setMaxEnchantItemThrows"))
     private static int maxEnchantItemThrows = 64 * 256;
     public static int getMaxEnchantItemThrows() {
         return maxEnchantItemThrows;
@@ -86,8 +137,6 @@ public class Configs {
     public static void setMaxEnchantItemThrows(int maxEnchantItemThrows) {
         Configs.maxEnchantItemThrows = Mth.clamp(maxEnchantItemThrows, 0, 1000000);
     }
-
-    @Config(setter = @Config.Setter("setMinEnchantBookshelves"), temporary = true)
     private static int minEnchantBookshelves = 0;
     public static int getMinEnchantBookshelves() {
         return minEnchantBookshelves;
@@ -96,8 +145,6 @@ public class Configs {
         Configs.minEnchantBookshelves = Mth.clamp(minEnchantBookshelves, 0, 15);
         Configs.maxEnchantBookshelves = Math.max(Configs.maxEnchantBookshelves, Configs.minEnchantBookshelves);
     }
-
-    @Config(setter = @Config.Setter("setMaxEnchantBookshelves"), temporary = true)
     private static int maxEnchantBookshelves = 15;
     public static int getMaxEnchantBookshelves() {
         return maxEnchantBookshelves;
@@ -106,8 +153,6 @@ public class Configs {
         Configs.maxEnchantBookshelves = Mth.clamp(maxEnchantBookshelves, 0, 15);
         Configs.minEnchantBookshelves = Math.min(Configs.minEnchantBookshelves, Configs.maxEnchantBookshelves);
     }
-
-    @Config(setter = @Config.Setter("setMinEnchantLevels"), temporary = true)
     private static int minEnchantLevels = 1;
     public static int getMinEnchantLevels() {
         return minEnchantLevels;
@@ -116,8 +161,6 @@ public class Configs {
         Configs.minEnchantLevels = Mth.clamp(minEnchantLevels, 1, 30);
         Configs.maxEnchantLevels = Math.max(Configs.maxEnchantLevels, Configs.minEnchantLevels);
     }
-
-    @Config(setter = @Config.Setter("setMaxEnchantSlot"), temporary = true)
     private static int maxEnchantSlot = 3;
 
     public static int getMaxEnchantSlot() {
@@ -127,8 +170,6 @@ public class Configs {
     public static void setMaxEnchantSlot(int maxEnchantSlot) {
         Configs.maxEnchantSlot = Mth.clamp(maxEnchantSlot, 1, 3);
     }
-
-    @Config(setter = @Config.Setter("setMaxEnchantLevels"), temporary = true)
     private static int maxEnchantLevels = 30;
     public static int getMaxEnchantLevels() {
         return maxEnchantLevels;
@@ -137,8 +178,6 @@ public class Configs {
         Configs.maxEnchantLevels = Mth.clamp(maxEnchantLevels, 1, 30);
         Configs.minEnchantLevels = Math.min(Configs.minEnchantLevels, Configs.maxEnchantLevels);
     }
-
-    @Config(onChange = "onChangeChorusManipulation", temporary = true)
     public static boolean chorusManipulation = false;
     public static void onChangeChorusManipulation(boolean oldChorusManipulation, boolean chorusManipulation) {
         if (chorusManipulation) {
@@ -146,8 +185,6 @@ public class Configs {
             ChorusManipulation.onChorusManipEnabled();
         }
     }
-
-    @Config(setter = @Config.Setter("setMaxChorusItemThrows"))
     private static int maxChorusItemThrows = 64 * 32;
     public static int getMaxChorusItemThrows() {
         return maxChorusItemThrows;
@@ -155,20 +192,10 @@ public class Configs {
     public static void setMaxChorusItemThrows(int maxChorusItemThrows) {
         Configs.maxChorusItemThrows = Mth.clamp(maxChorusItemThrows, 0, 1000000);
     }
-
-    @Config(temporary = true)
     public static String autoPrefix = "";
-
-    @Config(temporary = true, condition = "conditionLessThan1_21")
     public static boolean infiniteTools = false;
-
-    @Config
     public static int commandExecutionLimit = 65536;
-
-    @Config
     public static boolean acceptC2CPackets = false;
-
-    @Config
     public static float itemThrowsPerTick = 1;
 
     public static boolean conditionLessThan1_20() {
@@ -178,24 +205,16 @@ public class Configs {
     public static boolean conditionLessThan1_21() {
         return MultiVersionCompat.INSTANCE.getProtocolVersion() < MultiVersionCompat.V1_21;
     }
-
-    @Config
     public static PacketDumpMethod packetDumpMethod = PacketDumpMethod.REFLECTION;
 
     public enum PacketDumpMethod {
         REFLECTION,
         BYTE_BUF,
     }
-
-    @Config
     public static int maximumPacketFieldDepth = 10;
-
-    @Config(temporary = true, setter = @Config.Setter("setMinimumReplyDelaySeconds"))
     public static float minimumReplyDelaySeconds = 0.5f;
     public static void setMinimumReplyDelaySeconds(float minimumReplyDelaySeconds) {
         Configs.minimumReplyDelaySeconds = Math.clamp(minimumReplyDelaySeconds, 0.0f, ReplyCommand.MAXIMUM_REPLY_DELAY_SECONDS);
     }
-
-    @Config(readOnly = true)
     public static int overriddenFps = 0;
 }

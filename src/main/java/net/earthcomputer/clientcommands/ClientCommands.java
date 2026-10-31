@@ -5,9 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.logging.LogUtils;
-import dev.xpple.betterconfig.api.BetterConfigAPI;
-import dev.xpple.betterconfig.api.ModConfigBuilder;
-import dev.xpple.simplewaypoints.api.SimpleWaypointsAPI;
 import net.earthcomputer.clientcommands.command.*;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.features.CommandExecutionCustomPayload;
@@ -16,7 +13,6 @@ import net.earthcomputer.clientcommands.features.FishingCracker;
 import net.earthcomputer.clientcommands.features.PlayerRandCracker;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
-import net.earthcomputer.clientcommands.features.Waypoints;
 import net.earthcomputer.clientcommands.render.RenderQueue;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
@@ -62,15 +58,7 @@ public class ClientCommands {
             LOGGER.error("Failed to create config dir", e);
         }
 
-        new ModConfigBuilder<>("clientcommands", Configs.class).build();
-        ClientConnectionEvents.DISCONNECT.register(() -> {
-            if (!Relogger.isRelogging) {
-                BetterConfigAPI.getInstance().getModConfig("clientcommands").resetTemporaryConfigs();
-            }
-        });
-
-        Waypoints.migrateWaypoints();
-        SimpleWaypointsAPI.getInstance().registerCommandAlias("cwaypoint");
+        Configs.load();
 
         // Registration
         PayloadTypeRegistry.serverboundPlay().register(CommandExecutionCustomPayload.TYPE, CommandExecutionCustomPayload.CODEC);
