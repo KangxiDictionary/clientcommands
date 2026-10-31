@@ -31,6 +31,7 @@ public class ClientCommandsNeoForge {
             if (tickCount++ == 0) {
                 LOGGER.info("[clientcommands] first client tick, level={}",
                     Minecraft.getInstance().level != null);
+                net.earthcomputer.clientcommands.platform.PlatformSelfCheck.runOnce();
             }
             ClientCommands.setupScrambleWindowTitle();
             CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance());
