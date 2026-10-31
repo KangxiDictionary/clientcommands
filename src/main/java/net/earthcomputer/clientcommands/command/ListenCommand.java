@@ -68,7 +68,7 @@ public class ListenCommand {
     private static @UnknownNullability PacketCallback callback;
 
     static {
-        ClientConnectionEvents.SEND_PACKET_NO_UNPACK_BUNDLES.register((_, packet) -> onPacket(packet, PacketFlow.SERVERBOUND));
+        ClientConnectionEvents.registerSendPacketNoUnpack((_, packet) -> onPacket(packet, PacketFlow.SERVERBOUND));
     }
 
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

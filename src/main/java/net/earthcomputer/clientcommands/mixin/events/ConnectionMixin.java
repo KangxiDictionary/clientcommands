@@ -31,8 +31,8 @@ public class ConnectionMixin {
     @Inject(method = "sendPacket", at = @At("HEAD"))
     private void onSendPacket(Packet<?> packet, @Nullable ChannelFutureListener listener, boolean flush, CallbackInfo ci) {
         if (this.receiving == PacketFlow.CLIENTBOUND && this.packetListener instanceof ClientPacketListener connection) {
-            ClientConnectionEvents.SEND_PACKET_NO_UNPACK_BUNDLES.invoker().onSendPacket(connection, packet);
-            unpackBundle(packet, subPacket -> ClientConnectionEvents.SEND_PACKET.invoker().onSendPacket(connection, subPacket));
+            ClientConnectionEvents.postSendPacket(connection, packet, true);
+            unpackBundle(packet, subPacket -> ClientConnectionEvents.postSendPacket(connection, subPacket, false));
         }
     }
 

@@ -20,7 +20,7 @@ public final class RoundTripFence {
     private final Long2ObjectMap<CompletableFuture<Void>> fences = new Long2ObjectOpenHashMap<>();
 
     static {
-        ClientConnectionEvents.SEND_PACKET.register((connection, packet) -> {
+        ClientConnectionEvents.registerSendPacket((connection, packet) -> {
             if (packet instanceof ServerboundClientCommandPacket clientCommandPacket && clientCommandPacket.getAction() == ServerboundClientCommandPacket.Action.REQUEST_STATS) {
                 getInstance(connection).onSendRequestStats();
             }

@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public final class SuggestionsHook {
     static {
-        ClientConnectionEvents.DISCONNECT.register(SuggestionsHook::onDisconnect);
+        ClientConnectionEvents.registerDisconnect(SuggestionsHook::onDisconnect);
     }
 
     private SuggestionsHook() {

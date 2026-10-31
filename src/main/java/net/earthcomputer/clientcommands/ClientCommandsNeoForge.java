@@ -1,6 +1,5 @@
 package net.earthcomputer.clientcommands;
 
-import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.earthcomputer.clientcommands.features.CommandExecutionCustomPayload;
 import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.minecraft.client.Minecraft;
@@ -34,11 +33,8 @@ public class ClientCommandsNeoForge {
                 net.earthcomputer.clientcommands.platform.PlatformSelfCheck.runOnce();
             }
             ClientCommands.setupScrambleWindowTitle();
-            CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance());
         });
         NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.RegisterClientCommandsEvent.class,
             net.earthcomputer.clientcommands.platform.ClientCommandRegistrar::register);
-        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event ->
-            CClientTickEvents.END_CLIENT_TICK.invoker().onEndTick(Minecraft.getInstance()));
     }
 }

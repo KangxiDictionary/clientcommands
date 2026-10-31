@@ -19,7 +19,7 @@ public class RenderSettings {
     private static final Set<UUID> disabledEntities = new HashSet<>();
 
     static {
-        ClientConnectionEvents.DISCONNECT.register(RenderSettings::clearEntityRenderSelectors);
+        ClientConnectionEvents.registerDisconnect(RenderSettings::clearEntityRenderSelectors);
     }
 
     private static void clearEntityRenderSelectors() {

@@ -2,7 +2,8 @@ package net.earthcomputer.clientcommands;
 
 import net.earthcomputer.clientcommands.command.ClientCommandHelper;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CConnectionEvents;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.network.chat.Component;
 
 public final class Donate {
@@ -10,7 +11,7 @@ public final class Donate {
     }
 
     public static void registerEvents() {
-        CConnectionEvents.JOIN.register((_, _, _) -> run());
+        NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingIn.class, event -> run());
     }
 
     private static void run() {

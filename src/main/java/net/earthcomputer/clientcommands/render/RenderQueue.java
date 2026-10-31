@@ -5,10 +5,11 @@ import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
-import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.earthcomputer.clientcommands.compat.CRenderContext;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -56,7 +57,7 @@ public class RenderQueue {
     );
 
     static {
-        CClientTickEvents.START_CLIENT_TICK.register(RenderQueue::tick);
+        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> RenderQueue.tick(Minecraft.getInstance()));
     }
 
     public static void register() {

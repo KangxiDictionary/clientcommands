@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GuiMixin {
     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     public void onOpenScreen(@Nullable Screen screen, CallbackInfo ci) {
-        if (!MoreScreenEvents.BEFORE_ADD.invoker().beforeScreenAdd(screen)) {
+        if (!MoreScreenEvents.post(screen)) {
             ci.cancel();
         }
     }

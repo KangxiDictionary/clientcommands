@@ -37,7 +37,7 @@ public class Relogger {
     public static final int RETRY_DELAY_TICKS = 200;
 
     static {
-        MoreScreenEvents.BEFORE_ADD.register(Relogger::onAddScreen);
+        MoreScreenEvents.register(Relogger::onAddScreen);
     }
 
     private static boolean disconnect() {

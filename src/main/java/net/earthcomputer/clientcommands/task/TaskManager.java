@@ -6,9 +6,10 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
@@ -23,8 +24,8 @@ public class TaskManager {
         new Dynamic2CommandExceptionType((conflictingTask, cancel) -> Component.translatable("commands.ctask.conflicting", conflictingTask, cancel));
 
     static {
-        CClientTickEvents.START_CLIENT_TICK.register(TaskManager::tick);
-        ClientLevelEvents.UNLOAD_LEVEL.register(TaskManager::onLevelUnload);
+        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> TaskManager.tick(Minecraft.getInstance()));
+        ClientLevelEvents.registerUnloadLevel(TaskManager::onLevelUnload);
     }
 
     /**

@@ -19,16 +19,16 @@ public abstract class MinecraftMixin {
     @Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("HEAD"))
     public void onUpdateLevelInEngines(@Nullable ClientLevel level, boolean bl, CallbackInfo ci) {
         if (isLevelLoaded) {
-            ClientLevelEvents.UNLOAD_LEVEL.invoker().onUnloadLevel(level == null);
+            ClientLevelEvents.postUnloadLevel(level == null);
         }
         isLevelLoaded = level != null;
         if (isLevelLoaded) {
-            ClientLevelEvents.LOAD_LEVEL.invoker().onLoadLevel(level);
+            ClientLevelEvents.postLoadLevel(level);
         }
     }
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V", at = @At("RETURN"))
     public void onDisconnect(CallbackInfo ci) {
-        ClientConnectionEvents.DISCONNECT.invoker().onDisconnect();
+        ClientConnectionEvents.postDisconnect();
     }
 }

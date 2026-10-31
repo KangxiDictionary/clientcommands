@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientLevelMixin {
     @Inject(method = "unload", at = @At("HEAD"))
     private void onChunkUnload(LevelChunk chunk, CallbackInfo ci) {
-        ClientLevelEvents.UNLOAD_CHUNK.invoker().onUnloadChunk((ClientLevel) (Object) this, chunk.getPos());
+        ClientLevelEvents.postUnloadChunk((ClientLevel) (Object) this, chunk.getPos());
     }
 
     @Inject(method = "onChunkLoaded", at = @At("HEAD"))
     private void onChunkLoad(ChunkPos chunkPos, CallbackInfo ci) {
-        ClientLevelEvents.LOAD_CHUNK.invoker().onLoadChunk((ClientLevel) (Object) this, chunkPos);
+        ClientLevelEvents.postLoadChunk((ClientLevel) (Object) this, chunkPos);
     }
 }

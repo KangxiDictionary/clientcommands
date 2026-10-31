@@ -29,7 +29,7 @@ public abstract class RenderDistanceScanTask extends SimpleTask {
     private static final Set<Object> MUTEX_KEYS = Set.of(TaskManager.INTENSIVE_TASK_MUTEX);
 
     static {
-        ClientLevelEvents.CHUNK_UPDATE.register((level, pos, oldState, newState) -> {
+        ClientLevelEvents.registerChunkUpdate((level, pos, oldState, newState) -> {
             WeakReference<RenderDistanceScanTask> currentScanTask = RenderDistanceScanTask.currentScanTask;
             if (currentScanTask != null) {
                 RenderDistanceScanTask scanTask = currentScanTask.get();
@@ -38,7 +38,7 @@ public abstract class RenderDistanceScanTask extends SimpleTask {
                 }
             }
         });
-        ClientLevelEvents.UNLOAD_CHUNK.register((level, pos) -> {
+        ClientLevelEvents.registerUnloadChunk((level, pos) -> {
             WeakReference<RenderDistanceScanTask> currentScanTask = RenderDistanceScanTask.currentScanTask;
             if (currentScanTask != null) {
                 RenderDistanceScanTask scanTask = currentScanTask.get();
@@ -47,7 +47,7 @@ public abstract class RenderDistanceScanTask extends SimpleTask {
                 }
             }
         });
-        ClientLevelEvents.LOAD_CHUNK.register((level, pos) -> {
+        ClientLevelEvents.registerLoadChunk((level, pos) -> {
             WeakReference<RenderDistanceScanTask> currentScanTask = RenderDistanceScanTask.currentScanTask;
             if (currentScanTask != null) {
                 RenderDistanceScanTask scanTask = currentScanTask.get();

@@ -29,8 +29,8 @@ public abstract class ItemThrowTask extends SimpleTask {
     private static WeakReference<ItemThrowTask> currentThrowTask = null;
 
     static {
-        MoreClientEntityEvents.POST_ADD.register(ItemThrowTask::handleItemSpawn);
-        PlayerRandCracker.RNG_CALLED_EVENT.register(ItemThrowTask::handleRNGCallEvent);
+        MoreClientEntityEvents.registerPostAdd(ItemThrowTask::handleItemSpawn);
+        PlayerRandCracker.registerRNGCallListener(ItemThrowTask::handleRNGCallEvent);
     }
 
     private final int totalItemsToThrow;

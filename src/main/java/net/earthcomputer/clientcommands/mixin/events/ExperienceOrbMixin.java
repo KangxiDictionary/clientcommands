@@ -22,7 +22,7 @@ public class ExperienceOrbMixin extends EntityMixin {
         super.onSynchedDataUpdated(dataAccessor, ci);
         if (dataAccessor == DATA_VALUE && !hasXpUpdated) {
             hasXpUpdated = true;
-            MoreClientEntityEvents.POST_SET_INITIAL_XP_ORB_VALUE.invoker().onSetInitialXpOrbValue((ExperienceOrb) (Object) this);
+            MoreClientEntityEvents.postSetInitialXpOrbValue((ExperienceOrb) (Object) this);
         }
     }
 }

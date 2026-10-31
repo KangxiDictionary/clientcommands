@@ -12,7 +12,7 @@ public class ServerBrandManager {
     private static boolean hasWarnedRng = false;
 
     public static void registerEvents() {
-        ClientConnectionEvents.DISCONNECT.register(ServerBrandManager::onDisconnect);
+        ClientConnectionEvents.registerDisconnect(ServerBrandManager::onDisconnect);
     }
 
     public static String getServerBrand() {

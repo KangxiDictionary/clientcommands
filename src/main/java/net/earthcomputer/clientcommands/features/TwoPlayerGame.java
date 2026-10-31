@@ -98,7 +98,7 @@ public class TwoPlayerGame<T, S extends Screen> {
     }
 
     static {
-        ClientConnectionEvents.DISCONNECT.register(() -> {
+        ClientConnectionEvents.registerDisconnect(() -> {
             for (TwoPlayerGame<?, ?> game : TYPE_BY_NAME.values()) {
                 game.activeGames.clear();
                 game.pendingInvites.clear();

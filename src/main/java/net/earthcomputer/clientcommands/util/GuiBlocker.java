@@ -1,8 +1,9 @@
 package net.earthcomputer.clientcommands.util;
 
 import net.earthcomputer.clientcommands.event.MoreScreenEvents;
-import net.earthcomputer.clientcommands.compat.CClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.gui.screens.Screen;
 import org.jspecify.annotations.Nullable;
 
@@ -12,8 +13,8 @@ import java.util.List;
 
 public abstract class GuiBlocker {
     static {
-        MoreScreenEvents.BEFORE_ADD.register(GuiBlocker::onOpenGui);
-        CClientTickEvents.START_CLIENT_TICK.register(GuiBlocker::tick);
+        MoreScreenEvents.register(GuiBlocker::onOpenGui);
+        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> GuiBlocker.tick(Minecraft.getInstance()));
     }
 
     private static final List<GuiBlocker> blockers = new ArrayList<>();

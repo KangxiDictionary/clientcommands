@@ -314,7 +314,7 @@ public class FishingCracker {
     // region EVENT HANDLERS
 
     public static void registerEvents() {
-        MoreClientEntityEvents.POST_ADD.register(packet -> {
+        MoreClientEntityEvents.registerPostAdd(packet -> {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player != null && canManipulateFishing()) {
                 if (packet.getData() == player.getId() && packet.getType() == EntityTypes.FISHING_BOBBER) {
@@ -322,7 +322,7 @@ public class FishingCracker {
                 }
             }
         });
-        MoreClientEntityEvents.PRE_ADD_MAYBE_ON_NETWORK_THREAD.register(packet -> {
+        MoreClientEntityEvents.registerPreAddMaybeOnNetworkThread(packet -> {
             // Called on network thread first, FishingCracker.waitingForFishingRod
             LocalPlayer player = Minecraft.getInstance().player;
             if (player == null) {
@@ -335,12 +335,12 @@ public class FishingCracker {
 
             onFishingBobberEntity();
         });
-        MoreClientEntityEvents.POST_SET_INITIAL_XP_ORB_VALUE.register(orb -> {
+        MoreClientEntityEvents.registerPostSetInitialXpOrbValue(orb -> {
             if (canManipulateFishing()) {
                 processExperienceOrbSpawn(orb.getX(), orb.getY(), orb.getZ(), orb.getValue());
             }
         });
-        MoreClientEvents.TIME_SYNC_ON_NETWORK_THREAD.register(packet -> {
+        MoreClientEvents.registerTimeSyncOnNetworkThread(packet -> {
             if (Configs.fishingManipulation.isEnabled()) {
                 onTimeSync();
             }

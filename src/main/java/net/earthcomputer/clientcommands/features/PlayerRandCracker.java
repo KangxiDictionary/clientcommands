@@ -7,8 +7,6 @@ import net.earthcomputer.clientcommands.util.MultiVersionCompat;
 import net.earthcomputer.clientcommands.command.ClientCommandHelper;
 import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.interfaces.ICreativeSlot;
-import net.earthcomputer.clientcommands.compat.CEvent;
-import net.earthcomputer.clientcommands.compat.CEventFactory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -96,21 +94,19 @@ public class PlayerRandCracker {
 
     // ===== RESET DETECTION + PLAYER RNG MAINTENANCE ===== //
 
-    public static final CEvent<RNGCallListener> RNG_CALLED_EVENT = CEventFactory.createArrayBacked(RNGCallListener.class, listeners -> event -> {
-        for (RNGCallListener listener : listeners) {
-            listener.onCall(event);
-        }
-    });
+    public static void registerRNGCallListener(RNGCallListener listener) {
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(RNGCallEvent.class, listener::onCall);
+    }
 
     public static boolean isPredictingBlockBreaking = false;
     @Nullable
     private static Runnable postBlockBreakPredictAction = null;
 
     public static void registerEvents() {
-        ClientLevelEvents.LOAD_LEVEL.register(level -> {
+        ClientLevelEvents.registerLoadLevel(level -> {
             resetCracker(RNGCallType.RECREATED);
         });
-        RNG_CALLED_EVENT.register(PlayerRandCracker::throwItemsUntilOnRNGCallEvent);
+        registerRNGCallListener(PlayerRandCracker::throwItemsUntilOnRNGCallEvent);
     }
 
     public static void postSendBlockBreakingPredictionPacket() {
@@ -129,7 +125,7 @@ public class PlayerRandCracker {
     // isResettingUnconditionally should be true iff canMaintainPlayerRNG wasn't previously called
     private static void resetCracker(RNGCallType reason, boolean isResettingUnconditionally) {
         if (isResettingUnconditionally) {
-            RNG_CALLED_EVENT.invoker().onCall(new RNGCallEvent(reason, false));
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new RNGCallEvent(reason, false));
         }
         if (Configs.playerCrackState != PlayerRandCracker.CrackState.UNCRACKED) {
             ClientCommandHelper.sendError(Component.translatable("playerManip.reset", reason.resetMessage));
@@ -338,7 +334,7 @@ public class PlayerRandCracker {
 
     private static boolean canMaintainPlayerRNG(RNGCallType callType) {
         RNGCallEvent event = new RNGCallEvent(callType, Configs.playerRNGMaintenance && Configs.playerCrackState.knowsSeed());
-        RNG_CALLED_EVENT.invoker().onCall(event);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(event);
         if (event.isMaintained && Configs.playerCrackState.knowsSeed()) {
             Configs.playerCrackState = CrackState.CRACKED;
             return true;
@@ -574,7 +570,7 @@ public class PlayerRandCracker {
         void onCall(RNGCallEvent event);
     }
 
-    public static final class RNGCallEvent {
+    public static final class RNGCallEvent extends net.neoforged.bus.api.Event {
         private final RNGCallType type;
         private boolean isMaintained;
         private boolean isMaintainedEvenIfSeedUnknown = false;

@@ -16,20 +16,20 @@ public class ClientPacketListenerMixin {
 
     @Inject(method = "handleAddEntity", at = @At("HEAD"))
     public void onHandleAddEntityPre(ClientboundAddEntityPacket packet, CallbackInfo ci) {
-        MoreClientEntityEvents.PRE_ADD_MAYBE_ON_NETWORK_THREAD.invoker().onAddEntity(packet);
+        MoreClientEntityEvents.postAddEntity(packet, true);
     }
 
     @Inject(method = "handleAddEntity", at = @At("TAIL"))
     public void onHandleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
-        MoreClientEntityEvents.POST_ADD.invoker().onAddEntity(packet);
+        MoreClientEntityEvents.postAddEntity(packet, false);
     }
 
     @Inject(method = "handleSetTime", at = @At("HEAD"))
     private void onHandleSetTime(ClientboundSetTimePacket packet, CallbackInfo ci) {
         if (Minecraft.getInstance().isSameThread()) {
-            MoreClientEvents.TIME_SYNC.invoker().onTimeSync(packet);
+            MoreClientEvents.postTimeSync(packet, false);
         } else {
-            MoreClientEvents.TIME_SYNC_ON_NETWORK_THREAD.invoker().onTimeSync(packet);
+            MoreClientEvents.postTimeSync(packet, true);
         }
     }
 }

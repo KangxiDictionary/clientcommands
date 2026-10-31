@@ -23,7 +23,7 @@ public class LevelChunkMixin {
     private BlockState onSetBlockState(LevelChunkSection instance, int x, int y, int z, BlockState state, Operation<BlockState> original, BlockPos pos, BlockState redundant, int flags) {
         BlockState oldState = original.call(instance, x, y, z, state);
         if (level.isClientSide()) {
-            ClientLevelEvents.CHUNK_UPDATE.invoker().onBlockStateUpdate((ClientLevel) level, pos, oldState, state);
+            ClientLevelEvents.postChunkUpdate((ClientLevel) level, pos, oldState, state);
         }
         return oldState;
     }

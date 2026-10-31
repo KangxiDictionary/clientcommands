@@ -1,39 +1,68 @@
 package net.earthcomputer.clientcommands.event;
 
-import net.earthcomputer.clientcommands.compat.CEvent;
-import net.earthcomputer.clientcommands.compat.CEventFactory;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
 
 public final class MoreClientEntityEvents {
-    /**
-     * Called twice, first on the network thread and then on the main thread
-     */
-    public static final CEvent<AddEntity> PRE_ADD_MAYBE_ON_NETWORK_THREAD = CEventFactory.createArrayBacked(AddEntity.class, listeners -> packet -> {
-        for (AddEntity listener : listeners) {
-            listener.onAddEntity(packet);
-        }
-    });
+    private MoreClientEntityEvents() {
+    }
 
-    public static final CEvent<AddEntity> POST_ADD = CEventFactory.createArrayBacked(AddEntity.class, listeners -> packet -> {
-        for (AddEntity listener : listeners) {
-            listener.onAddEntity(packet);
-        }
-    });
+    /** Posted twice, first on the network thread and then on the main thread. */
+    public static final class AddEntity extends Event {
+        public final ClientboundAddEntityPacket packet;
+        public final boolean networkThread;
 
-    public static final CEvent<SetInitialXpOrbValue> POST_SET_INITIAL_XP_ORB_VALUE = CEventFactory.createArrayBacked(SetInitialXpOrbValue.class, listeners -> orb -> {
-        for (SetInitialXpOrbValue listener : listeners) {
-            listener.onSetInitialXpOrbValue(orb);
+        public AddEntity(ClientboundAddEntityPacket packet, boolean networkThread) {
+            this.packet = packet;
+            this.networkThread = networkThread;
         }
-    });
+    }
+
+    public static final class SetInitialXpOrbValue extends Event {
+        public final ExperienceOrb orb;
+
+        public SetInitialXpOrbValue(ExperienceOrb orb) {
+            this.orb = orb;
+        }
+    }
 
     @FunctionalInterface
-    public interface AddEntity {
+    public interface AddEntityListener {
         void onAddEntity(ClientboundAddEntityPacket packet);
     }
 
     @FunctionalInterface
-    public interface SetInitialXpOrbValue {
+    public interface SetInitialXpOrbValueListener {
         void onSetInitialXpOrbValue(ExperienceOrb orb);
+    }
+
+    public static void registerPostAdd(AddEntityListener listener) {
+        NeoForge.EVENT_BUS.addListener(AddEntity.class, event -> {
+            if (!event.networkThread) {
+                listener.onAddEntity(event.packet);
+            }
+        });
+    }
+
+    public static void registerPreAddMaybeOnNetworkThread(AddEntityListener listener) {
+        NeoForge.EVENT_BUS.addListener(AddEntity.class, event -> {
+            if (event.networkThread) {
+                listener.onAddEntity(event.packet);
+            }
+        });
+    }
+
+    public static void registerPostSetInitialXpOrbValue(SetInitialXpOrbValueListener listener) {
+        NeoForge.EVENT_BUS.addListener(SetInitialXpOrbValue.class, event -> listener.onSetInitialXpOrbValue(event.orb));
+    }
+
+    public static void postAddEntity(ClientboundAddEntityPacket packet, boolean networkThread) {
+        NeoForge.EVENT_BUS.post(new AddEntity(packet, networkThread));
+    }
+
+    public static void postSetInitialXpOrbValue(ExperienceOrb orb) {
+        NeoForge.EVENT_BUS.post(new SetInitialXpOrbValue(orb));
     }
 }
