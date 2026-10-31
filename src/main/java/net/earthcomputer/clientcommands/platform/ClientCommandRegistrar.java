@@ -21,6 +21,7 @@ public final class ClientCommandRegistrar {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final CommandDispatcher<CClientCommandSource> DISPATCHER = new CommandDispatcher<>();
     private static boolean registered;
+    private static boolean mergedLogged;
 
     private ClientCommandRegistrar() {
     }
@@ -35,7 +36,12 @@ public final class ClientCommandRegistrar {
             if (!registered) {
                 ClientCommands.registerCommands(DISPATCHER, event.getBuildContext());
                 registered = true;
-                LOGGER.info("[clientcommands] registered {} root commands", DISPATCHER.getRoot().getChildren().size());
+                int roots = DISPATCHER.getRoot().getChildren().size();
+                if (roots == 0) {
+                    LOGGER.warn("[clientcommands] no root commands were registered");
+                } else {
+                    LOGGER.info("[clientcommands] registered {} root commands", roots);
+                }
             }
             mergeInto(event.getDispatcher());
         } catch (Throwable t) {
@@ -45,10 +51,16 @@ public final class ClientCommandRegistrar {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static void mergeInto(CommandDispatcher<CommandSourceStack> target) {
+        int merged = 0;
         for (CommandNode<CClientCommandSource> node : DISPATCHER.getRoot().getChildren()) {
             if (target.getRoot().getChild(node.getName()) == null) {
                 target.getRoot().addChild((CommandNode) node);
+                merged++;
             }
+        }
+        if (!mergedLogged && merged > 0) {
+            mergedLogged = true;
+            LOGGER.info("[clientcommands] merged {} root commands into the client dispatcher", merged);
         }
     }
 }
