@@ -16,15 +16,25 @@ repositories {
 	maven { url = 'https://maven.xpple.dev/maven2' }
 }
 
+configurations {
+	embed
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
-	compileOnly "com.seedfinding:mc_core:${project.seedfinding_core_version}"
-	compileOnly "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
-	compileOnly "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
-	compileOnly "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
-	compileOnly "com.seedfinding:latticg:${project.latticg_version}"
+	implementation "com.seedfinding:mc_core:${project.seedfinding_core_version}"
+	implementation "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
+	implementation "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
+	implementation "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
+	implementation "com.seedfinding:latticg:${project.latticg_version}:rt"
+
+	embed "com.seedfinding:mc_core:${project.seedfinding_core_version}"
+	embed "com.seedfinding:mc_biome:${project.seedfinding_biome_version}"
+	embed "com.seedfinding:mc_feature:${project.seedfinding_feature_version}"
+	embed "com.seedfinding:mc_seed:${project.seedfinding_seed_version}"
+	embed "com.seedfinding:latticg:${project.latticg_version}:rt"
 }
 
 loom {
@@ -65,4 +75,15 @@ tasks.named('validateAccessWidener') {
 // Gradle itself runs on a newer JDK.
 tasks.withType(JavaCompile).configureEach {
 	options.release = 25
+}
+
+
+// Temporary: bundle the seedfinding/latticg libraries into the mod jar.
+// TODO: replace with NeoForge JarJar once the build is on ModDevGradle.
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from {
+		configurations.embed.collect { zipTree(it) }
+	}
+	exclude 'META-INF/MANIFEST.MF', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
 }
