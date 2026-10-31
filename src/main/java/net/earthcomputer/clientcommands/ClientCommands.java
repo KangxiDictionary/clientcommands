@@ -70,9 +70,19 @@ public class ClientCommands {
         ServerBrandManager.registerEvents();
     }
 
-    private static void setupScrambleWindowTitle() {
-        // can't set this up during class initializer, because Minecraft.getInstance() is null during automated tests
-        String playerUUID = String.valueOf(Minecraft.getInstance().getUser().getProfileId());
+    private static boolean scrambleTitleInitialized = false;
+
+    public static void setupScrambleWindowTitle() {
+        if (scrambleTitleInitialized) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft == null || minecraft.getUser() == null) {
+            // Not ready yet; retried from the first client tick.
+            return;
+        }
+        scrambleTitleInitialized = true;
+        String playerUUID = String.valueOf(minecraft.getUser().getProfileId());
 
         Set<String> victims = Set.of(
             "fa68270b-1071-46c6-ac5c-6c4a0b777a96", // Earthcomputer

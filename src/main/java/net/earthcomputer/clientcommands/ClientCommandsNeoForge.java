@@ -23,8 +23,10 @@ public class ClientCommandsNeoForge {
             ClientCommandsServer.registerPayloads(event);
         });
 
-        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event ->
-            CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance()));
+        NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> {
+            ClientCommands.setupScrambleWindowTitle();
+            CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance());
+        });
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event ->
             CClientTickEvents.END_CLIENT_TICK.invoker().onEndTick(Minecraft.getInstance()));
     }
