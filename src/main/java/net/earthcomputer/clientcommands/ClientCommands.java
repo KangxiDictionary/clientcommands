@@ -16,8 +16,8 @@ import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.render.RenderQueue;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.earthcomputer.clientcommands.compat.CNetworking;
+
 import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
@@ -61,7 +61,6 @@ public class ClientCommands {
         Configs.load();
 
         // Registration
-        PayloadTypeRegistry.serverboundPlay().register(CommandExecutionCustomPayload.TYPE, CommandExecutionCustomPayload.CODEC);
         CreativeTabCommand.registerCreativeTabs();
 
         // Events
@@ -99,8 +98,8 @@ public class ClientCommands {
         reader.skipWhitespace();
         String theCommand = reader.readUnquotedString();
         if (clientcommandsCommands.contains(theCommand) && !COMMANDS_TO_NOT_SEND_TO_SERVER.contains(theCommand)) {
-            if (ClientPlayNetworking.canSend(CommandExecutionCustomPayload.TYPE)) {
-                ClientPlayNetworking.send(new CommandExecutionCustomPayload(command));
+            if (CNetworking.canSend(CommandExecutionCustomPayload.TYPE)) {
+                CNetworking.send(new CommandExecutionCustomPayload(command));
             }
         }
     }

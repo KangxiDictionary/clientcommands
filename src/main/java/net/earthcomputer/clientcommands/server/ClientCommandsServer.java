@@ -4,9 +4,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.netty.buffer.ByteBuf;
 import net.earthcomputer.clientcommands.util.BuildInfo;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.earthcomputer.clientcommands.compat.CNetworking;
+
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ClickEvent;
@@ -19,6 +19,10 @@ import net.minecraft.server.permissions.Permissions;
 import java.net.URI;
 
 public class ClientCommandsServer {
+    public static void registerPayloads(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent event) {
+        event.registrar("1").playToServer(OptInPayload.TYPE, OptInPayload.CODEC, (payload, context) -> {});
+    }
+
     private static final URI WHY_URI = URI.create("https://github.com/Earthcomputer/clientcommands/blob/" + BuildInfo.COMMIT_HASH + "/docs/server_installation.md");
     private static final SimpleCommandExceptionType MUST_BE_INSTALLED_EXCEPTION = new SimpleCommandExceptionType(
         Component.translatable(
@@ -29,12 +33,10 @@ public class ClientCommandsServer {
     );
 
     public void onInitialize() {
-        PayloadTypeRegistry.serverboundPlay().register(OptInPayload.TYPE, OptInPayload.CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(OptInPayload.TYPE, (_, _) -> {});
     }
 
     public static void requirePrivileges() throws CommandSyntaxException {
-        if (ClientPlayNetworking.canSend(OptInPayload.TYPE)) {
+        if (CNetworking.canSend(OptInPayload.TYPE)) {
             return;
         }
 

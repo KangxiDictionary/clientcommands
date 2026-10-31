@@ -1,6 +1,7 @@
 package net.earthcomputer.clientcommands;
 
 import net.earthcomputer.clientcommands.compat.CClientTickEvents;
+import net.earthcomputer.clientcommands.features.CommandExecutionCustomPayload;
 import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -16,6 +17,11 @@ public class ClientCommandsNeoForge {
     public ClientCommandsNeoForge(IEventBus modBus) {
         new ClientCommands().onInitializeClient();
         new ClientCommandsServer().onInitialize();
+
+        modBus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> {
+            event.registrar("1").playToServer(CommandExecutionCustomPayload.TYPE, CommandExecutionCustomPayload.CODEC, (payload, context) -> {});
+            ClientCommandsServer.registerPayloads(event);
+        });
 
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event ->
             CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance()));

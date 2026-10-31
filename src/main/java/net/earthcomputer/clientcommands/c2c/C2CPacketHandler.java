@@ -23,7 +23,7 @@ import net.earthcomputer.clientcommands.command.TicTacToeCommand;
 import net.earthcomputer.clientcommands.command.arguments.ExtendedMarkdownArgument;
 import net.earthcomputer.clientcommands.features.TwoPlayerGame;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
+import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -90,7 +90,7 @@ public class C2CPacketHandler implements C2CPacketListener {
             throw PUBLIC_KEY_NOT_FOUND_EXCEPTION.create();
         }
         PublicKey key = ppk.data().key();
-        FriendlyByteBuf buf = wrapByteBuf(FriendlyByteBufs.create(), null, null);
+        FriendlyByteBuf buf = wrapByteBuf(new FriendlyByteBuf(Unpooled.buffer()), null, null);
         if (buf == null) {
             return;
         }
