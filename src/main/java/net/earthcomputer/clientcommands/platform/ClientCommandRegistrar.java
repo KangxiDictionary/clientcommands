@@ -6,6 +6,9 @@ import com.mojang.brigadier.tree.CommandNode;
 import net.earthcomputer.clientcommands.ClientCommands;
 import net.minecraft.commands.CommandSourceStack;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import org.slf4j.Logger;
+
+import com.mojang.logging.LogUtils;
 
 /**
  * Bridges the mod's command definitions into NeoForge's client command dispatcher.
@@ -15,6 +18,7 @@ import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
  * registration time.
  */
 public final class ClientCommandRegistrar {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final CommandDispatcher<CClientCommandSource> DISPATCHER = new CommandDispatcher<>();
     private static boolean registered;
 
@@ -26,11 +30,17 @@ public final class ClientCommandRegistrar {
     }
 
     public static void register(RegisterClientCommandsEvent event) {
-        if (!registered) {
-            ClientCommands.registerCommands(DISPATCHER, event.getBuildContext());
-            registered = true;
+        // A failure here must never take down the vanilla command tree.
+        try {
+            if (!registered) {
+                ClientCommands.registerCommands(DISPATCHER, event.getBuildContext());
+                registered = true;
+                LOGGER.info("[clientcommands] registered {} root commands", DISPATCHER.getRoot().getChildren().size());
+            }
+            mergeInto(event.getDispatcher());
+        } catch (Throwable t) {
+            LOGGER.error("[clientcommands] failed to register client commands", t);
         }
-        mergeInto(event.getDispatcher());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
