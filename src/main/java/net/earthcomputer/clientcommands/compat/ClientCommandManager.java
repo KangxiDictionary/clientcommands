@@ -16,6 +16,8 @@ import net.minecraft.network.chat.Component;
 public final class ClientCommandManager {
     private static final CommandDispatcher<CClientCommandSource> DISPATCHER = new CommandDispatcher<>();
     private static boolean registered;
+    private static boolean registrationFailed;
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
     private ClientCommandManager() {
     }
@@ -25,15 +27,20 @@ public final class ClientCommandManager {
     }
 
     public static void ensureRegistered(Minecraft client) {
-        if (registered) {
+        if (registered || registrationFailed) {
             return;
         }
         ClientLevel level = client.level;
         if (level == null) {
             return;
         }
-        ClientCommands.registerCommands(DISPATCHER, CommandBuildContext.simple(level.registryAccess(), level.enabledFeatures()));
-        registered = true;
+        try {
+            ClientCommands.registerCommands(DISPATCHER, CommandBuildContext.simple(level.registryAccess(), level.enabledFeatures()));
+            registered = true;
+        } catch (Throwable t) {
+            registrationFailed = true;
+            LOGGER.error("Failed to register client commands", t);
+        }
     }
 
     /**
@@ -42,17 +49,25 @@ public final class ClientCommandManager {
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void registerInto(CommandDispatcher<?> target) {
-        Minecraft client = Minecraft.getInstance();
-        if (client == null) {
-            return;
-        }
-        ensureRegistered(client);
-        CommandDispatcher rawTarget = target;
-        for (Object node : DISPATCHER.getRoot().getChildren()) {
-            com.mojang.brigadier.tree.CommandNode rawNode = (com.mojang.brigadier.tree.CommandNode) node;
-            if (rawTarget.getRoot().getChild(rawNode.getName()) == null) {
-                rawTarget.getRoot().addChild(rawNode);
+        // Never let our merging break the vanilla command tree / tab completion.
+        try {
+            Minecraft client = Minecraft.getInstance();
+            if (client == null) {
+                return;
             }
+            ensureRegistered(client);
+            if (!registered) {
+                return;
+            }
+            CommandDispatcher rawTarget = target;
+            for (Object node : DISPATCHER.getRoot().getChildren()) {
+                com.mojang.brigadier.tree.CommandNode rawNode = (com.mojang.brigadier.tree.CommandNode) node;
+                if (rawTarget.getRoot().getChild(rawNode.getName()) == null) {
+                    rawTarget.getRoot().addChild(rawNode);
+                }
+            }
+        } catch (Throwable t) {
+            LOGGER.error("Failed to merge client command suggestions", t);
         }
     }
 
