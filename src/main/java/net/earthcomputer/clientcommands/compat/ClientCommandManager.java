@@ -24,7 +24,7 @@ public final class ClientCommandManager {
         return DISPATCHER;
     }
 
-    private static void ensureRegistered(Minecraft client) {
+    public static void ensureRegistered(Minecraft client) {
         if (registered) {
             return;
         }
@@ -34,6 +34,26 @@ public final class ClientCommandManager {
         }
         ClientCommands.registerCommands(DISPATCHER, CommandBuildContext.simple(level.registryAccess(), level.enabledFeatures()));
         registered = true;
+    }
+
+    /**
+     * Merges the client command nodes into the vanilla suggestion dispatcher so that
+     * they show up in tab completion.
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void registerInto(CommandDispatcher<?> target) {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null) {
+            return;
+        }
+        ensureRegistered(client);
+        CommandDispatcher rawTarget = target;
+        for (Object node : DISPATCHER.getRoot().getChildren()) {
+            com.mojang.brigadier.tree.CommandNode rawNode = (com.mojang.brigadier.tree.CommandNode) node;
+            if (rawTarget.getRoot().getChild(rawNode.getName()) == null) {
+                rawTarget.getRoot().addChild(rawNode);
+            }
+        }
     }
 
     /**
