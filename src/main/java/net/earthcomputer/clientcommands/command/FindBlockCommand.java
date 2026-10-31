@@ -26,7 +26,7 @@ import java.util.Objects;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
 import static net.earthcomputer.clientcommands.command.arguments.ClientBlockPredicateArgument.*;
 import static net.earthcomputer.clientcommands.command.arguments.WithStringArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class FindBlockCommand {
     public static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();

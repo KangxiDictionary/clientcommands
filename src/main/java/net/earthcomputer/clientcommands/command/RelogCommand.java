@@ -8,7 +8,7 @@ import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class RelogCommand {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.crelog.failed"));

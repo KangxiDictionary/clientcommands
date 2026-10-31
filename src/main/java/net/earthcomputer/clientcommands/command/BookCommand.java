@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
 import static com.mojang.brigadier.arguments.LongArgumentType.*;
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class BookCommand {
     private static final SimpleCommandExceptionType NO_BOOK = new SimpleCommandExceptionType(Component.translatable("commands.cbook.commandException"));

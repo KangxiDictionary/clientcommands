@@ -22,7 +22,7 @@ import java.util.UUID;
 
 import static dev.xpple.clientarguments.arguments.CEntityArgument.*;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class FindCommand {
 

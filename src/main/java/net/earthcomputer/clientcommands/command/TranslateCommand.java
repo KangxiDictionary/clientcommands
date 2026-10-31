@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static net.earthcomputer.clientcommands.command.arguments.TranslationQueryArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class TranslateCommand {
 

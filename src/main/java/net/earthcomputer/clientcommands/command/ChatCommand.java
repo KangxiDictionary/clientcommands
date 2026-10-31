@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class ChatCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

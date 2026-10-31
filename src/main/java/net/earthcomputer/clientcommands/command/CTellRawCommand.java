@@ -8,7 +8,7 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.MutableComponent;
 
 import static dev.xpple.clientarguments.arguments.CComponentArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class CTellRawCommand {
 

@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class HotbarCommand {
 

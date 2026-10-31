@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class MinesweeperCommand {
     private static final SimpleCommandExceptionType TOO_MANY_MINES_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cminesweeper.tooManyMines"));

@@ -54,7 +54,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static net.earthcomputer.clientcommands.command.arguments.PacketTypeArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class ListenCommand {
 

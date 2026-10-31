@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 import static net.minecraft.commands.SharedSuggestionProvider.*;
 
 public class KitCommand {

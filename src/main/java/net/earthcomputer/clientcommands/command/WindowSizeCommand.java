@@ -7,7 +7,7 @@ import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import org.lwjgl.sdl.SDLVideo;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class WindowSizeCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

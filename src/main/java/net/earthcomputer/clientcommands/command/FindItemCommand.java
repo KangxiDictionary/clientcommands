@@ -75,7 +75,7 @@ import java.util.function.Predicate;
 import static dev.xpple.clientarguments.arguments.CItemPredicateArgument.*;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
 import static net.earthcomputer.clientcommands.command.arguments.WithStringArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class FindItemCommand {
     private static final Flag<Boolean> FLAG_CLICK_INVENTORIES = Flag.ofFlag("click-inventories").build();

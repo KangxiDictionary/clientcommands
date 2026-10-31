@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 
 import static dev.xpple.clientarguments.arguments.CBlockPosArgument.*;
 import static dev.xpple.clientarguments.arguments.CDimensionArgument.*;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class PosCommand {
     // Syntax: "/cpos [to|from <dimension>] [from|to <dimension>] [<pos>]"

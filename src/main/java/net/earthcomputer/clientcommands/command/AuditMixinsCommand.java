@@ -6,7 +6,7 @@ import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class AuditMixinsCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

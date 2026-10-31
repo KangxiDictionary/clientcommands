@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
+import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
 
 public class SnakeCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
