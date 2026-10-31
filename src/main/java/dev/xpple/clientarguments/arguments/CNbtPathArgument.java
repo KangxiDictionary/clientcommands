@@ -12,7 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

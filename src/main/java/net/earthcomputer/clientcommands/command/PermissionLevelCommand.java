@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.permissions.Permission;
 import net.minecraft.server.permissions.PermissionLevel;
@@ -17,7 +17,7 @@ public class PermissionLevelCommand {
     }
 
     private static int getPermissionLevel(CClientCommandSource source) {
-        int permissionLevel = getPermissionLevel(source.getPlayer().permissions());
+        int permissionLevel = getPermissionLevel(source.getClientPlayer().permissions());
         source.sendFeedback(Component.translatable("commands.cpermissionlevel.success", permissionLevel));
 
         return permissionLevel;

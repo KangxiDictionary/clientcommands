@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.features.ClientCommandFunctions;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 

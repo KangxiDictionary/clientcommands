@@ -12,7 +12,7 @@ import net.earthcomputer.clientcommands.task.RenderDistanceScanTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
 import net.earthcomputer.clientcommands.util.SeedfindingUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

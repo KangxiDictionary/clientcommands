@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.c2c.C2CPacketHandler;
 import net.earthcomputer.clientcommands.c2c.packets.MessageC2CPacket;
 import net.earthcomputer.clientcommands.command.arguments.WithStringArgument;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;

@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -16,7 +16,7 @@ public class CTellRawCommand {
         dispatcher.register(literal("ctellraw")
             .then(argument("message", component(context))
                 .executes(ctx -> {
-                    MutableComponent component = CComponentUtil.updateForEntity(ctx.getSource(), getComponent(ctx, "message"), ctx.getSource().getPlayer(), 0);
+                    MutableComponent component = CComponentUtil.updateForEntity(ctx.getSource(), getComponent(ctx, "message"), ctx.getSource().getClientPlayer(), 0);
                     ClientCommandHelper.sendFeedback(component);
                     return Command.SINGLE_SUCCESS;
                 })

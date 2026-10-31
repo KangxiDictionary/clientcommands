@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.earthcomputer.clientcommands.interfaces.IClientSuggestionsProvider;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

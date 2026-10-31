@@ -12,7 +12,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.earthcomputer.clientcommands.command.arguments.ExcludingArgument;
 import net.earthcomputer.clientcommands.mixin.commands.flag.ArgumentCommandNodeAccessor;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.Nullable;
 
@@ -126,15 +126,6 @@ public final class Flag<T> {
 
     @SuppressWarnings("unchecked")
     public static <S> S getActualSource(CommandContext<S> ctx) {
-        if (ctx.getSource() instanceof CClientCommandSource
-            && ctx.getRootNode() == Objects.requireNonNull(Minecraft.getInstance().getConnection()).getCommands().getRoot()) {
-            // we're in the completion dispatcher, reparse using the real dispatcher to get the redirects
-            return (S) getActualSource(Objects.requireNonNull(getActiveDispatcher()).parse(
-                StringRange.encompassing(ctx.getRange(), ctx.getLastChild().getRange()).get(ctx.getInput()),
-                (CClientCommandSource) ctx.getSource()
-            ));
-        }
-
         S source = ctx.getSource();
         do {
             if (ctx.hasNodes()) {

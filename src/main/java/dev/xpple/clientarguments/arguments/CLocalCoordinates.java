@@ -2,7 +2,7 @@ package dev.xpple.clientarguments.arguments;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinate;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;

@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -21,7 +21,7 @@ public class TooltipCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         var ctooltip = dispatcher.register(literal("ctooltip")
             .then(literal("held")
-                .executes(ctx -> showTooltip(ctx.getSource(), ctx.getSource().getPlayer().getMainHandItem(), "held")))
+                .executes(ctx -> showTooltip(ctx.getSource(), ctx.getSource().getClientPlayer().getMainHandItem(), "held")))
             .then(literal("stack")
                 .then(argument("stack", itemStack(context))
                     .executes(ctx -> showTooltip(ctx.getSource(), getItemStackArgument(ctx, "stack").createItemStack(1), "stack")))));
@@ -33,7 +33,7 @@ public class TooltipCommand {
 
         TooltipFlag flag = getFlag(source, FLAG_ADVANCED) ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
 
-        List<Component> tooltip = stack.getTooltipLines(Item.TooltipContext.of(source.getLevel()), source.getPlayer(), flag);
+        List<Component> tooltip = stack.getTooltipLines(Item.TooltipContext.of(source.getClientLevel()), source.getClientPlayer(), flag);
         for (Component line : tooltip) {
             source.sendFeedback(line);
         }

@@ -7,7 +7,7 @@ import net.earthcomputer.clientcommands.c2c.C2CPacketHandler;
 import net.earthcomputer.clientcommands.c2c.packets.PutTicTacToeMarkC2CPacket;
 import net.earthcomputer.clientcommands.features.TwoPlayerGame;
 import net.earthcomputer.clientcommands.interfaces.ISafeZoneScreen;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;

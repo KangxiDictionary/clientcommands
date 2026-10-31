@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -80,7 +80,7 @@ public class CResourceKeyArgument<T> implements ArgumentType<ResourceKey<T>> {
 
     public static AdvancementHolder getAdvancement(final CommandContext<CClientCommandSource> context, final String string) throws CommandSyntaxException {
         ResourceKey<Advancement> resourceKey = getKey(context, string, Registries.ADVANCEMENT, ERROR_INVALID_ADVANCEMENT);
-        AdvancementHolder advancementHolder = context.getSource().getPlayer().connection.getAdvancements().get(resourceKey.identifier());
+        AdvancementHolder advancementHolder = context.getSource().getClientPlayer().connection.getAdvancements().get(resourceKey.identifier());
         if (advancementHolder == null) {
             throw ERROR_INVALID_ADVANCEMENT.create(resourceKey.identifier());
         }

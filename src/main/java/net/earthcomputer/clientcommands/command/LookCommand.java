@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.xpple.clientarguments.arguments.CCoordinates;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec2;
@@ -38,7 +38,7 @@ public class LookCommand {
     }
 
     private static int lookBlock(CClientCommandSource source, BlockPos pos) {
-        LocalPlayer player = source.getPlayer();
+        LocalPlayer player = source.getClientPlayer();
         double dx = (pos.getX() + 0.5) - player.getX();
         double dy = (pos.getY() + 0.5) - (player.getY() + player.getEyeHeight());
         double dz = (pos.getZ() + 0.5) - player.getZ();
@@ -50,11 +50,11 @@ public class LookCommand {
 
     private static int lookAngles(CClientCommandSource source, CCoordinates rotation) {
         Vec2 rot = rotation.getRotation(source);
-        return doLook(source.getPlayer(), rot.y, rot.x);
+        return doLook(source.getClientPlayer(), rot.y, rot.x);
     }
 
     private static int lookCardinal(CClientCommandSource source, float yaw, float pitch) {
-        return doLook(source.getPlayer(), yaw, pitch);
+        return doLook(source.getClientPlayer(), yaw, pitch);
     }
 
     private static int lookCardinal(CClientCommandSource source, float pitch) {

@@ -33,10 +33,10 @@ public class ClientCommandsNeoForge {
                     Minecraft.getInstance().level != null);
             }
             ClientCommands.setupScrambleWindowTitle();
-            net.earthcomputer.clientcommands.compat.ClientCommandManager.ensureRegistered(Minecraft.getInstance());
-            net.earthcomputer.clientcommands.compat.ClientCommandManager.mergeIntoConnection(Minecraft.getInstance());
             CClientTickEvents.START_CLIENT_TICK.invoker().onStartTick(Minecraft.getInstance());
         });
+        NeoForge.EVENT_BUS.addListener(net.neoforged.neoforge.client.event.RegisterClientCommandsEvent.class,
+            net.earthcomputer.clientcommands.platform.ClientCommandRegistrar::register);
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event ->
             CClientTickEvents.END_CLIENT_TICK.invoker().onEndTick(Minecraft.getInstance()));
     }

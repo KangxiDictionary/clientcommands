@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -32,7 +32,7 @@ public class CBlockPosArgument implements ArgumentType<CCoordinates> {
 	}
 
 	public static BlockPos getLoadedBlockPos(final CommandContext<CClientCommandSource> context, final String name) throws CommandSyntaxException {
-		ClientLevel clientLevel = context.getSource().getLevel();
+		ClientLevel clientLevel = context.getSource().getClientLevel();
 		return getLoadedBlockPos(context, clientLevel, name);
 	}
 

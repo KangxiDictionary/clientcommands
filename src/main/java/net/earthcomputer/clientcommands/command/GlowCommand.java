@@ -11,7 +11,7 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.SimpleTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -124,7 +124,7 @@ public class GlowCommand {
         List<AABB> boundingBoxes = new ArrayList<>();
 
         if (pos2 == null) {
-            boundingBoxes.addAll(Minecraft.getInstance().level.getBlockState(pos1).getShape(source.getLevel(), pos1).toAabbs());
+            boundingBoxes.addAll(Minecraft.getInstance().level.getBlockState(pos1).getShape(source.getClientLevel(), pos1).toAabbs());
             if (boundingBoxes.isEmpty()) {
                 boundingBoxes.add(new AABB(pos1));
             } else {

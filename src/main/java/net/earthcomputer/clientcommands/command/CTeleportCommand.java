@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ public class CTeleportCommand {
     }
 
     private static int teleport(CClientCommandSource source, UUID uuid) throws CommandSyntaxException {
-        if (!source.getPlayer().isSpectator()) {
+        if (!source.getClientPlayer().isSpectator()) {
             throw NOT_SPECTATOR_EXCEPTION.create();
         }
 

@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.features.ClientTimeModifier;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 
@@ -38,15 +38,15 @@ public class CTimeCommand {
     }
 
     private static int executeQueryDay(CClientCommandSource source) {
-        return executeQuery(source, (int) (source.getLevel().getOverworldClockTime() / SharedConstants.TICKS_PER_GAME_DAY % 2147483647L));
+        return executeQuery(source, (int) (source.getClientLevel().getOverworldClockTime() / SharedConstants.TICKS_PER_GAME_DAY % 2147483647L));
     }
 
     private static int executeQueryDayTime(CClientCommandSource source) {
-        return executeQuery(source, (int) (source.getLevel().getOverworldClockTime() % SharedConstants.TICKS_PER_GAME_DAY));
+        return executeQuery(source, (int) (source.getClientLevel().getOverworldClockTime() % SharedConstants.TICKS_PER_GAME_DAY));
     }
 
     private static int executeQueryGameTime(CClientCommandSource source) {
-        return executeQuery(source, (int) (source.getLevel().getGameTime() % 2147483647L));
+        return executeQuery(source, (int) (source.getClientLevel().getGameTime() % 2147483647L));
     }
 
     private static int executeQuery(CClientCommandSource source, int time) {

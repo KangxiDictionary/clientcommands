@@ -10,7 +10,7 @@ import net.earthcomputer.clientcommands.util.MultiVersionCompat;
 import net.earthcomputer.clientcommands.command.arguments.ClientItemPredicateArgument;
 import net.earthcomputer.clientcommands.command.arguments.WithStringArgument;
 import net.earthcomputer.clientcommands.features.FishingCracker;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;

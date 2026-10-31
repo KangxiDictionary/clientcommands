@@ -1,7 +1,7 @@
 package dev.xpple.clientarguments.arguments;
 
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;

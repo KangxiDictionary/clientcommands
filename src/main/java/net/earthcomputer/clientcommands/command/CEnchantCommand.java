@@ -9,7 +9,7 @@ import net.earthcomputer.clientcommands.features.LegacyEnchantment;
 import net.earthcomputer.clientcommands.features.PlayerRandCracker;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
 import net.earthcomputer.clientcommands.util.MultiVersionCompat;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

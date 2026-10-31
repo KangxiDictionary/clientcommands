@@ -13,7 +13,7 @@ import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.features.PacketDumper;
 import net.earthcomputer.clientcommands.util.ReflectionUtils;
 import net.earthcomputer.clientcommands.util.UnsafeUtils;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import dev.xpple.clientarguments.arguments.CEntitySelectorParser;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.predicates.NbtPredicate;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
@@ -215,7 +215,7 @@ public final class CComponentUtil {
         return switch (data) {
             case BlockDataSource(Coordinates coordinates) -> {
                 BlockPos pos = getBlockPos(source, coordinates);
-                BlockEntity be = source.getLevel().getBlockEntity(pos);
+                BlockEntity be = source.getClientLevel().getBlockEntity(pos);
                 yield be == null ? Stream.empty() : Stream.of(be.saveWithFullMetadata(source.registryAccess()));
             }
             case EntityDataSource(CompilableString<EntitySelector> selectorStr) -> {

@@ -1,6 +1,6 @@
 package dev.xpple.clientarguments.arguments;
 
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;

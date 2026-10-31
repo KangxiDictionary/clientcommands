@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.xpple.clientarguments.arguments.CEntityArgument;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import dev.xpple.clientarguments.arguments.CEntitySelectorParser;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
 

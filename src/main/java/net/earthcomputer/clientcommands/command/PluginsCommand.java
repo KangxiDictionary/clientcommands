@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.tree.CommandNode;
 import net.earthcomputer.clientcommands.features.SuggestionsHook;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
 import java.util.stream.Collectors;

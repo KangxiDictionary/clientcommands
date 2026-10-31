@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.xpple.clientarguments.arguments.CSuggestionProviders;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
@@ -33,7 +33,7 @@ public class CPlaySoundCommand {
 
     private static LiteralArgumentBuilder<CClientCommandSource> buildArguments(SoundSource source) {
         return literal(source.getName())
-            .executes(ctx -> playSound(ctx.getSource(), getId(ctx, "sound"), source, ctx.getSource().getPlayer().position(), 1, 1))
+            .executes(ctx -> playSound(ctx.getSource(), getId(ctx, "sound"), source, ctx.getSource().getClientPlayer().position(), 1, 1))
             .then(argument("pos", vec3())
                 .executes(ctx -> playSound(ctx.getSource(), getId(ctx, "sound"), source, getVec3(ctx, "pos"), 1, 1))
                 .then(argument("volume", floatArg(0))

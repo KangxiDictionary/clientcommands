@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
@@ -51,7 +51,7 @@ public class CScoreHolderArgument implements ArgumentType<CScoreHolderArgument.R
 	}
 
 	public static Collection<ScoreHolder> getScoreboardScoreHolders(final CommandContext<CClientCommandSource> context, final String name) throws CommandSyntaxException {
-		return getScoreHolders(context, name, context.getSource().getLevel().getScoreboard()::getTrackedPlayers);
+		return getScoreHolders(context, name, context.getSource().getClientLevel().getScoreboard()::getTrackedPlayers);
 	}
 
 	public static Collection<ScoreHolder> getScoreHolders(final CommandContext<CClientCommandSource> context, final String name, final Supplier<Collection<ScoreHolder>> players) throws CommandSyntaxException {
@@ -111,7 +111,7 @@ public class CScoreHolderArgument implements ArgumentType<CScoreHolderArgument.R
 		try {
 			UUID uuid = UUID.fromString(string);
 			return (source, holders) -> {
-				ScoreHolder scoreHolder = Streams.stream(source.getLevel().entitiesForRendering())
+				ScoreHolder scoreHolder = Streams.stream(source.getClientLevel().entitiesForRendering())
 					.filter(e -> e.getUUID().equals(uuid))
 					.findAny().orElse(null);
 
@@ -119,7 +119,7 @@ public class CScoreHolderArgument implements ArgumentType<CScoreHolderArgument.R
 			};
 		} catch (IllegalArgumentException var6) {
 			return (source, holders) -> {
-				AbstractClientPlayer abstractClientPlayer = Streams.stream(source.getLevel().entitiesForRendering())
+				AbstractClientPlayer abstractClientPlayer = Streams.stream(source.getClientLevel().entitiesForRendering())
 					.filter(entity -> entity instanceof AbstractClientPlayer)
 					.map(entity -> (AbstractClientPlayer) entity)
 					.filter(abstractPlayer -> abstractPlayer.getName().getString().equals(string))

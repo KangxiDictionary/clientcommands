@@ -8,7 +8,7 @@ import net.earthcomputer.clientcommands.c2c.C2CPacketHandler;
 import net.earthcomputer.clientcommands.c2c.packets.PutConnectFourPieceC2CPacket;
 import net.earthcomputer.clientcommands.features.TwoPlayerGame;
 import net.earthcomputer.clientcommands.interfaces.ISafeZoneScreen;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

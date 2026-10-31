@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import org.lwjgl.sdl.SDLVideo;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;

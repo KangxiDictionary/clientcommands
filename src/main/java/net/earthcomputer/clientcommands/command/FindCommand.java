@@ -9,7 +9,7 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.LongTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import dev.xpple.clientarguments.arguments.CCoordinates;
 import net.earthcomputer.clientcommands.features.ChorusManipulation;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.core.Direction;
 
 import java.util.EnumSet;

@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
@@ -39,10 +39,10 @@ public class SnapCommand {
         if (source.getPosition().distanceToSqr(pos) > 1) {
             throw TOO_FAR_EXCEPTION.create();
         }
-        if (!canStay(source.getPlayer(), pos)) {
+        if (!canStay(source.getClientPlayer(), pos)) {
             throw CANNOT_FIT_EXCEPTION.create();
         }
-        source.getPlayer().setPos(pos);
+        source.getClientPlayer().setPos(pos);
         source.sendFeedback(Component.translatable("commands.csnap.success", pos.x, pos.y, pos.z));
         return Command.SINGLE_SUCCESS;
     }

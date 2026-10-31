@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.HotbarManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -39,7 +39,7 @@ public class HotbarCommand {
         HotbarManager manager = minecraft.getHotbarManager();
         Hotbar hotbar = manager.get(index - 1);
 
-        hotbar.storeFrom(source.getPlayer().getInventory(), source.registryAccess());
+        hotbar.storeFrom(source.getClientPlayer().getInventory(), source.registryAccess());
         manager.save();
 
         Component loadKey = minecraft.options.keyLoadHotbarActivator.getTranslatedKeyMessage();
@@ -52,7 +52,7 @@ public class HotbarCommand {
     private static int restore(CClientCommandSource source, int index) throws CommandSyntaxException {
         Minecraft minecraft = source.getClient();
 
-        LocalPlayer player = source.getPlayer();
+        LocalPlayer player = source.getClientPlayer();
         if (!player.getAbilities().instabuild) {
             throw NOT_CREATIVE_EXCEPTION.create();
         }

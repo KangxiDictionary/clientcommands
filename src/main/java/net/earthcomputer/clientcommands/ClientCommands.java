@@ -14,7 +14,7 @@ import net.earthcomputer.clientcommands.features.PlayerRandCracker;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.render.RenderQueue;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.earthcomputer.clientcommands.compat.CNetworking;
 
 import net.earthcomputer.clientcommands.compat.CPlatform;

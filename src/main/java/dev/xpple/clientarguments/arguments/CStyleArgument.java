@@ -2,7 +2,7 @@ package dev.xpple.clientarguments.arguments;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;

@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.features;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,7 +43,7 @@ public class RenderSettings {
         if (minecraft.player == null) {
             return;
         }
-        CClientCommandSource source = new CClientCommandSource(minecraft.getConnection(), minecraft);
+        CClientCommandSource source = new net.earthcomputer.clientcommands.platform.SimpleClientCommandSource();
 
         disabledEntities.clear();
         for (var filter : entityRenderSelectors) {

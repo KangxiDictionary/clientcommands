@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.locale.Language;
@@ -34,9 +34,9 @@ public class PosCommand {
                                     .executes(ctx -> convertCoords(ctx.getSource(),
                                             getBlockPos(ctx, "pos"), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension"))))
                             .executes(ctx -> convertCoords(ctx.getSource(),
-                                    ctx.getSource().getPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension")))))
+                                    ctx.getSource().getClientPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension")))))
                     .executes(ctx -> convertCoords(ctx.getSource(),
-                            ctx.getSource().getPlayer().blockPosition(), null, getDimension(ctx, "targetDimension")))))
+                            ctx.getSource().getClientPlayer().blockPosition(), null, getDimension(ctx, "targetDimension")))))
             .then(literal("from").then(argument("sourceDimension", dimension())
                     .then(argument("pos", blockPos())
                             .executes(ctx -> convertCoords(ctx.getSource(),
@@ -46,11 +46,11 @@ public class PosCommand {
                                     .executes(ctx -> convertCoords(ctx.getSource(),
                                             getBlockPos(ctx, "pos"), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension"))))
                             .executes(ctx -> convertCoords(ctx.getSource(),
-                                    ctx.getSource().getPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension")))))
+                                    ctx.getSource().getClientPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), getDimension(ctx, "targetDimension")))))
                     .executes(ctx -> convertCoords(ctx.getSource(),
-                            ctx.getSource().getPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), null))))
+                            ctx.getSource().getClientPlayer().blockPosition(), getDimension(ctx, "sourceDimension"), null))))
             .executes(ctx -> convertCoords(ctx.getSource(),
-                    ctx.getSource().getPlayer().blockPosition(), null, null)));
+                    ctx.getSource().getClientPlayer().blockPosition(), null, null)));
     }
 
     private static int convertCoords(CClientCommandSource source, BlockPos pos,
@@ -60,7 +60,7 @@ public class PosCommand {
         ResourceKey<Level> targetLevel;
         if (sourceDim == null && targetDim == null) {
             // If neither argument is given, set current dimension as source and "opposite" as target
-            sourceLevel = source.getPlayer().level().dimension();
+            sourceLevel = source.getClientPlayer().level().dimension();
             targetLevel = getOppositeLevel(sourceLevel);
         } else if (targetDim == null) {
             // If only source dimension is given, set the target to "opposite"

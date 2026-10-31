@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.earthcomputer.clientcommands.command.arguments.ClientBlockPredicateArgument;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.util.ThrowingPredicate;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

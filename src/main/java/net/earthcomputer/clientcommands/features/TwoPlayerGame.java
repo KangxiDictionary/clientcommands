@@ -17,7 +17,7 @@ import net.earthcomputer.clientcommands.command.ConnectFourCommand;
 import net.earthcomputer.clientcommands.command.TicTacToeCommand;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

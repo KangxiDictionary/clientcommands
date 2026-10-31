@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.render.RenderQueue;
 import net.earthcomputer.clientcommands.server.ClientCommandsServer;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.BlockPos;
@@ -38,7 +38,7 @@ public class AreaStatsCommand {
     private static int areaStats(CClientCommandSource source, BlockPos pos1, BlockPos pos2, ClientBlockPredicate blockPredicate) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
 
-        final ClientLevel level = source.getLevel();
+        final ClientLevel level = source.getClientLevel();
         chunkSource = level.getChunkSource();
         assertChunkIsLoaded(pos1.getX() >> 4, pos1.getZ() >> 4);
         assertChunkIsLoaded(pos2.getX() >> 4, pos2.getZ() >> 4);

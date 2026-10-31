@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.util.MultiVersionCompat;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -76,7 +76,7 @@ public class BookCommand {
     }
 
     private static int fillBook(CClientCommandSource source, IntStream characterGenerator, int limit) throws CommandSyntaxException {
-        LocalPlayer player = source.getPlayer();
+        LocalPlayer player = source.getClientPlayer();
 
         HeldBook book = getHeldWritableBook(player);
 
@@ -102,7 +102,7 @@ public class BookCommand {
     }
 
     private static int signBook(CClientCommandSource source, String title) throws CommandSyntaxException {
-        LocalPlayer player = source.getPlayer();
+        LocalPlayer player = source.getClientPlayer();
 
         if (title.length() > WrittenBookContent.TITLE_MAX_LENGTH) {
             throw TITLE_TOO_LONG.create();

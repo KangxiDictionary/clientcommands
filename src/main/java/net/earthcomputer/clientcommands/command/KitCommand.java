@@ -10,7 +10,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.ClientCommands;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -102,7 +102,7 @@ public class KitCommand {
         if (kits.containsKey(name)) {
             throw ALREADY_EXISTS_EXCEPTION.create(name);
         }
-        kits.put(name, saveInventory(source.registryAccess(), source.getPlayer().getInventory()));
+        kits.put(name, saveInventory(source.registryAccess(), source.getClientPlayer().getInventory()));
         saveFile();
         source.sendFeedback(Component.translatable("commands.ckit.create.success", name));
         return Command.SINGLE_SUCCESS;
@@ -121,14 +121,14 @@ public class KitCommand {
         if (!kits.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
-        kits.put(name, saveInventory(source.registryAccess(), source.getPlayer().getInventory()));
+        kits.put(name, saveInventory(source.registryAccess(), source.getClientPlayer().getInventory()));
         saveFile();
         source.sendFeedback(Component.translatable("commands.ckit.edit.success", name));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int load(CClientCommandSource source, String name, boolean override) throws CommandSyntaxException {
-        if (!source.getPlayer().isCreative()) {
+        if (!source.getClientPlayer().isCreative()) {
             throw NOT_CREATIVE_EXCEPTION.create();
         }
 
@@ -137,20 +137,20 @@ public class KitCommand {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
 
-        Inventory tempInv = new Inventory(source.getPlayer(), source.getPlayer().equipment);
+        Inventory tempInv = new Inventory(source.getClientPlayer(), source.getClientPlayer().equipment);
         loadInventory(source.registryAccess(), tempInv, kit);
-        List<Slot> slots = source.getPlayer().inventoryMenu.slots;
+        List<Slot> slots = source.getClientPlayer().inventoryMenu.slots;
         for (int i = 0; i < slots.size(); i++) {
-            if (slots.get(i).container == source.getPlayer().getInventory()) {
+            if (slots.get(i).container == source.getClientPlayer().getInventory()) {
                 ItemStack itemStack = tempInv.getItem(slots.get(i).getContainerSlot());
                 if (!itemStack.isEmpty() || override) {
-                    source.getPlayer().getInventory().setItem(slots.get(i).getContainerSlot(), itemStack);
+                    source.getClientPlayer().getInventory().setItem(slots.get(i).getContainerSlot(), itemStack);
                     source.getClient().gameMode.handleCreativeModeItemAdd(itemStack, i);
                 }
             }
         }
 
-        source.getPlayer().inventoryMenu.broadcastChanges();
+        source.getClientPlayer().inventoryMenu.broadcastChanges();
         source.sendFeedback(Component.translatable("commands.ckit.load.success", name));
         return Command.SINGLE_SUCCESS;
     }
@@ -171,7 +171,7 @@ public class KitCommand {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
 
-        Inventory tempInv = new Inventory(source.getPlayer(), source.getPlayer().equipment);
+        Inventory tempInv = new Inventory(source.getClientPlayer(), source.getClientPlayer().equipment);
         loadInventory(source.registryAccess(), tempInv, kit);
         /*
             After executing a command, the current screen will be closed (the chat hud).
@@ -179,7 +179,7 @@ public class KitCommand {
             instantly along with the chat hud. Slightly delaying the opening of the
             screen fixes this issue.
          */
-        source.getClient().schedule(() -> source.getClient().gui.setScreen(new PreviewScreen(new InventoryMenu(tempInv, true, source.getPlayer()), tempInv, name)));
+        source.getClient().schedule(() -> source.getClient().gui.setScreen(new PreviewScreen(new InventoryMenu(tempInv, true, source.getClientPlayer()), tempInv, name)));
         return Command.SINGLE_SUCCESS;
     }
 

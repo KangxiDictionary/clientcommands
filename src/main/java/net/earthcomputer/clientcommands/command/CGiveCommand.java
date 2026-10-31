@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandBuildContext;
@@ -34,7 +34,7 @@ public class CGiveCommand {
     }
 
     private static int give(CClientCommandSource source, ItemInput itemInput, int count) throws CommandSyntaxException {
-        LocalPlayer player = source.getPlayer();
+        LocalPlayer player = source.getClientPlayer();
         if (!player.isCreative()) {
             throw NOT_CREATIVE_EXCEPTION.create();
         }

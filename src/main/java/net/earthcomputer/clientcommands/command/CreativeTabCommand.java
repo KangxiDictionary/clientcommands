@@ -9,7 +9,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.util.CUtil;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;

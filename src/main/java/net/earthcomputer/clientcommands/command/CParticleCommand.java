@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +22,7 @@ public class CParticleCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("cparticle")
             .then(argument("name", particle(context))
-                .executes(ctx -> spawnParticle(ctx.getSource(), getParticle(ctx, "name"), ctx.getSource().getPlayer().position(), Vec3.ZERO, 1, 1, false))
+                .executes(ctx -> spawnParticle(ctx.getSource(), getParticle(ctx, "name"), ctx.getSource().getClientPlayer().position(), Vec3.ZERO, 1, 1, false))
                 .then(argument("pos", vec3())
                     .executes(ctx -> spawnParticle(ctx.getSource(), getParticle(ctx, "name"), getVec3(ctx, "pos"), Vec3.ZERO, 1, 1, false))
                     .then(argument("delta", vec3(false))
@@ -39,11 +39,11 @@ public class CParticleCommand {
 
     private static int spawnParticle(CClientCommandSource source, ParticleOptions parameters, Vec3 pos, Vec3 delta, float speed, int count, boolean force) throws CommandSyntaxException {
         if (count == 0) {
-            source.getLevel().addAlwaysVisibleParticle(parameters, force, pos.x, pos.y, pos.z, delta.x * speed, delta.y * speed, delta.z * speed);
+            source.getClientLevel().addAlwaysVisibleParticle(parameters, force, pos.x, pos.y, pos.z, delta.x * speed, delta.y * speed, delta.z * speed);
         } else {
             final RandomSource random = source.getClient().getConnection().getLevel().getRandom();
             for (int i = 0; i < count; i++) {
-                source.getLevel().addAlwaysVisibleParticle(parameters, force, pos.x + delta.x * random.nextGaussian(), pos.y + delta.y * random.nextGaussian(), pos.z + delta.z * random.nextGaussian(), speed * random.nextGaussian(), speed * random.nextGaussian(), speed * random.nextGaussian());
+                source.getClientLevel().addAlwaysVisibleParticle(parameters, force, pos.x + delta.x * random.nextGaussian(), pos.y + delta.y * random.nextGaussian(), pos.z + delta.z * random.nextGaussian(), speed * random.nextGaussian(), speed * random.nextGaussian(), speed * random.nextGaussian());
             }
         }
         source.sendFeedback(Component.translatable("commands.cparticle.success",

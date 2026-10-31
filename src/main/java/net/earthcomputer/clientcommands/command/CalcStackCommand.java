@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -48,7 +48,7 @@ public class CalcStackCommand {
     }
 
     private static int getStackSize(CClientCommandSource source, int count) {
-        ItemStack heldStack = source.getPlayer().getItemInHand(InteractionHand.MAIN_HAND).copy();
+        ItemStack heldStack = source.getClientPlayer().getItemInHand(InteractionHand.MAIN_HAND).copy();
         return getStackSize(source, heldStack, count);
     }
 

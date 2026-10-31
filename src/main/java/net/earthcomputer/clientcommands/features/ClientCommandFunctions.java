@@ -10,7 +10,7 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.ClientCommands;
 import net.earthcomputer.clientcommands.Configs;
 import net.earthcomputer.clientcommands.command.VarCommand;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.server.IntegratedServer;

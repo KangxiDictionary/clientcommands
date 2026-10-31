@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import net.earthcomputer.clientcommands.features.RenderSettings;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
 import static dev.xpple.clientarguments.arguments.CEntityArgument.*;

@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -58,12 +58,12 @@ public class MapCommand {
     }
 
     private static int exportMap(CClientCommandSource source, int scale) throws CommandSyntaxException {
-        MapItemSavedData data = fromHand(source.getPlayer());
+        MapItemSavedData data = fromHand(source.getClientPlayer());
         if (data != null) {
             return exportMap(source, new MapInfo[][] { { new MapInfo(data, 0) } }, scale, false);
         }
 
-        MapInfo[][] worldData = fromWorld(source.getClient().crosshairPickEntity, source.getClient().level, source.getPlayer().getDirection());
+        MapInfo[][] worldData = fromWorld(source.getClient().crosshairPickEntity, source.getClient().level, source.getClientPlayer().getDirection());
         if (worldData != null) {
             return exportMap(source, worldData, scale, true);
         }

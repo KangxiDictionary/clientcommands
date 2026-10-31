@@ -13,7 +13,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.util.BrigadierRemover;
 import net.earthcomputer.clientcommands.interfaces.IClientSuggestionsProvider_Alias;
-import net.earthcomputer.clientcommands.compat.CClientCommandSource;
+import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.earthcomputer.clientcommands.compat.CPlatform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
