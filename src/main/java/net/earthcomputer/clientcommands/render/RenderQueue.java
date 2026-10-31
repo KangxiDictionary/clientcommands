@@ -6,10 +6,8 @@ import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import net.earthcomputer.clientcommands.compat.CClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.earthcomputer.clientcommands.compat.CRenderContext;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollection;
@@ -36,15 +34,11 @@ public class RenderQueue {
     private static final List<RemoveQueueEntry> removeQueue = new ArrayList<>();
     private static final EnumMap<Layer, Map<Object, Shape>> queue = new EnumMap<>(Layer.class);
 
-    private static final RenderStateDataKey<EnumMap<Layer, List<Shape.RenderState>>> RENDER_STATES_KEY = RenderStateDataKey.create(() -> "clientcommands render queue");
-
-    private static final RenderPipeline LINES_NO_DEPTH_PIPELINE = RenderPipelines.register(
-        RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
-            .withLocation(Identifier.fromNamespaceAndPath("clientcommands", "pipeline/lines_no_depth"))
-            .withColorTargetState(ColorTargetState.DEFAULT)
-            .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, true))
-            .build()
-    );
+    private static final RenderPipeline LINES_NO_DEPTH_PIPELINE = RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
+        .withLocation(Identifier.fromNamespaceAndPath("clientcommands", "pipeline/lines_no_depth"))
+        .withColorTargetState(ColorTargetState.DEFAULT)
+        .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, true))
+        .build();
     private static final OitPipelineSet LINES_NO_DEPTH_OIT_PIPELINE = OitPipelineSet.builder(
         "clientcommands_no_depth",
         RenderPipeline.builder(RenderPipelines.OIT_LINES_SNIPPET)
@@ -61,18 +55,6 @@ public class RenderQueue {
 
     static {
         CClientTickEvents.START_CLIENT_TICK.register(RenderQueue::tick);
-
-        LevelExtractionEvents.END_EXTRACTION.register(context -> {
-            EnumMap<Layer, List<Shape.RenderState>> renderStates = new EnumMap<>(Layer.class);
-            queue.forEach((layer, shapes) -> {
-                List<Shape.RenderState> states = new ArrayList<>();
-                shapes.values().forEach(shape -> states.add(shape.extract(context)));
-                renderStates.put(layer, states);
-            });
-            context.levelState().setData(RENDER_STATES_KEY, renderStates);
-        });
-
-        LevelRenderEvents.COLLECT_SUBMITS.register(context -> render(Layer.ON_TOP, LINES_NO_DEPTH_LAYER, context));
     }
 
     public static void register() {
@@ -138,19 +120,19 @@ public class RenderQueue {
         }
     }
 
-    private static void render(Layer layer, RenderType renderType, LevelRenderContext context) {
-        EnumMap<Layer, List<Shape.RenderState>> renderStates = context.levelState().getData(RENDER_STATES_KEY);
-        if (renderStates == null) {
-            return;
-        }
+    /**
+     * Called from the LevelRenderer mixin at the end of the feature submission phase,
+     * where both the LevelRenderState and the SubmitNodeCollector are available.
+     */
+    public static void submit(PoseStack poseStack, SubmitNodeCollector collector, LevelRenderState levelState) {
+        Minecraft mc = Minecraft.getInstance();
+        CRenderContext context = new CRenderContext(poseStack, mc.gameRenderer.mainCamera(),
+            mc.getDeltaTracker(), collector, levelState);
 
-        List<Shape.RenderState> states = renderStates.get(layer);
-        if (states == null) {
-            return;
-        }
-
-        for (Shape.RenderState state : states) {
-            state.render(context, renderType);
+        for (Map.Entry<Layer, Map<Object, Shape>> entry : queue.entrySet()) {
+            for (Shape shape : entry.getValue().values()) {
+                shape.extract(context).render(context, LINES_NO_DEPTH_LAYER);
+            }
         }
     }
 

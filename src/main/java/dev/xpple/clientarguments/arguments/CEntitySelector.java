@@ -144,16 +144,12 @@ public class CEntitySelector {
 			if (box != null) {
 				level.getEntities(this.type, box, predicate, entities, resultLimit);
 			} else {
-				level.getEntities().get(this.type, entity -> {
-					if (predicate.test(entity)) {
-						entities.add(entity);
-						if (entities.size() >= resultLimit) {
-							return Continuation.ABORT;
-						}
+				for (Entity entity : level.getEntities(this.type, AABB.ofSize(Vec3.ZERO, 3.0E7, 3.0E7, 3.0E7), predicate)) {
+					entities.add(entity);
+					if (entities.size() >= resultLimit) {
+						break;
 					}
-
-					return Continuation.CONTINUE;
-				});
+				}
 			}
 		}
 	}

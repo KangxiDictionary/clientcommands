@@ -2,8 +2,8 @@ package net.earthcomputer.clientcommands.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.earthcomputer.clientcommands.compat.CRenderContext;
+import net.earthcomputer.clientcommands.compat.CRenderContext;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.phys.Vec3;
 
@@ -20,7 +20,7 @@ public class Line extends Shape {
     }
 
     @Override
-    public Shape.RenderState extract(LevelExtractionContext context) {
+    public Shape.RenderState extract(CRenderContext context) {
         Vec3 prevPosOffset = prevPos.subtract(getPos());
         float delta = context.deltaTracker().getRealtimeDeltaTicks();
         Vec3 cameraPos = context.camera().position();
@@ -63,7 +63,7 @@ public class Line extends Shape {
 
     private record RenderState(Vec3 start, Vec3 end, int color) implements Shape.RenderState {
         @Override
-        public void render(LevelRenderContext context, RenderType renderType) {
+        public void render(CRenderContext context, RenderType renderType) {
             RenderQueue.submitCustomGeometry(context.submitNodeCollector(), context.poseStack(), renderType, this::draw);
         }
 

@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.render;
 
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.earthcomputer.clientcommands.compat.CRenderContext;
+import net.earthcomputer.clientcommands.compat.CRenderContext;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.phys.Vec3;
 
@@ -12,11 +12,11 @@ public abstract class Shape {
     public void tick() {
     }
 
-    public abstract RenderState extract(LevelExtractionContext context);
+    public abstract RenderState extract(CRenderContext context);
 
     public abstract Vec3 getPos();
 
     public interface RenderState {
-        void render(LevelRenderContext context, RenderType renderType);
+        void render(CRenderContext context, RenderType renderType);
     }
 }
