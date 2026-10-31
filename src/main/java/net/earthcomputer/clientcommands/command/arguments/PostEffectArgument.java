@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelTargetBundle;
 import net.minecraft.client.renderer.PostChainConfig;
@@ -31,7 +31,7 @@ public class PostEffectArgument implements ArgumentType<Identifier> {
         return new PostEffectArgument();
     }
 
-    public static Identifier getPostEffect(final CommandContext<FabricClientCommandSource> context, final String name) {
+    public static Identifier getPostEffect(final CommandContext<CClientCommandSource> context, final String name) {
         return context.getArgument(name, Identifier.class);
     }
 

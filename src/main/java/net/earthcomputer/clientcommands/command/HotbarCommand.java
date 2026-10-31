@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.HotbarManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,7 +22,7 @@ public class HotbarCommand {
 
     private static final SimpleCommandExceptionType NOT_CREATIVE_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.chotbar.notCreative"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("chotbar")
             .then(literal("save")
                 // Intentionally one-indexed to match keybindings and creative inventory display
@@ -33,7 +33,7 @@ public class HotbarCommand {
                 .executes(ctx -> restore(ctx.getSource(), getInteger(ctx, "index"))))));
     }
 
-    private static int save(FabricClientCommandSource source, int index) {
+    private static int save(CClientCommandSource source, int index) {
         Minecraft minecraft = source.getClient();
 
         HotbarManager manager = minecraft.getHotbarManager();
@@ -49,7 +49,7 @@ public class HotbarCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int restore(FabricClientCommandSource source, int index) throws CommandSyntaxException {
+    private static int restore(CClientCommandSource source, int index) throws CommandSyntaxException {
         Minecraft minecraft = source.getClient();
 
         LocalPlayer player = source.getPlayer();

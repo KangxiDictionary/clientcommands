@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.server.ClientCommandsServer;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class GhostBlockCommand {
     private static final SimpleCommandExceptionType SET_FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.setblock.failed"));
     private static final SimpleCommandExceptionType FILL_FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.fill.failed"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("cghostblock")
             .then(literal("set")
                 .then(argument("pos", blockPos())
@@ -42,7 +42,7 @@ public class GhostBlockCommand {
                                     .executes(ctx -> fillGhostBlocks(ctx.getSource(), getBlockPos(ctx, "from"), getBlockPos(ctx, "to"), getBlockState(ctx, "block").getState(), getBlockPredicate(ctx, "filter"))))))))));
     }
 
-    private static int setGhostBlock(FabricClientCommandSource source, BlockPos pos, BlockState state) throws CommandSyntaxException {
+    private static int setGhostBlock(CClientCommandSource source, BlockPos pos, BlockState state) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
         ClientLevel level = source.getLevel();
         assert level != null;
@@ -58,7 +58,7 @@ public class GhostBlockCommand {
         }
     }
 
-    private static int fillGhostBlocks(FabricClientCommandSource source, BlockPos from, BlockPos to, BlockState state, Predicate<BlockInWorld> filter) throws CommandSyntaxException {
+    private static int fillGhostBlocks(CClientCommandSource source, BlockPos from, BlockPos to, BlockState state, Predicate<BlockInWorld> filter) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
         ClientLevel level = source.getLevel();
         assert level != null;

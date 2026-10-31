@@ -8,8 +8,8 @@ import net.earthcomputer.clientcommands.util.MultiVersionCompat;
 import net.earthcomputer.clientcommands.command.ClientCommandHelper;
 import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.interfaces.ICreativeSlot;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import net.earthcomputer.clientcommands.compat.CEvent;
+import net.earthcomputer.clientcommands.compat.CEventFactory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -97,7 +97,7 @@ public class PlayerRandCracker {
 
     // ===== RESET DETECTION + PLAYER RNG MAINTENANCE ===== //
 
-    public static final Event<RNGCallListener> RNG_CALLED_EVENT = EventFactory.createArrayBacked(RNGCallListener.class, listeners -> event -> {
+    public static final CEvent<RNGCallListener> RNG_CALLED_EVENT = CEventFactory.createArrayBacked(RNGCallListener.class, listeners -> event -> {
         for (RNGCallListener listener : listeners) {
             listener.onCall(event);
         }

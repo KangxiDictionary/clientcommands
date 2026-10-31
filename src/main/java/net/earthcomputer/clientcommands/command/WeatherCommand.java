@@ -3,14 +3,14 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.features.ClientWeather;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class WeatherCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cweather")
             .then(literal("clear").executes(ctx -> executeWeatherClear(ctx.getSource())))
             .then(literal("rain").executes(ctx -> executeWeatherRain(ctx.getSource())))
@@ -19,7 +19,7 @@ public class WeatherCommand {
         );
     }
 
-    private static int executeWeatherClear(FabricClientCommandSource source) {
+    private static int executeWeatherClear(CClientCommandSource source) {
         ClientWeather.setRain(0);
         ClientWeather.setThunder(0);
         Component feedback = Component.translatable("commands.weather.set.clear");
@@ -27,7 +27,7 @@ public class WeatherCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeWeatherRain(FabricClientCommandSource source) {
+    private static int executeWeatherRain(CClientCommandSource source) {
         ClientWeather.setRain(1);
         ClientWeather.setThunder(0);
         Component feedback = Component.translatable("commands.weather.set.rain");
@@ -35,7 +35,7 @@ public class WeatherCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeWeatherThunder(FabricClientCommandSource source) {
+    private static int executeWeatherThunder(CClientCommandSource source) {
         ClientWeather.setRain(1);
         ClientWeather.setThunder(1);
         Component feedback = Component.translatable("commands.weather.set.thunder");
@@ -43,7 +43,7 @@ public class WeatherCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeWeatherReset(FabricClientCommandSource source) {
+    private static int executeWeatherReset(CClientCommandSource source) {
         ClientWeather.setRain(-1);
         ClientWeather.setThunder(-1);
         Component feedback = Component.translatable("commands.cweather.reset");

@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.util.StringRepresentable;
 
@@ -10,7 +10,7 @@ import static dev.xpple.clientarguments.arguments.CEnumArgument.*;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CDebugCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cdebug")
             .executes(ctx -> execute(ctx.getSource(), DebugScreenType.OVERLAY))
             .then(argument("type", enumArg(DebugScreenType.class))
@@ -18,7 +18,7 @@ public class CDebugCommand {
         );
     }
 
-    private static int execute(FabricClientCommandSource source, DebugScreenType type) {
+    private static int execute(CClientCommandSource source, DebugScreenType type) {
         DebugScreenOverlay debugScreenOverlay = source.getClient().getDebugOverlay();
         switch (type) {
             case OVERLAY -> source.getClient().debugEntries.toggleDebugOverlay();

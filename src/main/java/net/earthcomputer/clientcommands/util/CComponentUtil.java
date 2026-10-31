@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import dev.xpple.clientarguments.arguments.CEntitySelectorParser;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.predicates.NbtPredicate;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
@@ -120,7 +120,7 @@ public final class CComponentUtil {
     }
 
     public static MutableComponent updateForEntity(
-        FabricClientCommandSource source,
+        CClientCommandSource source,
         Component component,
         @Nullable Entity entity,
         int recursionDepth
@@ -139,7 +139,7 @@ public final class CComponentUtil {
     }
 
     private static MutableComponent resolveContents(
-        FabricClientCommandSource source,
+        CClientCommandSource source,
         ComponentContents contents,
         @Nullable Entity entity,
         int recursionDepth
@@ -198,7 +198,7 @@ public final class CComponentUtil {
     }
 
     private static Style resolveStyle(
-        FabricClientCommandSource source,
+        CClientCommandSource source,
         Style style,
         @Nullable Entity entity,
         int recursionDepth
@@ -212,7 +212,7 @@ public final class CComponentUtil {
         }
     }
 
-    private static Stream<CompoundTag> getData(FabricClientCommandSource source, DataSource data) throws CommandSyntaxException {
+    private static Stream<CompoundTag> getData(CClientCommandSource source, DataSource data) throws CommandSyntaxException {
         return switch (data) {
             case BlockDataSource(Coordinates coordinates) -> {
                 BlockPos pos = getBlockPos(source, coordinates);
@@ -227,7 +227,7 @@ public final class CComponentUtil {
         };
     }
 
-    private static BlockPos getBlockPos(FabricClientCommandSource source, Coordinates pos) {
+    private static BlockPos getBlockPos(CClientCommandSource source, Coordinates pos) {
         Vec3 sourcePos = source.getPosition();
         return switch (pos) {
             case WorldCoordinates worldCoords -> BlockPos.containing(worldCoords.x().get(sourcePos.x), worldCoords.y().get(sourcePos.y), worldCoords.z().get(sourcePos.z));

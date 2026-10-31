@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.datafixers.util.Either;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
@@ -66,7 +66,7 @@ public class ClientBlockPredicateArgument implements ArgumentType<ClientBlockPre
         return BlockStateParser.fillSuggestions(holderLookup, builder, allowTags, allowNbt);
     }
 
-    public static ClientBlockPredicate getBlockPredicate(CommandContext<FabricClientCommandSource> context, String arg) throws CommandSyntaxException {
+    public static ClientBlockPredicate getBlockPredicate(CommandContext<CClientCommandSource> context, String arg) throws CommandSyntaxException {
         return getBlockPredicate(context.getArgument(arg, ParseResult.class));
     }
 
@@ -94,7 +94,7 @@ public class ClientBlockPredicateArgument implements ArgumentType<ClientBlockPre
         };
     }
 
-    public static ClientBlockPredicate getBlockPredicateList(CommandContext<FabricClientCommandSource> context, String arg) throws CommandSyntaxException {
+    public static ClientBlockPredicate getBlockPredicateList(CommandContext<CClientCommandSource> context, String arg) throws CommandSyntaxException {
         List<ParseResult> results = ListArgument.getList(context, arg);
         Predicate<BlockState> predicate = getPredicateForListWithoutNbt(results.stream().map(ParseResult::result).toList());
 

@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import dev.xpple.clientarguments.arguments.CCoordinates;
 import net.earthcomputer.clientcommands.features.ChorusManipulation;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.core.Direction;
 
 import java.util.EnumSet;
@@ -13,7 +13,7 @@ import static dev.xpple.clientarguments.arguments.CVec3Argument.*;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class ChorusCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cchorus")
                 .then(literal("setGoal")
                         .then(literal("relative")
@@ -29,13 +29,13 @@ public class ChorusCommand {
                 ));
     }
 
-    public static RequiredArgumentBuilder<FabricClientCommandSource, CCoordinates> areaThen(boolean relative) {
+    public static RequiredArgumentBuilder<CClientCommandSource, CCoordinates> areaThen(boolean relative) {
         return argument("posFrom", vec3())
                 .then(argument("posTo", vec3())
                         .executes(ctx -> ChorusManipulation.setGoal(getVec3(ctx, "posFrom"), getVec3(ctx, "posTo"), relative)));
     }
 
-    public static RequiredArgumentBuilder<FabricClientCommandSource, CCoordinates> blockThen(boolean relative) {
+    public static RequiredArgumentBuilder<CClientCommandSource, CCoordinates> blockThen(boolean relative) {
         return argument("posGoal", vec3())
                 .executes(ctx -> ChorusManipulation.setGoal(
                         getVec3(ctx, "posGoal").align(EnumSet.allOf(Direction.Axis.class)).add(-0.2, 0, -0.2),

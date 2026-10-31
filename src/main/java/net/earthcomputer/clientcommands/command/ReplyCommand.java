@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.Configs;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
@@ -53,14 +53,14 @@ public class ReplyCommand {
         replyCandidates.add(new ReplyCandidate(username, timestamp));
     }
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var command = dispatcher.register(literal("creply")
             .then(argument("message", message())
                 .executes(ctx -> reply(ctx.getSource(), getMessage(ctx, "message")))));
         dispatcher.register(literal("cr").redirect(command));
     }
 
-    public static int reply(FabricClientCommandSource source, Component message) throws CommandSyntaxException {
+    public static int reply(CClientCommandSource source, Component message) throws CommandSyntaxException {
         String target = ReplyCommand.getCurrentTarget();
         if (target == null) {
             throw NO_TARGET_FOUND_EXCEPTION.create();

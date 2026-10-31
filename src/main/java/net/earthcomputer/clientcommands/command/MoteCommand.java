@@ -2,14 +2,14 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class MoteCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cmote")//cmote for c emoticon but shortened because it sounds better
             .then(literal("yay")
                 .executes(ctx -> sendEmoticon("╲(｡◕‿◕｡)╱")))

@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.ClickEvent;
@@ -16,13 +16,13 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class UuidCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cuuid")
             .then(argument("entity", entityUuid())
                 .executes(ctx -> getUuid(ctx.getSource(), getEntityUuid(ctx, "entity")))));
     }
 
-    private static int getUuid(FabricClientCommandSource source, UUID entity) {
+    private static int getUuid(CClientCommandSource source, UUID entity) {
         String uuid = entity.toString();
         Component uuidComponent = Component.literal(uuid).withStyle(style -> style
             .withUnderlined(true)

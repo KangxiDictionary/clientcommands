@@ -47,3 +47,7 @@ processResources {
 		expand replaceProperties
 	}
 }
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += ['-Xmaxerrs', '2000']
+}

@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -48,7 +48,7 @@ public class VarCommand {
         }
     }
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cvar")
                 .then(literal("add")
                         .then(argument("variable", word())
@@ -71,7 +71,7 @@ public class VarCommand {
                         .executes(ctx -> listVariables(ctx.getSource()))));
     }
 
-    private static int addVariable(FabricClientCommandSource source, String variable, String value) throws CommandSyntaxException {
+    private static int addVariable(CClientCommandSource source, String variable, String value) throws CommandSyntaxException {
         if (variables.containsKey(variable)) {
             throw ALREADY_EXISTS_EXCEPTION.create(variable);
         }
@@ -81,7 +81,7 @@ public class VarCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeVariable(FabricClientCommandSource source, String variable) throws CommandSyntaxException {
+    private static int removeVariable(CClientCommandSource source, String variable) throws CommandSyntaxException {
         if (variables.remove(variable) == null) {
             throw NOT_FOUND_EXCEPTION.create(variable);
         }
@@ -90,7 +90,7 @@ public class VarCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int editVariable(FabricClientCommandSource source, String variable, String value) throws CommandSyntaxException {
+    private static int editVariable(CClientCommandSource source, String variable, String value) throws CommandSyntaxException {
         if (!variables.containsKey(variable)) {
             throw NOT_FOUND_EXCEPTION.create(variable);
         }
@@ -100,7 +100,7 @@ public class VarCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int parseVariable(FabricClientCommandSource source, String variable) throws CommandSyntaxException {
+    private static int parseVariable(CClientCommandSource source, String variable) throws CommandSyntaxException {
         String value = variables.get(variable);
         if (value == null) {
             throw NOT_FOUND_EXCEPTION.create(variable);
@@ -109,7 +109,7 @@ public class VarCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int listVariables(FabricClientCommandSource source) {
+    private static int listVariables(CClientCommandSource source) {
         if (variables.isEmpty()) {
             source.sendFeedback(Component.translatable("commands.cvar.list.empty"));
         } else {

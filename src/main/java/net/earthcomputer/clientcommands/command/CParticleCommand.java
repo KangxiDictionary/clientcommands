@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +19,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CParticleCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("cparticle")
             .then(argument("name", particle(context))
                 .executes(ctx -> spawnParticle(ctx.getSource(), getParticle(ctx, "name"), ctx.getSource().getPlayer().position(), Vec3.ZERO, 1, 1, false))
@@ -37,7 +37,7 @@ public class CParticleCommand {
                                     .executes(ctx -> spawnParticle(ctx.getSource(), getParticle(ctx, "name"), getVec3(ctx, "pos"), getVec3(ctx, "delta"), getFloat(ctx, "speed"), getInteger(ctx, "count"), true)))))))));
     }
 
-    private static int spawnParticle(FabricClientCommandSource source, ParticleOptions parameters, Vec3 pos, Vec3 delta, float speed, int count, boolean force) throws CommandSyntaxException {
+    private static int spawnParticle(CClientCommandSource source, ParticleOptions parameters, Vec3 pos, Vec3 delta, float speed, int count, boolean force) throws CommandSyntaxException {
         if (count == 0) {
             source.getLevel().addAlwaysVisibleParticle(parameters, force, pos.x, pos.y, pos.z, delta.x * speed, delta.y * speed, delta.z * speed);
         } else {

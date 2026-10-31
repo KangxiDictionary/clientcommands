@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import net.earthcomputer.clientcommands.features.RenderSettings;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
 import static dev.xpple.clientarguments.arguments.CEntityArgument.*;
@@ -12,7 +12,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class RenderCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("crender")
             .then(literal("enable")
                 .then(literal("entities")
@@ -24,7 +24,7 @@ public class RenderCommand {
                         .executes(ctx -> enableEntityRendering(ctx.getSource(), ctx.getArgument("filter", CEntitySelector.class), false))))));
     }
 
-    private static int enableEntityRendering(FabricClientCommandSource source, CEntitySelector selector, boolean enable) {
+    private static int enableEntityRendering(CClientCommandSource source, CEntitySelector selector, boolean enable) {
         RenderSettings.addEntityRenderSelector(selector, enable);
         source.sendFeedback(Component.translatable("commands.crender.entities.success"));
         return Command.SINGLE_SUCCESS;

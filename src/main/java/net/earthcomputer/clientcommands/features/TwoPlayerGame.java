@@ -18,7 +18,7 @@ import net.earthcomputer.clientcommands.command.ConnectFourCommand;
 import net.earthcomputer.clientcommands.command.TicTacToeCommand;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -137,7 +137,7 @@ public class TwoPlayerGame<T, S extends Screen> {
         this.activeGames.put(opponent.getProfile().id(), this.gameFactory.create(opponent, isFirstPlayer));
     }
 
-    public LiteralArgumentBuilder<FabricClientCommandSource> createCommandTree() {
+    public LiteralArgumentBuilder<CClientCommandSource> createCommandTree() {
         final Minecraft mc = Minecraft.getInstance();
         final ClientPacketListener connection = mc.getConnection();
         assert connection != null;
@@ -155,7 +155,7 @@ public class TwoPlayerGame<T, S extends Screen> {
                     .executes(ctx -> this.open(ctx.getSource(), getString(ctx, "opponent")))));
     }
 
-    private int start(FabricClientCommandSource source, GameProfile player) throws CommandSyntaxException {
+    private int start(CClientCommandSource source, GameProfile player) throws CommandSyntaxException {
         PlayerInfo recipient = source.getClient().getConnection().getPlayerInfo(player.id());
         if (recipient == null) {
             throw PLAYER_NOT_FOUND_EXCEPTION.create();
@@ -173,7 +173,7 @@ public class TwoPlayerGame<T, S extends Screen> {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int stop(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private int stop(CClientCommandSource source, String name) throws CommandSyntaxException {
         PlayerInfo opponent = source.getClient().getConnection().getPlayerInfo(name);
         if (opponent == null) {
             throw PLAYER_NOT_FOUND_EXCEPTION.create();
@@ -189,7 +189,7 @@ public class TwoPlayerGame<T, S extends Screen> {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int open(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private int open(CClientCommandSource source, String name) throws CommandSyntaxException {
         PlayerInfo opponent = source.getClient().getConnection().getPlayerInfo(name);
         if (opponent == null) {
             throw PLAYER_NOT_FOUND_EXCEPTION.create();

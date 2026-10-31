@@ -9,7 +9,7 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.LongTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -30,14 +30,14 @@ public class FindCommand {
 
     private static final SimpleCommandExceptionType NO_MATCH_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cfind.noMatch"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var cfind = dispatcher.register(literal("cfind")
             .then(argument("filter", entities())
                 .executes(ctx -> listEntities(ctx.getSource(), ctx.getArgument("filter", CEntitySelector.class)))));
         FLAG_KEEP_SEARCHING.addToCommand(dispatcher, cfind, ctx -> true);
     }
 
-    private static int listEntities(FabricClientCommandSource source, CEntitySelector selector) throws CommandSyntaxException {
+    private static int listEntities(CClientCommandSource source, CEntitySelector selector) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
         boolean keepSearching = getFlag(source, FLAG_KEEP_SEARCHING);
         if (keepSearching) {
@@ -64,7 +64,7 @@ public class FindCommand {
         }
     }
 
-    private static void sendEntityFoundMessage(FabricClientCommandSource source, Entity entity) {
+    private static void sendEntityFoundMessage(CClientCommandSource source, Entity entity) {
         String distance = "%.2f".formatted(Math.sqrt(entity.distanceToSqr(source.getPosition())));
         source.sendFeedback(Component.translatable(
             "commands.cfind.found",
@@ -75,11 +75,11 @@ public class FindCommand {
     }
 
     private static class FindTask extends LongTask {
-        private final FabricClientCommandSource source;
+        private final CClientCommandSource source;
         private final CEntitySelector selector;
         private final Set<UUID> foundEntities = new HashSet<>();
 
-        private FindTask(FabricClientCommandSource source, CEntitySelector selector) {
+        private FindTask(CClientCommandSource source, CEntitySelector selector) {
             this.source = source;
             this.selector = selector;
         }

@@ -13,7 +13,7 @@ import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
 import net.earthcomputer.clientcommands.features.PacketDumper;
 import net.earthcomputer.clientcommands.util.ReflectionUtils;
 import net.earthcomputer.clientcommands.util.UnsafeUtils;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -71,7 +71,7 @@ public class ListenCommand {
         ClientConnectionEvents.SEND_PACKET_NO_UNPACK_BUNDLES.register((_, packet) -> onPacket(packet, PacketFlow.SERVERBOUND));
     }
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("clisten")
             .then(literal("add")
                 .then(argument("packet", packet())
@@ -85,7 +85,7 @@ public class ListenCommand {
                 .executes(ctx -> clear(ctx.getSource()))));
     }
 
-    private static int add(FabricClientCommandSource source, Identifier packetType) throws CommandSyntaxException {
+    private static int add(CClientCommandSource source, Identifier packetType) throws CommandSyntaxException {
         if (!packets.add(packetType)) {
             throw ALREADY_LISTENING_EXCEPTION.create();
         }
@@ -136,7 +136,7 @@ public class ListenCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int remove(FabricClientCommandSource source, Identifier packetType) throws CommandSyntaxException {
+    private static int remove(CClientCommandSource source, Identifier packetType) throws CommandSyntaxException {
         if (!packets.remove(packetType)) {
             throw NOT_LISTENING_EXCEPTION.create();
         }
@@ -145,7 +145,7 @@ public class ListenCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int list(FabricClientCommandSource source) throws CommandSyntaxException {
+    private static int list(CClientCommandSource source) throws CommandSyntaxException {
         int amount = packets.size();
         if (amount == 0) {
             source.sendFeedback(Component.translatable("commands.clisten.list.none"));
@@ -159,7 +159,7 @@ public class ListenCommand {
         return amount;
     }
 
-    private static int clear(FabricClientCommandSource source) throws CommandSyntaxException {
+    private static int clear(CClientCommandSource source) throws CommandSyntaxException {
         int amount = packets.size();
         packets.clear();
         source.sendFeedback(Component.translatable("commands.clisten.clear"));

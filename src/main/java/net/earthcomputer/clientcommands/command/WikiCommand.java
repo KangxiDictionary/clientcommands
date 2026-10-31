@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.features.WikiRetriever;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -24,7 +24,7 @@ public class WikiCommand {
     private static final String WIKI_ARTICLE = WIKI_HOST + "w/%s";
 
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cwiki")
             .then(argument("page", greedyString())
                 .executes(ctx -> displayWikiPage(ctx.getSource(), getString(ctx, "page")))));
@@ -51,7 +51,7 @@ public class WikiCommand {
                 );
     }
 
-    private static int displayWikiPage(FabricClientCommandSource source, String page) throws CommandSyntaxException {
+    private static int displayWikiPage(CClientCommandSource source, String page) throws CommandSyntaxException {
         String content = WikiRetriever.getWikiSummary(page);
         if (content == null) {
             throw FAILED_EXCEPTION.create();

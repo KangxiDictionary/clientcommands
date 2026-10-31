@@ -12,7 +12,7 @@ import net.earthcomputer.clientcommands.task.RenderDistanceScanTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
 import net.earthcomputer.clientcommands.util.SeedfindingUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -48,13 +48,13 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 public class PredictBrushablesCommand {
     public static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var cpredictbrushables = dispatcher.register(literal("cpredictbrushables")
             .executes(PredictBrushablesCommand::predictBrushables));
         FLAG_KEEP_SEARCHING.addToCommand(dispatcher, cpredictbrushables, ctx -> true);
     }
 
-    private static int predictBrushables(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+    private static int predictBrushables(CommandContext<CClientCommandSource> ctx) throws CommandSyntaxException {
         boolean keepSearching = getFlag(ctx, FLAG_KEEP_SEARCHING);
         String taskName = TaskManager.addTask("cpredictbrushables", new PredictBrushablesTask(keepSearching));
         if (keepSearching) {

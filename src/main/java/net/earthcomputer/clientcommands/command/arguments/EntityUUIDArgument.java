@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.xpple.clientarguments.arguments.CEntityArgument;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
 import dev.xpple.clientarguments.arguments.CEntitySelectorParser;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
 
@@ -29,7 +29,7 @@ public class EntityUUIDArgument implements ArgumentType<EntityUUIDArgument.Resul
         return new net.earthcomputer.clientcommands.command.arguments.EntityUUIDArgument();
     }
 
-    public static UUID getEntityUuid(CommandContext<FabricClientCommandSource> context, String name) throws CommandSyntaxException {
+    public static UUID getEntityUuid(CommandContext<CClientCommandSource> context, String name) throws CommandSyntaxException {
         return context.getArgument(name, Result.class).getUUID(context.getSource());
     }
 
@@ -80,12 +80,12 @@ public class EntityUUIDArgument implements ArgumentType<EntityUUIDArgument.Resul
     }
 
     sealed interface Result {
-        UUID getUUID(FabricClientCommandSource source) throws CommandSyntaxException;
+        UUID getUUID(CClientCommandSource source) throws CommandSyntaxException;
     }
 
     private record NameBacked(String name) implements Result {
         @Override
-        public UUID getUUID(FabricClientCommandSource source) throws CommandSyntaxException {
+        public UUID getUUID(CClientCommandSource source) throws CommandSyntaxException {
             PlayerInfo entry = source.getClient().getConnection().getPlayerInfo(name);
             if (entry == null) {
                 throw CEntityArgument.ENTITY_NOT_FOUND_EXCEPTION.create();
@@ -96,14 +96,14 @@ public class EntityUUIDArgument implements ArgumentType<EntityUUIDArgument.Resul
 
     private record UuidBacked(UUID uuid) implements Result {
         @Override
-        public UUID getUUID(FabricClientCommandSource source) {
+        public UUID getUUID(CClientCommandSource source) {
             return uuid;
         }
     }
 
     private record SelectorBacked(CEntitySelector selector) implements Result {
         @Override
-        public UUID getUUID(FabricClientCommandSource source) throws CommandSyntaxException {
+        public UUID getUUID(CClientCommandSource source) throws CommandSyntaxException {
             return selector.findSingleEntity(source).getUUID();
         }
     }

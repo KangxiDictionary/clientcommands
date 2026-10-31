@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.CommandNode;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -24,11 +24,11 @@ public class UsageTreeCommand {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.help.failed"));
 
     @SuppressWarnings("unchecked")
-    private static final Flag<UnaryOperator<CommandDispatcher<FabricClientCommandSource>>> FLAG_DISPATCHER =
-        Flag.of((Class<UnaryOperator<CommandDispatcher<FabricClientCommandSource>>>) (Class<?>) UnaryOperator.class, "all").withDefaultValue(UnaryOperator.identity()).build();
+    private static final Flag<UnaryOperator<CommandDispatcher<CClientCommandSource>>> FLAG_DISPATCHER =
+        Flag.of((Class<UnaryOperator<CommandDispatcher<CClientCommandSource>>>) (Class<?>) UnaryOperator.class, "all").withDefaultValue(UnaryOperator.identity()).build();
 
     @SuppressWarnings("unchecked")
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var cusagetree = dispatcher.register(
             literal("cusagetree")
                 .executes(ctx -> usage(ctx.getSource(), getFlag(ctx, FLAG_DISPATCHER).apply(dispatcher)))
@@ -44,10 +44,10 @@ public class UsageTreeCommand {
                         .executes(ctx -> usageCommand(ctx.getSource(), getString(ctx, "command"), getFlag(ctx, FLAG_DISPATCHER).apply(dispatcher)))
                 )
         );
-        FLAG_DISPATCHER.addToCommand(dispatcher, cusagetree, ctx -> d -> (CommandDispatcher<FabricClientCommandSource>) (CommandDispatcher<?>) Objects.requireNonNull(Minecraft.getInstance().getConnection()).getCommands());
+        FLAG_DISPATCHER.addToCommand(dispatcher, cusagetree, ctx -> d -> (CommandDispatcher<CClientCommandSource>) (CommandDispatcher<?>) Objects.requireNonNull(Minecraft.getInstance().getConnection()).getCommands());
     }
 
-    private static int usage(FabricClientCommandSource source, CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    private static int usage(CClientCommandSource source, CommandDispatcher<CClientCommandSource> dispatcher) {
         var content = tree(dispatcher.getRoot());
         source.sendFeedback(Component.literal("/"));
         for (var line : content) {
@@ -56,7 +56,7 @@ public class UsageTreeCommand {
         return content.size();
     }
 
-    private static int usageCommand(FabricClientCommandSource source, String cmdName, CommandDispatcher<FabricClientCommandSource> dispatcher) throws CommandSyntaxException {
+    private static int usageCommand(CClientCommandSource source, String cmdName, CommandDispatcher<CClientCommandSource> dispatcher) throws CommandSyntaxException {
         var parseResults = dispatcher.parse(cmdName, source);
         if (parseResults.getContext().getNodes().isEmpty()) {
             throw FAILED_EXCEPTION.create();
@@ -70,7 +70,7 @@ public class UsageTreeCommand {
         return content.size();
     }
 
-    private static List<Component> tree(CommandNode<FabricClientCommandSource> root) {
+    private static List<Component> tree(CommandNode<CClientCommandSource> root) {
         List<Component> lines = new ArrayList<>();
         var children = List.copyOf(root.getChildren());
         for (int i = 0; i < children.size(); i++) {

@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -12,7 +12,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CTellRawCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("ctellraw")
             .then(argument("message", component(context))
                 .executes(ctx -> {

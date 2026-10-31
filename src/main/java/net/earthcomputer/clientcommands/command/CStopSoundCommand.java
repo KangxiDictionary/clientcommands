@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.xpple.clientarguments.arguments.CSuggestionProviders;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
@@ -14,7 +14,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CStopSoundCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var builder = literal("cstopsound");
 
         for (SoundSource source : SoundSource.values()) {
@@ -25,7 +25,7 @@ public class CStopSoundCommand {
         dispatcher.register(builder);
     }
 
-    private static LiteralArgumentBuilder<FabricClientCommandSource> buildArguments(SoundSource source, String literal) {
+    private static LiteralArgumentBuilder<CClientCommandSource> buildArguments(SoundSource source, String literal) {
         return literal(literal)
             .executes(ctx -> stopSound(ctx.getSource(), source, null))
             .then(argument("sound", id())
@@ -33,7 +33,7 @@ public class CStopSoundCommand {
                 .executes(ctx -> stopSound(ctx.getSource(), source, getId(ctx, "sound"))));
     }
 
-    private static int stopSound(FabricClientCommandSource source, SoundSource soundSource, Identifier sound) {
+    private static int stopSound(CClientCommandSource source, SoundSource soundSource, Identifier sound) {
         source.getClient().getSoundManager().stop(sound, soundSource);
 
         if (soundSource == null && sound == null) {

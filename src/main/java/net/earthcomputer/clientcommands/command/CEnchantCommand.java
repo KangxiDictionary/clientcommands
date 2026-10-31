@@ -9,7 +9,7 @@ import net.earthcomputer.clientcommands.features.LegacyEnchantment;
 import net.earthcomputer.clientcommands.features.PlayerRandCracker;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
 import net.earthcomputer.clientcommands.util.MultiVersionCompat;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -36,7 +36,7 @@ public class CEnchantCommand {
 
     private static final Flag<Boolean> FLAG_SIMULATE = Flag.ofFlag("simulate").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         var cenchant = dispatcher.register(literal("cenchant")
             .then(argument("itemAndEnchantmentsPredicate", itemAndEnchantmentsPredicate(context).withEnchantmentPredicate(CEnchantCommand::enchantmentPredicate).constrainMaxLevel())
                     .executes(ctx -> cenchant(ctx.getSource(), getItemAndEnchantmentsPredicate(ctx, "itemAndEnchantmentsPredicate")))));
@@ -54,7 +54,7 @@ public class CEnchantCommand {
         return inEnchantingTable && (item == Items.BOOK || ench.value().isPrimaryItem(new ItemStack(item)));
     }
 
-    private static int cenchant(FabricClientCommandSource source, ItemAndEnchantmentsPredicate itemAndEnchantmentsPredicate) throws CommandSyntaxException {
+    private static int cenchant(CClientCommandSource source, ItemAndEnchantmentsPredicate itemAndEnchantmentsPredicate) throws CommandSyntaxException {
         if (!Configs.enchantingPrediction) {
             Component component = Component.translatable("commands.cenchant.needEnchantingPrediction")
                     .withStyle(ChatFormatting.RED)

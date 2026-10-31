@@ -9,7 +9,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.ClickEvent;
@@ -48,7 +48,7 @@ public class ExtendedMarkdownArgument implements ArgumentType<MutableComponent> 
         return new ExtendedMarkdownArgument();
     }
 
-    public static MutableComponent getExtendedMarkdown(CommandContext<FabricClientCommandSource> context, String arg) {
+    public static MutableComponent getExtendedMarkdown(CommandContext<CClientCommandSource> context, String arg) {
         return context.getArgument(arg, MutableComponent.class);
     }
 

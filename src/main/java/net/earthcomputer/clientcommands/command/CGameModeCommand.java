@@ -5,7 +5,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
@@ -21,7 +21,7 @@ public class CGameModeCommand {
 
     private static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cgamemode.playerNotFound"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cgamemode")
             .then(literal("query")
                 .then(argument("player", gameProfile(true))
@@ -31,7 +31,7 @@ public class CGameModeCommand {
                     .executes(ctx -> listWithGameMode(ctx.getSource(), getEnum(ctx, "gameMode"))))));
     }
 
-    private static int getPlayerGameMode(FabricClientCommandSource source, GameProfile player) throws CommandSyntaxException {
+    private static int getPlayerGameMode(CClientCommandSource source, GameProfile player) throws CommandSyntaxException {
         PlayerInfo playerInfo = source.getClient().getConnection().getPlayerInfo(player.id());
         if (playerInfo == null) {
             throw PLAYER_NOT_FOUND_EXCEPTION.create();
@@ -41,7 +41,7 @@ public class CGameModeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int listWithGameMode(FabricClientCommandSource source, GameType gameMode) {
+    private static int listWithGameMode(CClientCommandSource source, GameType gameMode) {
         Set<PlayerInfo> playersWithGameMode = source.getClient().getConnection().getOnlinePlayers().stream()
             .filter(p -> p.getGameMode() == gameMode)
             .collect(Collectors.toSet());

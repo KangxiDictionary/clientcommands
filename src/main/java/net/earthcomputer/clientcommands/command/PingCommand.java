@@ -5,7 +5,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -19,7 +19,7 @@ public class PingCommand {
     private static final SimpleCommandExceptionType PLAYER_IN_SINGLEPLAYER_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cping.singleplayer"));
     private static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cping.playerNotFound"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cping")
             .executes(ctx -> printPing(ctx.getSource()))
             .then(argument("player", gameProfile(true))
@@ -27,7 +27,7 @@ public class PingCommand {
         );
     }
 
-    private static int printPing(FabricClientCommandSource source) throws CommandSyntaxException {
+    private static int printPing(CClientCommandSource source) throws CommandSyntaxException {
         if (source.getClient().isLocalServer()) {
             throw PLAYER_IN_SINGLEPLAYER_EXCEPTION.create();
         }
@@ -41,7 +41,7 @@ public class PingCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int printPing(FabricClientCommandSource source, GameProfile player) throws CommandSyntaxException {
+    private static int printPing(CClientCommandSource source, GameProfile player) throws CommandSyntaxException {
         if (source.getClient().isLocalServer()) {
             throw PLAYER_IN_SINGLEPLAYER_EXCEPTION.create();
         }

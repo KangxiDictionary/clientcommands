@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +14,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CalcStackCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("ccalcstack")
             .then(argument("count", integer(0))
                 .then(argument("item", itemStack(context))
@@ -25,7 +25,7 @@ public class CalcStackCommand {
             .executes(ctx -> getStackSize(ctx.getSource(), getInteger(ctx, "count")))));
     }
 
-    private static int getStackSize(FabricClientCommandSource source, ItemStack stack, int count) {
+    private static int getStackSize(CClientCommandSource source, ItemStack stack, int count) {
         int stacks = count / stack.getMaxStackSize();
         int remainder = count % stack.getMaxStackSize();
 
@@ -47,7 +47,7 @@ public class CalcStackCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int getStackSize(FabricClientCommandSource source, int count) {
+    private static int getStackSize(CClientCommandSource source, int count) {
         ItemStack heldStack = source.getPlayer().getItemInHand(InteractionHand.MAIN_HAND).copy();
         return getStackSize(source, heldStack, count);
     }

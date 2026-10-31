@@ -10,7 +10,7 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.ClientCommands;
 import net.earthcomputer.clientcommands.Configs;
 import net.earthcomputer.clientcommands.command.VarCommand;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.server.IntegratedServer;
@@ -126,7 +126,7 @@ public class ClientCommandFunctions {
             assert dispatcher != null : "Command dispatcher should not be null while calling ClientCommandFunctions.runStartup()";
             var packetListener = Minecraft.getInstance().getConnection();
             assert packetListener != null : "Network handler should not be null while calling ClientCommandFunctions.runStartup()";
-            var source = (FabricClientCommandSource) packetListener.getSuggestionsProvider();
+            var source = (CClientCommandSource) packetListener.getSuggestionsProvider();
             int result = executeFunction(dispatcher, source, startupFunction, res -> {});
             LOGGER.info("Ran {} commands from startup function {}", result, startupFunction);
         } catch (CommandSyntaxException e) {
@@ -148,7 +148,7 @@ public class ClientCommandFunctions {
     @Nullable
     private static ExecutionContext currentContext = null;
 
-    public static int executeFunction(CommandDispatcher<FabricClientCommandSource> dispatcher, FabricClientCommandSource source, String function, IntConsumer successMessageSender) throws CommandSyntaxException {
+    public static int executeFunction(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source, String function, IntConsumer successMessageSender) throws CommandSyntaxException {
         if (currentContext != null) {
             CommandFunction func = currentContext.functions.get(function);
             if (func == null) {
@@ -184,8 +184,8 @@ public class ClientCommandFunctions {
     }
 
     private record ExecutionContext(
-        CommandDispatcher<FabricClientCommandSource> dispatcher,
-        FabricClientCommandSource source,
+        CommandDispatcher<CClientCommandSource> dispatcher,
+        CClientCommandSource source,
         Deque<Entry> entries,
         Map<String, CommandFunction> functions
     ) {
@@ -210,7 +210,7 @@ public class ClientCommandFunctions {
             return FileUtil.resolvePath(FUNCTION_DIR, decomposedPath);
         }
 
-        static CommandFunction load(CommandDispatcher<FabricClientCommandSource> dispatcher, FabricClientCommandSource source, String function) throws CommandSyntaxException {
+        static CommandFunction load(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source, String function) throws CommandSyntaxException {
             Path path = getPath(function);
             if (path == null || !Files.exists(path)) {
                 throw NO_SUCH_FUNCTION_EXCEPTION.create(function);
@@ -244,12 +244,12 @@ public class ClientCommandFunctions {
     }
 
     private interface Entry {
-        void execute(CommandDispatcher<FabricClientCommandSource> dispatcher, FabricClientCommandSource source) throws CommandSyntaxException;
+        void execute(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source) throws CommandSyntaxException;
     }
 
-    private record ParsedEntry(String commandString, ParseResults<FabricClientCommandSource> command) implements Entry {
+    private record ParsedEntry(String commandString, ParseResults<CClientCommandSource> command) implements Entry {
         @Override
-        public void execute(CommandDispatcher<FabricClientCommandSource> dispatcher, FabricClientCommandSource source) throws CommandSyntaxException {
+        public void execute(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source) throws CommandSyntaxException {
             ClientCommands.sendCommandExecutionToServer(commandString);
             dispatcher.execute(command);
         }
@@ -257,7 +257,7 @@ public class ClientCommandFunctions {
 
     private record LazyEntry(String command) implements Entry {
         @Override
-        public void execute(CommandDispatcher<FabricClientCommandSource> dispatcher, FabricClientCommandSource source) throws CommandSyntaxException {
+        public void execute(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source) throws CommandSyntaxException {
             String replacedCommand = VarCommand.replaceVariables(command);
             ClientCommands.sendCommandExecutionToServer(replacedCommand);
             dispatcher.execute(replacedCommand, source);

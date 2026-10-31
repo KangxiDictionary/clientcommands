@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.interfaces.ISafeZoneScreen;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,12 +25,12 @@ import java.util.Random;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class SnakeCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("csnake")
                 .executes(ctx -> snake(ctx.getSource())));
     }
 
-    private static int snake(FabricClientCommandSource source) {
+    private static int snake(CClientCommandSource source) {
         /*
             After executing a command, the current screen will be closed (the chat hud).
             And if you open a new screen in a command, that new screen will be closed

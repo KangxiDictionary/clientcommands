@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.tree.CommandNode;
 import net.earthcomputer.clientcommands.features.SuggestionsHook;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.*;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class PluginsCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cplugins")
             .executes(ctx -> getPlugins(ctx.getSource()))
             .then(literal("partial")
@@ -24,11 +24,11 @@ public class PluginsCommand {
                 .executes(ctx -> getPluginsFromDispatcher(ctx.getSource()))));
     }
 
-    private static int getPlugins(FabricClientCommandSource source) {
+    private static int getPlugins(CClientCommandSource source) {
         return getPlugins(source, "");
     }
 
-    private static int getPlugins(FabricClientCommandSource source, String partial) {
+    private static int getPlugins(CClientCommandSource source, String partial) {
         SuggestionsHook.request(partial).whenComplete((suggestions, throwable) -> {
             String plugins = suggestions.getList().stream()
                 .map(Suggestion::getText)
@@ -43,7 +43,7 @@ public class PluginsCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int getPluginsFromDispatcher(FabricClientCommandSource source) {
+    private static int getPluginsFromDispatcher(CClientCommandSource source) {
         String plugins = source.getClient().getConnection().getCommands().getRoot().getChildren().stream()
             .map(CommandNode::getName)
             .filter(name -> name.contains(":"))

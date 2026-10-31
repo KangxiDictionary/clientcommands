@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.task.TaskManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -18,7 +18,7 @@ public class TaskCommand {
 
     private static final SimpleCommandExceptionType NO_MATCH_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.ctask.stop.noMatch"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("ctask")
             .then(literal("list")
                 .executes(ctx -> listTasks(ctx.getSource())))
@@ -29,7 +29,7 @@ public class TaskCommand {
                     .executes(ctx -> stopTasks(ctx.getSource(), getString(ctx, "pattern"))))));
     }
 
-    private static int listTasks(FabricClientCommandSource source) {
+    private static int listTasks(CClientCommandSource source) {
         Iterable<String> tasks = TaskManager.getTaskNames();
         int taskCount = TaskManager.getTaskCount();
 
@@ -45,7 +45,7 @@ public class TaskCommand {
         return taskCount;
     }
 
-    private static int stopTasks(FabricClientCommandSource source, String pattern) throws CommandSyntaxException {
+    private static int stopTasks(CClientCommandSource source, String pattern) throws CommandSyntaxException {
         List<String> tasksToStop = new ArrayList<>();
         for (String task : TaskManager.getTaskNames()) {
             if (task.contains(pattern)) {

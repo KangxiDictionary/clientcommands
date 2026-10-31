@@ -12,7 +12,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.earthcomputer.clientcommands.command.arguments.ExcludingArgument;
 import net.earthcomputer.clientcommands.mixin.commands.flag.ArgumentCommandNodeAccessor;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.Nullable;
 
@@ -72,9 +72,9 @@ public final class Flag<T> {
         return repeatable;
     }
 
-    private void addExclusion(LiteralCommandNode<FabricClientCommandSource> baseNode) {
-        Collection<CommandNode<FabricClientCommandSource>> children = baseNode.getChildren();
-        for (CommandNode<FabricClientCommandSource> childDowncasted : children) {
+    private void addExclusion(LiteralCommandNode<CClientCommandSource> baseNode) {
+        Collection<CommandNode<CClientCommandSource>> children = baseNode.getChildren();
+        for (CommandNode<CClientCommandSource> childDowncasted : children) {
             if (childDowncasted instanceof ArgumentCommandNodeAccessor<?> child) {
                 ArgumentType<?> argument = child.getArgumentType();
                 if (argument instanceof ExcludingArgument<?, ?> excluding) {
@@ -87,14 +87,14 @@ public final class Flag<T> {
         }
     }
 
-    private void addLiteralFlagToCommand(String literal, CommandDispatcher<FabricClientCommandSource> dispatcher, LiteralCommandNode<FabricClientCommandSource> baseNode, Function<CommandContext<FabricClientCommandSource>, T> function) {
+    private void addLiteralFlagToCommand(String literal, CommandDispatcher<CClientCommandSource> dispatcher, LiteralCommandNode<CClientCommandSource> baseNode, Function<CommandContext<CClientCommandSource>, T> function) {
         dispatcher.register(baseNode.createBuilder()
                 .then(literal(literal)
                         .redirect(baseNode, ctx -> ClientCommandHelper.withFlag(ctx.getSource(), this, function.apply(ctx)))
                         .executes(baseNode.getCommand())));
     }
 
-    private void addArgumentFlagToCommand(String literal, ArgumentType<T> argument, CommandDispatcher<FabricClientCommandSource> dispatcher, LiteralCommandNode<FabricClientCommandSource> baseNode) {
+    private void addArgumentFlagToCommand(String literal, ArgumentType<T> argument, CommandDispatcher<CClientCommandSource> dispatcher, LiteralCommandNode<CClientCommandSource> baseNode) {
         dispatcher.register(baseNode.createBuilder()
                 .then(literal(literal)
                         .then(argument(this.name, argument)
@@ -102,7 +102,7 @@ public final class Flag<T> {
                                 .executes(baseNode.getCommand()))));
     }
 
-    public void addToCommand(CommandDispatcher<FabricClientCommandSource> dispatcher, LiteralCommandNode<FabricClientCommandSource> baseNode, Function<CommandContext<FabricClientCommandSource>, T> function) {
+    public void addToCommand(CommandDispatcher<CClientCommandSource> dispatcher, LiteralCommandNode<CClientCommandSource> baseNode, Function<CommandContext<CClientCommandSource>, T> function) {
         addExclusion(baseNode);
 
         addLiteralFlagToCommand(getFlag(), dispatcher, baseNode, function);
@@ -111,7 +111,7 @@ public final class Flag<T> {
         }
     }
 
-    public void addToCommandWithArg(CommandDispatcher<FabricClientCommandSource> dispatcher, LiteralCommandNode<FabricClientCommandSource> baseNode, ArgumentType<T> argument) {
+    public void addToCommandWithArg(CommandDispatcher<CClientCommandSource> dispatcher, LiteralCommandNode<CClientCommandSource> baseNode, ArgumentType<T> argument) {
         addExclusion(baseNode);
 
         addArgumentFlagToCommand(getFlag(), argument, dispatcher, baseNode);
@@ -130,7 +130,7 @@ public final class Flag<T> {
             // we're in the completion dispatcher, reparse using the real dispatcher to get the redirects
             return (S) getActualSource(Objects.requireNonNull(getActiveDispatcher()).parse(
                 StringRange.encompassing(ctx.getRange(), ctx.getLastChild().getRange()).get(ctx.getInput()),
-                (FabricClientCommandSource) ctx.getSource()
+                (CClientCommandSource) ctx.getSource()
             ));
         }
 

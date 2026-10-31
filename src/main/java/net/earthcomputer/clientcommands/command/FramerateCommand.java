@@ -5,7 +5,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.earthcomputer.clientcommands.Configs;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
@@ -17,7 +17,7 @@ public class FramerateCommand {
         30, 45, 60, 75, 90, 100, 120, 144, 165, 180, 240, 300, 360, 420, 480, 540, 600
     };
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cfps")
             .executes(ctx -> getMaxFps(ctx.getSource()))
             .then(literal("unlimited")
@@ -42,7 +42,7 @@ public class FramerateCommand {
 
     }
 
-    private static int getMaxFps(FabricClientCommandSource source) {
+    private static int getMaxFps(CClientCommandSource source) {
         int framerateLimit = Configs.overriddenFps;
         if (framerateLimit <= 0) {
             framerateLimit = source.getClient().getFramerateLimitTracker().getFramerateLimit();
@@ -55,7 +55,7 @@ public class FramerateCommand {
         return framerateLimit;
     }
 
-    private static int maxFps(FabricClientCommandSource source, int maxFps) {
+    private static int maxFps(CClientCommandSource source, int maxFps) {
         Configs.overriddenFps = maxFps;
         Configs.save();
         if (maxFps == Integer.MAX_VALUE) {
@@ -66,7 +66,7 @@ public class FramerateCommand {
         return maxFps;
     }
 
-    private static int resetMaxFps(FabricClientCommandSource source) {
+    private static int resetMaxFps(CClientCommandSource source) {
         Configs.overriddenFps = 0;
         Configs.save();
         source.sendFeedback(Component.translatable("commands.cfps.resetMaxFps.success"));

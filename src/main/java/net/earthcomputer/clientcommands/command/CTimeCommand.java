@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.features.ClientTimeModifier;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 
@@ -12,7 +12,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CTimeCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("ctime")
             .then(literal("query")
                 .then(literal("day")
@@ -37,29 +37,29 @@ public class CTimeCommand {
         );
     }
 
-    private static int executeQueryDay(FabricClientCommandSource source) {
+    private static int executeQueryDay(CClientCommandSource source) {
         return executeQuery(source, (int) (source.getLevel().getOverworldClockTime() / SharedConstants.TICKS_PER_GAME_DAY % 2147483647L));
     }
 
-    private static int executeQueryDayTime(FabricClientCommandSource source) {
+    private static int executeQueryDayTime(CClientCommandSource source) {
         return executeQuery(source, (int) (source.getLevel().getOverworldClockTime() % SharedConstants.TICKS_PER_GAME_DAY));
     }
 
-    private static int executeQueryGameTime(FabricClientCommandSource source) {
+    private static int executeQueryGameTime(CClientCommandSource source) {
         return executeQuery(source, (int) (source.getLevel().getGameTime() % 2147483647L));
     }
 
-    private static int executeQuery(FabricClientCommandSource source, int time) {
+    private static int executeQuery(CClientCommandSource source, int time) {
         source.sendFeedback(Component.translatable("commands.time.query.timeline", "minecraft:overworld", time));
         return time;
     }
 
-    private static int executeSetTime(FabricClientCommandSource source, int time) {
+    private static int executeSetTime(CClientCommandSource source, int time) {
         ClientTimeModifier.lock(time);
         return executeQueryDayTime(source);
     }
 
-    private static int executeResetTime(FabricClientCommandSource source) {
+    private static int executeResetTime(CClientCommandSource source) {
         ClientTimeModifier.none();
         source.sendFeedback(Component.translatable("commands.ctime.reset.success"));
         return Command.SINGLE_SUCCESS;

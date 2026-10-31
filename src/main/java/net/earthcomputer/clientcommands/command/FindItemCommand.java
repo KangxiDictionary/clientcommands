@@ -14,7 +14,7 @@ import net.earthcomputer.clientcommands.util.CComponentUtil;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.util.GuiBlocker;
 import net.earthcomputer.clientcommands.util.MathUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -83,7 +83,7 @@ public class FindItemCommand {
     private static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();
 
     @SuppressWarnings("unchecked")
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         var cfinditem = dispatcher.register(literal("cfinditem")
             .then(argument("item", withString(itemPredicate(context)))
                 .executes(ctx ->
@@ -97,7 +97,7 @@ public class FindItemCommand {
         FLAG_KEEP_SEARCHING.addToCommand(dispatcher, cfinditem, ctx -> true);
     }
 
-    private static int findItem(CommandContext<FabricClientCommandSource> ctx, boolean clickInventories, boolean noSearchNested, boolean keepSearching, WithStringArgument.Result<Predicate<ItemStack>> item) throws CommandSyntaxException {
+    private static int findItem(CommandContext<CClientCommandSource> ctx, boolean clickInventories, boolean noSearchNested, boolean keepSearching, WithStringArgument.Result<Predicate<ItemStack>> item) throws CommandSyntaxException {
         String taskName = TaskManager.addTask("cfinditem", makeFindItemsTask(item.string(), item.value(), clickInventories, !noSearchNested, keepSearching));
         if (keepSearching) {
             ctx.getSource().sendFeedback(Component.translatable("commands.cfinditem.starting.keepSearching", item.string())

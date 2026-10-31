@@ -11,7 +11,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.earthcomputer.clientcommands.Configs;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
@@ -43,7 +43,7 @@ public class ExpressionArgument implements ArgumentType<ExpressionArgument.Expre
         return new ExpressionArgument();
     }
 
-    public static Expression getExpression(CommandContext<FabricClientCommandSource> context, String arg) {
+    public static Expression getExpression(CommandContext<CClientCommandSource> context, String arg) {
         return context.getArgument(arg, Expression.class);
     }
 

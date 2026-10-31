@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandBuildContext;
@@ -25,7 +25,7 @@ public class CGiveCommand {
     private static final SimpleCommandExceptionType NOT_CREATIVE_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cgive.notCreative"));
     private static final SimpleCommandExceptionType NO_SPACE_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cgive.noSpace"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("cgive")
             .then(argument("item", itemStack(context))
             .executes(ctx -> give(ctx.getSource(), getItemStackArgument(ctx, "item"), 1))
@@ -33,7 +33,7 @@ public class CGiveCommand {
                 .executes(ctx -> give(ctx.getSource(), getItemStackArgument(ctx, "item"), getInteger(ctx, "count"))))));
     }
 
-    private static int give(FabricClientCommandSource source, ItemInput itemInput, int count) throws CommandSyntaxException {
+    private static int give(CClientCommandSource source, ItemInput itemInput, int count) throws CommandSyntaxException {
         LocalPlayer player = source.getPlayer();
         if (!player.isCreative()) {
             throw NOT_CREATIVE_EXCEPTION.create();

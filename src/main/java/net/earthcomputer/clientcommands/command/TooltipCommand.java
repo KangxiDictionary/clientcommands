@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -18,7 +18,7 @@ public class TooltipCommand {
 
     private static final Flag<Boolean> FLAG_ADVANCED = Flag.ofFlag("advanced").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         var ctooltip = dispatcher.register(literal("ctooltip")
             .then(literal("held")
                 .executes(ctx -> showTooltip(ctx.getSource(), ctx.getSource().getPlayer().getMainHandItem(), "held")))
@@ -28,7 +28,7 @@ public class TooltipCommand {
         FLAG_ADVANCED.addToCommand(dispatcher, ctooltip, ctx -> true);
     }
 
-    private static int showTooltip(FabricClientCommandSource source, ItemStack stack, String type) {
+    private static int showTooltip(CClientCommandSource source, ItemStack stack, String type) {
         source.sendFeedback(Component.translatable("commands.ctooltip.header." + type));
 
         TooltipFlag flag = getFlag(source, FLAG_ADVANCED) ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;

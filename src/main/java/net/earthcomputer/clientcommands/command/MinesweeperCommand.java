@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.interfaces.ISafeZoneScreen;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -30,7 +30,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 public class MinesweeperCommand {
     private static final SimpleCommandExceptionType TOO_MANY_MINES_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cminesweeper.tooManyMines"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cminesweeper")
             .executes(ctx -> minesweeper(ctx.getSource(), 9, 9, 10))
             .then(literal("beginner")
@@ -46,7 +46,7 @@ public class MinesweeperCommand {
                             .executes(ctx -> minesweeper(ctx.getSource(), getInteger(ctx, "width"), getInteger(ctx, "height"), getInteger(ctx, "mines"))))))));
     }
 
-    private static int minesweeper(FabricClientCommandSource source, int width, int height, int mines) throws CommandSyntaxException {
+    private static int minesweeper(CClientCommandSource source, int width, int height, int mines) throws CommandSyntaxException {
         if (mines > (width * height - 9)) {
             throw TOO_MANY_MINES_EXCEPTION.create();
         }

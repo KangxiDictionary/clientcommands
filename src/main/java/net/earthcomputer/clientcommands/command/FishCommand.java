@@ -10,7 +10,7 @@ import net.earthcomputer.clientcommands.util.MultiVersionCompat;
 import net.earthcomputer.clientcommands.command.arguments.ClientItemPredicateArgument;
 import net.earthcomputer.clientcommands.command.arguments.WithStringArgument;
 import net.earthcomputer.clientcommands.features.FishingCracker;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ public class FishCommand {
             .append(" ")
             .append(CComponentUtil.getCommandTextComponent("commands.client.enable", "/cconfig clientcommands fishingManipulation set MANUAL")));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         if (MultiVersionCompat.INSTANCE.getProtocolVersion() >= MultiVersionCompat.V1_20) {
             return; // fishing manipulation patched in 1.20
         }
@@ -55,7 +55,7 @@ public class FishCommand {
                     .executes(ctx -> removeGoal(ctx.getSource(), getInteger(ctx, "index"))))));
     }
 
-    private static int listGoals(FabricClientCommandSource source) throws CommandSyntaxException {
+    private static int listGoals(CClientCommandSource source) throws CommandSyntaxException {
         if (!Configs.fishingManipulation.isEnabled()) {
             throw NEED_FISHING_MANIPULATION_EXCEPTION.create();
         }
@@ -72,7 +72,7 @@ public class FishCommand {
         return FishingCracker.goals.size();
     }
 
-    private static int addGoal(FabricClientCommandSource source, WithStringArgument.Result<ClientItemPredicateArgument.ClientItemPredicate> goal) throws CommandSyntaxException {
+    private static int addGoal(CClientCommandSource source, WithStringArgument.Result<ClientItemPredicateArgument.ClientItemPredicate> goal) throws CommandSyntaxException {
         if (!Configs.fishingManipulation.isEnabled()) {
             throw NEED_FISHING_MANIPULATION_EXCEPTION.create();
         }
@@ -84,7 +84,7 @@ public class FishCommand {
         return FishingCracker.goals.size();
     }
 
-    private static int addEnchantedGoal(FabricClientCommandSource source, WithStringArgument.Result<ItemAndEnchantmentsPredicate> stringAndItemAndEnchantments) throws CommandSyntaxException {
+    private static int addEnchantedGoal(CClientCommandSource source, WithStringArgument.Result<ItemAndEnchantmentsPredicate> stringAndItemAndEnchantments) throws CommandSyntaxException {
         if (!Configs.fishingManipulation.isEnabled()) {
             throw NEED_FISHING_MANIPULATION_EXCEPTION.create();
         }
@@ -101,7 +101,7 @@ public class FishCommand {
         return FishingCracker.goals.size();
     }
 
-    private static int removeGoal(FabricClientCommandSource source, int index) throws CommandSyntaxException {
+    private static int removeGoal(CClientCommandSource source, int index) throws CommandSyntaxException {
         if (!Configs.fishingManipulation.isEnabled()) {
             throw NEED_FISHING_MANIPULATION_EXCEPTION.create();
         }

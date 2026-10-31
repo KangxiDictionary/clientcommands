@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 
@@ -13,7 +13,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class CTitleCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("ctitle")
             .then(literal("clear")
                 .executes(ctx -> executeClear(ctx.getSource())))
@@ -35,14 +35,14 @@ public class CTitleCommand {
                             .executes(ctx -> executeTimes(ctx.getSource(), getInteger(ctx, "fadeIn"), getInteger(ctx, "stay"), getInteger(ctx, "fadeOut"))))))));
     }
 
-    private static int executeClear(FabricClientCommandSource source) {
+    private static int executeClear(CClientCommandSource source) {
         source.getClient().gui.hud.clearTitles();
 
         source.sendFeedback(Component.translatable("commands.ctitle.cleared"));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeReset(FabricClientCommandSource source) {
+    private static int executeReset(CClientCommandSource source) {
         source.getClient().gui.hud.clearTitles();
         source.getClient().gui.hud.resetTitleTimes();
 
@@ -50,28 +50,28 @@ public class CTitleCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeTitle(FabricClientCommandSource source, Component title) {
+    private static int executeTitle(CClientCommandSource source, Component title) {
         source.getClient().gui.hud.setTitle(title);
 
         sendFeedback(Component.translatable("commands.ctitle.show.title"));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeSubtitle(FabricClientCommandSource source, Component title) {
+    private static int executeSubtitle(CClientCommandSource source, Component title) {
         source.getClient().gui.hud.setSubtitle(title);
 
         sendFeedback(Component.translatable("commands.ctitle.show.subtitle"));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeActionBar(FabricClientCommandSource source, Component title) {
+    private static int executeActionBar(CClientCommandSource source, Component title) {
         source.getClient().gui.hud.setOverlayMessage(title, false);
 
         sendFeedback(Component.translatable("commands.ctitle.show.actionbar"));
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int executeTimes(FabricClientCommandSource source, int fadeIn, int stay, int fadeOut) {
+    private static int executeTimes(CClientCommandSource source, int fadeIn, int stay, int fadeOut) {
         source.getClient().gui.hud.setTimes(fadeIn, stay, fadeOut);
 
         sendFeedback(Component.translatable("commands.ctitle.times"));

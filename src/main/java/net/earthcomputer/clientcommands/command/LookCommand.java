@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.xpple.clientarguments.arguments.CCoordinates;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec2;
@@ -14,7 +14,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class LookCommand {
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("clook")
             .then(literal("block")
                 .then(argument("pos", blockPos())
@@ -37,7 +37,7 @@ public class LookCommand {
                     .executes(ctx -> lookCardinal(ctx.getSource(), 0, 0)))));
     }
 
-    private static int lookBlock(FabricClientCommandSource source, BlockPos pos) {
+    private static int lookBlock(CClientCommandSource source, BlockPos pos) {
         LocalPlayer player = source.getPlayer();
         double dx = (pos.getX() + 0.5) - player.getX();
         double dy = (pos.getY() + 0.5) - (player.getY() + player.getEyeHeight());
@@ -48,16 +48,16 @@ public class LookCommand {
         return doLook(player, yaw, pitch);
     }
 
-    private static int lookAngles(FabricClientCommandSource source, CCoordinates rotation) {
+    private static int lookAngles(CClientCommandSource source, CCoordinates rotation) {
         Vec2 rot = rotation.getRotation(source);
         return doLook(source.getPlayer(), rot.y, rot.x);
     }
 
-    private static int lookCardinal(FabricClientCommandSource source, float yaw, float pitch) {
+    private static int lookCardinal(CClientCommandSource source, float yaw, float pitch) {
         return doLook(source.getPlayer(), yaw, pitch);
     }
 
-    private static int lookCardinal(FabricClientCommandSource source, float pitch) {
+    private static int lookCardinal(CClientCommandSource source, float pitch) {
         return lookCardinal(source, source.getRotation().y, pitch);
     }
 

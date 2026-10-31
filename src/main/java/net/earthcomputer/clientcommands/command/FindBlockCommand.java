@@ -9,7 +9,7 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.RenderDistanceScanTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandBuildContext;
@@ -31,7 +31,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 public class FindBlockCommand {
     public static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         var cfindblock = dispatcher.register(literal("cfindblock")
             .then(argument("block", withString(blockPredicate(context)))
                 .executes(ctx -> {
@@ -41,7 +41,7 @@ public class FindBlockCommand {
         FLAG_KEEP_SEARCHING.addToCommand(dispatcher, cfindblock, ctx -> true);
     }
 
-    public static int findBlock(CommandContext<FabricClientCommandSource> ctx, Component startingMessage, ClientBlockPredicate block) throws CommandSyntaxException {
+    public static int findBlock(CommandContext<CClientCommandSource> ctx, Component startingMessage, ClientBlockPredicate block) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
         boolean keepSearching = getFlag(ctx, FLAG_KEEP_SEARCHING);
         sendFeedback(startingMessage);

@@ -11,7 +11,7 @@ import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.SimpleTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -35,7 +35,7 @@ public class GlowCommand {
 
     private static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var cglow = dispatcher.register(literal("cglow")
             .then(literal("entities")
                 .then(argument("targets", entities())
@@ -74,7 +74,7 @@ public class GlowCommand {
         FLAG_KEEP_SEARCHING.addToCommand(dispatcher, cglow, ctx -> true);
     }
 
-    private static int glowEntities(FabricClientCommandSource source, CEntitySelector entitySelector, int seconds, int color) throws CommandSyntaxException {
+    private static int glowEntities(CClientCommandSource source, CEntitySelector entitySelector, int seconds, int color) throws CommandSyntaxException {
         ClientCommandsServer.requirePrivileges();
         boolean keepSearching = getFlag(source, FLAG_KEEP_SEARCHING);
         if (keepSearching) {
@@ -120,7 +120,7 @@ public class GlowCommand {
         }
     }
 
-    private static int glowBlock(FabricClientCommandSource source, BlockPos pos1, BlockPos pos2, int seconds, int color) {
+    private static int glowBlock(CClientCommandSource source, BlockPos pos1, BlockPos pos2, int seconds, int color) {
         List<AABB> boundingBoxes = new ArrayList<>();
 
         if (pos2 == null) {

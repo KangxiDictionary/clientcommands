@@ -8,7 +8,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
@@ -36,7 +36,7 @@ public class TranslationQueryArgument implements ArgumentType<TranslationQueryAr
         return new TranslationQueryArgument();
     }
 
-    public static TranslationQuery getTranslationQuery(CommandContext<FabricClientCommandSource> context, String arg) {
+    public static TranslationQuery getTranslationQuery(CommandContext<CClientCommandSource> context, String arg) {
         TranslationQuery query = context.getArgument(arg, TranslationQuery.class);
         return new TranslationQuery(query.from() == null ? "auto" : query.from(), query.to() == null ? context.getSource().getClient().options.languageCode : query.to(), query.query());
     }

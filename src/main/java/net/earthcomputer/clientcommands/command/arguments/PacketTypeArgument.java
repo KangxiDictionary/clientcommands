@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.netty.channel.ChannelPipeline;
 import net.earthcomputer.clientcommands.c2c.C2CPacketHandler;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -41,7 +41,7 @@ public class PacketTypeArgument implements ArgumentType<Identifier> {
         return new PacketTypeArgument();
     }
 
-    public static Identifier getPacket(final CommandContext<FabricClientCommandSource> context, final String name) {
+    public static Identifier getPacket(final CommandContext<CClientCommandSource> context, final String name) {
         return context.getArgument(name, Identifier.class);
     }
 

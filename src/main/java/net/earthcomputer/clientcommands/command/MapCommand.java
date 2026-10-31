@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -49,7 +49,7 @@ public class MapCommand {
     private static final SimpleCommandExceptionType NO_HELD_MAP_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cmap.noHeldMap"));
     private static final SimpleCommandExceptionType FAILED_SAVE_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cmap.failedSave"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cmap")
             .then(literal("export")
                 .executes(ctx -> exportMap(ctx.getSource(), 1))
@@ -57,7 +57,7 @@ public class MapCommand {
                     .executes(ctx -> exportMap(ctx.getSource(), getInteger(ctx, "scale"))))));
     }
 
-    private static int exportMap(FabricClientCommandSource source, int scale) throws CommandSyntaxException {
+    private static int exportMap(CClientCommandSource source, int scale) throws CommandSyntaxException {
         MapItemSavedData data = fromHand(source.getPlayer());
         if (data != null) {
             return exportMap(source, new MapInfo[][] { { new MapInfo(data, 0) } }, scale, false);
@@ -205,7 +205,7 @@ public class MapCommand {
     }
 
     // current impl will break horribly if MapItem.IMAGE_WIDTH != MapItem.IMAGE_HEIGHT
-    private static int exportMap(FabricClientCommandSource source, MapInfo[][] data, int scale, boolean world) throws CommandSyntaxException {
+    private static int exportMap(CClientCommandSource source, MapInfo[][] data, int scale, boolean world) throws CommandSyntaxException {
         int height = data.length * MapItem.IMAGE_HEIGHT;
         int width = Arrays.stream(data).mapToInt(a -> a.length).max().orElseThrow() * MapItem.IMAGE_WIDTH;
 

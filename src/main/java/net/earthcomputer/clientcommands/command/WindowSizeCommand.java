@@ -3,21 +3,21 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import org.lwjgl.sdl.SDLVideo;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class WindowSizeCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cwindowsize")
             .then(argument("width", integer(0))
                 .then(argument("height", integer(0))
                     .executes(ctx -> setWindowSize(ctx.getSource(), getInteger(ctx, "width"), getInteger(ctx, "height"))))));
     }
 
-    private static int setWindowSize(FabricClientCommandSource source, int width, int height) {
+    private static int setWindowSize(CClientCommandSource source, int width, int height) {
         Window window = source.getClient().getWindow();
         long handle = window.handle();
 

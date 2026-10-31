@@ -10,7 +10,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.ClientCommands;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
@@ -71,7 +71,7 @@ public class KitCommand {
         }
     }
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("ckit")
                 .then(literal("create")
                         .then(argument("name", string())
@@ -98,7 +98,7 @@ public class KitCommand {
                                 .executes(ctx -> preview(ctx.getSource(), getString(ctx, "name"))))));
     }
 
-    private static int create(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private static int create(CClientCommandSource source, String name) throws CommandSyntaxException {
         if (kits.containsKey(name)) {
             throw ALREADY_EXISTS_EXCEPTION.create(name);
         }
@@ -108,7 +108,7 @@ public class KitCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int delete(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private static int delete(CClientCommandSource source, String name) throws CommandSyntaxException {
         if (kits.remove(name) == null) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -117,7 +117,7 @@ public class KitCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int edit(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private static int edit(CClientCommandSource source, String name) throws CommandSyntaxException {
         if (!kits.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -127,7 +127,7 @@ public class KitCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int load(FabricClientCommandSource source, String name, boolean override) throws CommandSyntaxException {
+    private static int load(CClientCommandSource source, String name, boolean override) throws CommandSyntaxException {
         if (!source.getPlayer().isCreative()) {
             throw NOT_CREATIVE_EXCEPTION.create();
         }
@@ -155,7 +155,7 @@ public class KitCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int list(FabricClientCommandSource source) {
+    private static int list(CClientCommandSource source) {
         if (kits.isEmpty()) {
             source.sendFeedback(Component.translatable("commands.ckit.list.empty"));
         } else {
@@ -165,7 +165,7 @@ public class KitCommand {
         return kits.size();
     }
 
-    private static int preview(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private static int preview(CClientCommandSource source, String name) throws CommandSyntaxException {
         ListTag kit = kits.get(name);
         if (kit == null) {
             throw NOT_FOUND_EXCEPTION.create(name);

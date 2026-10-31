@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.util.MultiVersionCompat;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ public class BookCommand {
 
     private static final int DEFAULT_LIMIT = 50;
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cbook")
             .then(literal("sign")
                 .executes(ctx -> signBook(ctx.getSource(), ""))
@@ -75,7 +75,7 @@ public class BookCommand {
         return rand.ints(0x20, 0x7f);
     }
 
-    private static int fillBook(FabricClientCommandSource source, IntStream characterGenerator, int limit) throws CommandSyntaxException {
+    private static int fillBook(CClientCommandSource source, IntStream characterGenerator, int limit) throws CommandSyntaxException {
         LocalPlayer player = source.getPlayer();
 
         HeldBook book = getHeldWritableBook(player);
@@ -101,7 +101,7 @@ public class BookCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int signBook(FabricClientCommandSource source, String title) throws CommandSyntaxException {
+    private static int signBook(CClientCommandSource source, String title) throws CommandSyntaxException {
         LocalPlayer player = source.getPlayer();
 
         if (title.length() > WrittenBookContent.TITLE_MAX_LENGTH) {

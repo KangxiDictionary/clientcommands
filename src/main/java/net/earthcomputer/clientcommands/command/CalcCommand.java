@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.earthcomputer.clientcommands.Configs;
 import net.earthcomputer.clientcommands.command.arguments.ExpressionArgument;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,14 +20,14 @@ public class CalcCommand {
 
     private static final Flag<Boolean> FLAG_PARSE = Flag.ofFlag("parse").build();
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var ccalc = dispatcher.register(literal("ccalc")
             .then(argument("expr", expression())
                 .executes(ctx -> evaluateExpression(ctx.getSource(), getExpression(ctx, "expr")))));
         FLAG_PARSE.addToCommand(dispatcher, ccalc, ctx -> true);
     }
 
-    private static int evaluateExpression(FabricClientCommandSource source, ExpressionArgument.Expression expression) throws CommandSyntaxException {
+    private static int evaluateExpression(CClientCommandSource source, ExpressionArgument.Expression expression) throws CommandSyntaxException {
         if (getFlag(source, FLAG_PARSE)) {
             Component parsedTree;
             try {

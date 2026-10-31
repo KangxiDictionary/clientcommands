@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.locale.Language;
@@ -20,7 +20,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 public class PosCommand {
     // Syntax: "/cpos [to|from <dimension>] [from|to <dimension>] [<pos>]"
     // "/cpos to x to y", or "/cpos from x from y" are invalid
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cpos")
             .then(argument("pos", blockPos())
                     .executes(ctx -> convertCoords(ctx.getSource(),
@@ -53,7 +53,7 @@ public class PosCommand {
                     ctx.getSource().getPlayer().blockPosition(), null, null)));
     }
 
-    private static int convertCoords(FabricClientCommandSource source, BlockPos pos,
+    private static int convertCoords(CClientCommandSource source, BlockPos pos,
                                      @Nullable ResourceKey<Level> sourceDim,
                                      @Nullable ResourceKey<Level> targetDim) {
         ResourceKey<Level> sourceLevel;

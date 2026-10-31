@@ -2,7 +2,7 @@ package net.earthcomputer.clientcommands.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
@@ -11,7 +11,7 @@ import static net.earthcomputer.clientcommands.command.arguments.PostEffectArgum
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 
 public class PostEffectCommand {
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cposteffect")
             .then(argument("posteffect", postEffect())
                 .executes(ctx -> applyPostEffect(ctx.getSource(), getPostEffect(ctx, "posteffect"))))
@@ -19,7 +19,7 @@ public class PostEffectCommand {
                 .executes(ctx -> applyPostEffect(ctx.getSource(), null))));
     }
 
-    private static int applyPostEffect(FabricClientCommandSource source, @Nullable Identifier postEffect) {
+    private static int applyPostEffect(CClientCommandSource source, @Nullable Identifier postEffect) {
         if (postEffect == null) {
             source.getClient().gameRenderer.clearSpectatedEntityPostEffect();
             source.sendFeedback(Component.translatable("commands.cposteffect.reset.success"));

@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.features.ClientCommandFunctions;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
@@ -25,7 +25,7 @@ public class StartupCommand {
     private static final SimpleCommandExceptionType COULD_NOT_CREATE_FILE_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cstartup.couldNotCreateFile"));
     private static final SimpleCommandExceptionType COULD_NOT_EDIT_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cstartup.couldNotEdit"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("cstartup")
             .then(literal("local")
                 .then(literal("add")
@@ -41,7 +41,7 @@ public class StartupCommand {
                     .executes(ctx -> editStartupCommand(true)))));
     }
 
-    private static int addStartupCommand(FabricClientCommandSource source, boolean global, String command) throws CommandSyntaxException {
+    private static int addStartupCommand(CClientCommandSource source, boolean global, String command) throws CommandSyntaxException {
         ensureStartupFileExists(global);
 
         Path file = global ? ClientCommandFunctions.getGlobalStartupFunction() : ClientCommandFunctions.getLocalStartupFunction();

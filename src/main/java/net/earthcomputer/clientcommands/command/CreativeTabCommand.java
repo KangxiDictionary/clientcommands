@@ -9,7 +9,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.util.CUtil;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
@@ -83,7 +83,7 @@ public class CreativeTabCommand {
         });
     }
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext context) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         dispatcher.register(literal("ccreativetab")
             .then(literal("modify")
                 .then(argument("tab", string())
@@ -114,7 +114,7 @@ public class CreativeTabCommand {
                     .executes(ctx -> removeTab(ctx.getSource(), getString(ctx, "tab"))))));
     }
 
-    private static int addTab(FabricClientCommandSource source, String name, ItemStack icon) throws CommandSyntaxException {
+    private static int addTab(CClientCommandSource source, String name, ItemStack icon) throws CommandSyntaxException {
         if (tabs.containsKey(name)) {
             throw ALREADY_EXISTS_EXCEPTION.create(name);
         }
@@ -131,7 +131,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeTab(FabricClientCommandSource source, String name) throws CommandSyntaxException {
+    private static int removeTab(CClientCommandSource source, String name) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -144,7 +144,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int addStack(FabricClientCommandSource source, String name, ItemStack itemStack) throws CommandSyntaxException {
+    private static int addStack(CClientCommandSource source, String name, ItemStack itemStack) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -159,7 +159,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int removeStack(FabricClientCommandSource source, String name, int index) throws CommandSyntaxException {
+    private static int removeStack(CClientCommandSource source, String name, int index) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -177,7 +177,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int setStack(FabricClientCommandSource source, String name, int index, ItemStack itemStack) throws CommandSyntaxException {
+    private static int setStack(CClientCommandSource source, String name, int index, ItemStack itemStack) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -195,7 +195,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int changeIcon(FabricClientCommandSource source, String name, ItemStack icon) throws CommandSyntaxException {
+    private static int changeIcon(CClientCommandSource source, String name, ItemStack icon) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }
@@ -212,7 +212,7 @@ public class CreativeTabCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int renameTab(FabricClientCommandSource source, String name, String _new) throws CommandSyntaxException {
+    private static int renameTab(CClientCommandSource source, String name, String _new) throws CommandSyntaxException {
         if (!tabs.containsKey(name)) {
             throw NOT_FOUND_EXCEPTION.create(name);
         }

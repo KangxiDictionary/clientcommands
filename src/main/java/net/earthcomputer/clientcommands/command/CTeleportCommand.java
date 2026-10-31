@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.earthcomputer.clientcommands.compat.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
@@ -18,13 +18,13 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.*;
 public class CTeleportCommand {
     private static final SimpleCommandExceptionType NOT_SPECTATOR_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.ctp.notSpectator"));
 
-    public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         dispatcher.register(literal("ctp")
                 .then(argument("entity", entityUuid())
                         .executes(ctx -> teleport(ctx.getSource(), getEntityUuid(ctx, "entity")))));
     }
 
-    private static int teleport(FabricClientCommandSource source, UUID uuid) throws CommandSyntaxException {
+    private static int teleport(CClientCommandSource source, UUID uuid) throws CommandSyntaxException {
         if (!source.getPlayer().isSpectator()) {
             throw NOT_SPECTATOR_EXCEPTION.create();
         }

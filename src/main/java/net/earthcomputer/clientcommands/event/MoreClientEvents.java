@@ -1,16 +1,16 @@
 package net.earthcomputer.clientcommands.event;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
+import net.earthcomputer.clientcommands.compat.CEvent;
+import net.earthcomputer.clientcommands.compat.CEventFactory;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 
 public final class MoreClientEvents {
-    public static final Event<TimeSync> TIME_SYNC_ON_NETWORK_THREAD = EventFactory.createArrayBacked(TimeSync.class, listeners -> packet -> {
+    public static final CEvent<TimeSync> TIME_SYNC_ON_NETWORK_THREAD = CEventFactory.createArrayBacked(TimeSync.class, listeners -> packet -> {
         for (TimeSync listener : listeners) {
             listener.onTimeSync(packet);
         }
     });
-    public static final Event<TimeSync> TIME_SYNC = EventFactory.createArrayBacked(TimeSync.class, listeners -> packet -> {
+    public static final CEvent<TimeSync> TIME_SYNC = CEventFactory.createArrayBacked(TimeSync.class, listeners -> packet -> {
         for (TimeSync listener : listeners) {
             listener.onTimeSync(packet);
         }
