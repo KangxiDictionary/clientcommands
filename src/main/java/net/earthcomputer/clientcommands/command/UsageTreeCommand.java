@@ -18,7 +18,7 @@ import java.util.function.UnaryOperator;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class UsageTreeCommand {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.help.failed"));

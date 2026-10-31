@@ -33,7 +33,7 @@ import java.util.function.Function;
 import static dev.xpple.clientarguments.arguments.CBlockPosArgument.*;
 import static dev.xpple.clientarguments.arguments.CEntityArgument.*;
 import static dev.xpple.clientarguments.arguments.CNbtPathArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class GetDataCommand {
 

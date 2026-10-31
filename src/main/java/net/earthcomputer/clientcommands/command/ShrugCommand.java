@@ -6,7 +6,7 @@ import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class ShrugCommand {
 

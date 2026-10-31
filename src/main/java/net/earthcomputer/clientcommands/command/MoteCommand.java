@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.Minecraft;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class MoteCommand {
 

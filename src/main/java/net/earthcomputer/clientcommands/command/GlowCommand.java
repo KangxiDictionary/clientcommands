@@ -28,7 +28,7 @@ import static dev.xpple.clientarguments.arguments.CEntityArgument.*;
 import static dev.xpple.clientarguments.arguments.CTeamColorArgument.*;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
 import static net.earthcomputer.clientcommands.command.arguments.MultibaseIntegerArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class GlowCommand {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cglow.entity.failed"));

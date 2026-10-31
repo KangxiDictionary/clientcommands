@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class HotbarCommand {
 

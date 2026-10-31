@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.function.IntConsumer;
 import java.util.stream.Stream;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class ClientCommandFunctions {
     private static final Logger LOGGER = LogUtils.getLogger();

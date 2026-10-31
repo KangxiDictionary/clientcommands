@@ -1,4 +1,4 @@
-package net.earthcomputer.clientcommands.compat;
+package net.earthcomputer.clientcommands.platform;
 
 import java.nio.file.Path;
 import net.neoforged.fml.ModList;

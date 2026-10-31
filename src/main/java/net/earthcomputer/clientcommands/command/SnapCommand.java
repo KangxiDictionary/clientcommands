@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
 import static dev.xpple.clientarguments.arguments.CVec3Argument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class SnapCommand {
     public static boolean clickToTeleport = false;

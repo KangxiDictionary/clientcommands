@@ -15,9 +15,9 @@ import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.render.RenderQueue;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
-import net.earthcomputer.clientcommands.compat.CNetworking;
+import net.earthcomputer.clientcommands.platform.CNetworking;
 
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import org.slf4j.Logger;

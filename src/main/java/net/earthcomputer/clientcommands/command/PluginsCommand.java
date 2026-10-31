@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import java.util.stream.Collectors;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class PluginsCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

@@ -6,7 +6,7 @@ import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.network.chat.MutableComponent;
 
 import static net.earthcomputer.clientcommands.command.arguments.ExtendedMarkdownArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class NoteCommand {
 

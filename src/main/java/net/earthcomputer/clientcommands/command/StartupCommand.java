@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class StartupCommand {
     private static final Logger LOGGER = LogUtils.getLogger();

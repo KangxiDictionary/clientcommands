@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class PredictBrushablesCommand {
     public static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();

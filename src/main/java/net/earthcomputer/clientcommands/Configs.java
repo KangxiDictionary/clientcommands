@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.earthcomputer.clientcommands.command.ReplyCommand;
 import net.earthcomputer.clientcommands.features.ChorusManipulation;
 import net.earthcomputer.clientcommands.features.EnchantmentCracker;

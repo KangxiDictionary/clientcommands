@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.logging.LogUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;

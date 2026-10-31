@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static dev.xpple.clientarguments.arguments.CEnumArgument.*;
 import static dev.xpple.clientarguments.arguments.CGameProfileArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CGameModeCommand {
 

@@ -5,7 +5,7 @@ import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
-import net.earthcomputer.clientcommands.compat.CRenderContext;
+import net.earthcomputer.clientcommands.platform.CRenderContext;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.ClientTickEvent;

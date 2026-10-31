@@ -8,7 +8,7 @@ import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 import static net.earthcomputer.clientcommands.command.arguments.PostEffectArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class PostEffectCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

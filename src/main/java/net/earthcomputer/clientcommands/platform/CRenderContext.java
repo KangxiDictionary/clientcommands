@@ -1,4 +1,4 @@
-package net.earthcomputer.clientcommands.compat;
+package net.earthcomputer.clientcommands.platform;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;

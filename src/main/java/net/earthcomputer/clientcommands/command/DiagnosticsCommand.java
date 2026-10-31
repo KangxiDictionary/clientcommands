@@ -3,7 +3,7 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.Configs;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.earthcomputer.clientcommands.platform.ClientCommandRegistrar;
 import net.earthcomputer.clientcommands.platform.PlatformSelfCheck;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.literal;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.literal;
 
 /**
  * Prints the platform state so a bug report can be diagnosed without reading the log.

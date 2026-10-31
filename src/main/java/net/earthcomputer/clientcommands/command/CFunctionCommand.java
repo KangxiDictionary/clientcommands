@@ -9,7 +9,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CFunctionCommand {
     private static final SimpleCommandExceptionType NO_ACTIVE_DISPATCHER_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cfunction.noActiveDispatcher"));

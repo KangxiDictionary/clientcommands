@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 
 import static dev.xpple.clientarguments.arguments.CIdentifierArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CStopSoundCommand {
 

@@ -18,7 +18,7 @@ import net.minecraft.world.phys.AABB;
 import static dev.xpple.clientarguments.arguments.CBlockPosArgument.*;
 import static net.earthcomputer.clientcommands.command.arguments.ClientBlockPredicateArgument.*;
 import static net.earthcomputer.clientcommands.command.arguments.ListArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class AreaStatsCommand {
 

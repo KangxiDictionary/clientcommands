@@ -8,7 +8,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 
 import static dev.xpple.clientarguments.arguments.CTimeArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CTimeCommand {
 

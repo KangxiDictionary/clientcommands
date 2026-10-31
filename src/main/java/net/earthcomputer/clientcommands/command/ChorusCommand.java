@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import java.util.EnumSet;
 
 import static dev.xpple.clientarguments.arguments.CVec3Argument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class ChorusCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

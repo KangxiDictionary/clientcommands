@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import static com.mojang.brigadier.arguments.FloatArgumentType.*;
 import static dev.xpple.clientarguments.arguments.CIdentifierArgument.*;
 import static dev.xpple.clientarguments.arguments.CVec3Argument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CPlaySoundCommand {
 

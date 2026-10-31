@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.xpple.clientarguments.arguments.CMessageArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class ReplyCommand {
     public static final float MAXIMUM_REPLY_DELAY_SECONDS = 300.0f;

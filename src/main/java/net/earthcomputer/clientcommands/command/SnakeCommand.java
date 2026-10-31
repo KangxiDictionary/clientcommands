@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class SnakeCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

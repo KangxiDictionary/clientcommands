@@ -14,7 +14,7 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.util.BrigadierRemover;
 import net.earthcomputer.clientcommands.interfaces.IClientSuggestionsProvider_Alias;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -31,7 +31,7 @@ import java.util.IllegalFormatException;
 import java.util.regex.Pattern;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class AliasCommand {
 

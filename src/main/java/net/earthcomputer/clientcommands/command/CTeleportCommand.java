@@ -13,7 +13,7 @@ import net.minecraft.network.protocol.game.ServerboundTeleportToEntityPacket;
 import java.util.UUID;
 
 import static net.earthcomputer.clientcommands.command.arguments.EntityUUIDArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CTeleportCommand {
     private static final SimpleCommandExceptionType NOT_SPECTATOR_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.ctp.notSpectator"));

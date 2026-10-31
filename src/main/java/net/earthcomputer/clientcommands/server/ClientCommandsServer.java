@@ -4,7 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.netty.buffer.ByteBuf;
 import net.earthcomputer.clientcommands.util.BuildInfo;
-import net.earthcomputer.clientcommands.compat.CNetworking;
+import net.earthcomputer.clientcommands.platform.CNetworking;
 
 
 import net.minecraft.client.Minecraft;

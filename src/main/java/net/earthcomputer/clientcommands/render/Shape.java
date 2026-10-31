@@ -1,7 +1,7 @@
 package net.earthcomputer.clientcommands.render;
 
-import net.earthcomputer.clientcommands.compat.CRenderContext;
-import net.earthcomputer.clientcommands.compat.CRenderContext;
+import net.earthcomputer.clientcommands.platform.CRenderContext;
+import net.earthcomputer.clientcommands.platform.CRenderContext;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.phys.Vec3;
 

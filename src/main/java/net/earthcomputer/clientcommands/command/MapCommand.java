@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class MapCommand {
     private static final Logger LOGGER = LogUtils.getLogger();

@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Style;
 
 import java.util.List;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 /**
  * Carpet style settings page: the setting list is printed in chat, the names are clickable to show

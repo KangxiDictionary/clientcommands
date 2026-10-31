@@ -10,7 +10,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import net.earthcomputer.clientcommands.util.CUtil;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
@@ -44,7 +44,7 @@ import java.util.Set;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
 import static dev.xpple.clientarguments.arguments.CItemArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 import static net.minecraft.commands.SharedSuggestionProvider.*;
 
 public class CreativeTabCommand {

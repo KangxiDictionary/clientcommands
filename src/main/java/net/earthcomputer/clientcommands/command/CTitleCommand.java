@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
 import static dev.xpple.clientarguments.arguments.CComponentArgument.*;
 import static net.earthcomputer.clientcommands.command.ClientCommandHelper.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CTitleCommand {
 

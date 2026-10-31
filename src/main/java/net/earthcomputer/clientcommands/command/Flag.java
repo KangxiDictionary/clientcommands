@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public final class Flag<T> {
     private final Class<T> type;

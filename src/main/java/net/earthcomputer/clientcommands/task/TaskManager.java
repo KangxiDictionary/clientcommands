@@ -6,7 +6,7 @@ import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;

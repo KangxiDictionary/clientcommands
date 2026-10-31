@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
 import static dev.xpple.clientarguments.arguments.CGameProfileArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class TwoPlayerGame<T, S extends Screen> {
     public static final Map<Identifier, TwoPlayerGame<?, ?>> TYPE_BY_NAME = new LinkedHashMap<>();

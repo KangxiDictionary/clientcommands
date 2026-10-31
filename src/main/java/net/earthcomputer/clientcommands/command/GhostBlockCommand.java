@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import static dev.xpple.clientarguments.arguments.CBlockPosArgument.*;
 import static dev.xpple.clientarguments.arguments.CBlockPredicateArgument.*;
 import static dev.xpple.clientarguments.arguments.CBlockStateArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class GhostBlockCommand {
 

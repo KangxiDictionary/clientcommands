@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.util.StringRepresentable;
 
 import static dev.xpple.clientarguments.arguments.CEnumArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class CDebugCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

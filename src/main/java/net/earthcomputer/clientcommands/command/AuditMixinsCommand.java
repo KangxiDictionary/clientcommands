@@ -3,10 +3,10 @@ package net.earthcomputer.clientcommands.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
-import net.earthcomputer.clientcommands.compat.CPlatform;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class AuditMixinsCommand {
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {

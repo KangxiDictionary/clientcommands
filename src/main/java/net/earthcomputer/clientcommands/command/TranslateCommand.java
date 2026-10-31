@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static net.earthcomputer.clientcommands.command.arguments.TranslationQueryArgument.*;
-import static net.earthcomputer.clientcommands.compat.ClientCommands.*;
+import static net.earthcomputer.clientcommands.platform.ClientCommands.*;
 
 public class TranslateCommand {
 
