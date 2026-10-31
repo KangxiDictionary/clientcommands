@@ -112,6 +112,16 @@ public class ClientCommands {
         }
     }
 
+
+    /** Registers one command in isolation: one broken command must not hide all the others. */
+    private static void safe(String name, Runnable registration) {
+        try {
+            registration.run();
+        } catch (Throwable t) {
+            LOGGER.error("[clientcommands] failed to register command {}", name, t);
+        }
+    }
+
     public static boolean isClientcommandsCommand(String commandName) {
         return clientcommandsCommands.contains(commandName);
     }
@@ -119,75 +129,76 @@ public class ClientCommands {
     public static void registerCommands(CommandDispatcher<CClientCommandSource> dispatcher, CommandBuildContext context) {
         Set<String> existingCommands = getCommands(dispatcher);
 
-        AliasCommand.register(dispatcher);
-        AreaStatsCommand.register(dispatcher, context);
-        AuditMixinsCommand.register(dispatcher);
-        BookCommand.register(dispatcher);
-        BuildInfoCommand.register(dispatcher);
-        CalcCommand.register(dispatcher);
-        CalcStackCommand.register(dispatcher, context);
-        CallbackCommand.register(dispatcher);
-        ChessCommand.register(dispatcher);
-        CDebugCommand.register(dispatcher);
-        CEnchantCommand.register(dispatcher, context);
-        CFunctionCommand.register(dispatcher);
-        CGameModeCommand.register(dispatcher);
-        CGiveCommand.register(dispatcher, context);
-        ChorusCommand.register(dispatcher);
-        ConnectFourCommand.register(dispatcher);
-        CParticleCommand.register(dispatcher, context);
-        CPlaySoundCommand.register(dispatcher);
-        CrackRNGCommand.register(dispatcher);
-        CreativeTabCommand.register(dispatcher, context);
-        CStopSoundCommand.register(dispatcher);
-        CTeleportCommand.register(dispatcher);
-        CTellRawCommand.register(dispatcher, context);
-        CTimeCommand.register(dispatcher);
-        CTitleCommand.register(dispatcher, context);
-        FindBlockCommand.register(dispatcher, context);
-        FindCommand.register(dispatcher);
-        FindItemCommand.register(dispatcher, context);
-        FishCommand.register(dispatcher, context);
-        FovCommand.register(dispatcher);
-        FramerateCommand.register(dispatcher);
-        GammaCommand.register(dispatcher);
-        GetDataCommand.register(dispatcher);
-        GhostBlockCommand.register(dispatcher, context);
-        GlowCommand.register(dispatcher);
-        HotbarCommand.register(dispatcher);
-        KitCommand.register(dispatcher);
-        ListenCommand.register(dispatcher);
-        LookCommand.register(dispatcher);
-        MapCommand.register(dispatcher);
-        MinesweeperCommand.register(dispatcher);
-        MoteCommand.register(dispatcher);
-        NoteCommand.register(dispatcher);
-        PermissionLevelCommand.register(dispatcher);
-        PingCommand.register(dispatcher);
+
+        safe("AliasCommand", () -> AliasCommand.register(dispatcher));
+        safe("AreaStatsCommand", () -> AreaStatsCommand.register(dispatcher, context));
+        safe("AuditMixinsCommand", () -> AuditMixinsCommand.register(dispatcher));
+        safe("BookCommand", () -> BookCommand.register(dispatcher));
+        safe("BuildInfoCommand", () -> BuildInfoCommand.register(dispatcher));
+        safe("CalcCommand", () -> CalcCommand.register(dispatcher));
+        safe("CalcStackCommand", () -> CalcStackCommand.register(dispatcher, context));
+        safe("CallbackCommand", () -> CallbackCommand.register(dispatcher));
+        safe("ChessCommand", () -> ChessCommand.register(dispatcher));
+        safe("CDebugCommand", () -> CDebugCommand.register(dispatcher));
+        safe("CEnchantCommand", () -> CEnchantCommand.register(dispatcher, context));
+        safe("CFunctionCommand", () -> CFunctionCommand.register(dispatcher));
+        safe("CGameModeCommand", () -> CGameModeCommand.register(dispatcher));
+        safe("CGiveCommand", () -> CGiveCommand.register(dispatcher, context));
+        safe("ChorusCommand", () -> ChorusCommand.register(dispatcher));
+        safe("ConnectFourCommand", () -> ConnectFourCommand.register(dispatcher));
+        safe("CParticleCommand", () -> CParticleCommand.register(dispatcher, context));
+        safe("CPlaySoundCommand", () -> CPlaySoundCommand.register(dispatcher));
+        safe("CrackRNGCommand", () -> CrackRNGCommand.register(dispatcher));
+        safe("CreativeTabCommand", () -> CreativeTabCommand.register(dispatcher, context));
+        safe("CStopSoundCommand", () -> CStopSoundCommand.register(dispatcher));
+        safe("CTeleportCommand", () -> CTeleportCommand.register(dispatcher));
+        safe("CTellRawCommand", () -> CTellRawCommand.register(dispatcher, context));
+        safe("CTimeCommand", () -> CTimeCommand.register(dispatcher));
+        safe("CTitleCommand", () -> CTitleCommand.register(dispatcher, context));
+        safe("FindBlockCommand", () -> FindBlockCommand.register(dispatcher, context));
+        safe("FindCommand", () -> FindCommand.register(dispatcher));
+        safe("FindItemCommand", () -> FindItemCommand.register(dispatcher, context));
+        safe("FishCommand", () -> FishCommand.register(dispatcher, context));
+        safe("FovCommand", () -> FovCommand.register(dispatcher));
+        safe("FramerateCommand", () -> FramerateCommand.register(dispatcher));
+        safe("GammaCommand", () -> GammaCommand.register(dispatcher));
+        safe("GetDataCommand", () -> GetDataCommand.register(dispatcher));
+        safe("GhostBlockCommand", () -> GhostBlockCommand.register(dispatcher, context));
+        safe("GlowCommand", () -> GlowCommand.register(dispatcher));
+        safe("HotbarCommand", () -> HotbarCommand.register(dispatcher));
+        safe("KitCommand", () -> KitCommand.register(dispatcher));
+        safe("ListenCommand", () -> ListenCommand.register(dispatcher));
+        safe("LookCommand", () -> LookCommand.register(dispatcher));
+        safe("MapCommand", () -> MapCommand.register(dispatcher));
+        safe("MinesweeperCommand", () -> MinesweeperCommand.register(dispatcher));
+        safe("MoteCommand", () -> MoteCommand.register(dispatcher));
+        safe("NoteCommand", () -> NoteCommand.register(dispatcher));
+        safe("PermissionLevelCommand", () -> PermissionLevelCommand.register(dispatcher));
+        safe("PingCommand", () -> PingCommand.register(dispatcher));
         // PlayerInfoCommand.register(dispatcher);
-        PluginsCommand.register(dispatcher);
-        PosCommand.register(dispatcher);
-        PostEffectCommand.register(dispatcher);
-        PredictBrushablesCommand.register(dispatcher);
-        RelogCommand.register(dispatcher);
-        RenderCommand.register(dispatcher);
-        ReplyCommand.register(dispatcher);
-        ShrugCommand.register(dispatcher);
-        SignSearchCommand.register(dispatcher);
-        SnakeCommand.register(dispatcher);
-        SnapCommand.register(dispatcher);
-        StartupCommand.register(dispatcher);
-        TaskCommand.register(dispatcher);
-        TicTacToeCommand.register(dispatcher);
-        TooltipCommand.register(dispatcher, context);
-        TranslateCommand.register(dispatcher);
-        UsageTreeCommand.register(dispatcher);
-        UuidCommand.register(dispatcher);
-        VarCommand.register(dispatcher);
-        WeatherCommand.register(dispatcher);
-        WhisperEncryptedCommand.register(dispatcher);
-        WikiCommand.register(dispatcher);
-        WindowSizeCommand.register(dispatcher);
+        safe("PluginsCommand", () -> PluginsCommand.register(dispatcher));
+        safe("PosCommand", () -> PosCommand.register(dispatcher));
+        safe("PostEffectCommand", () -> PostEffectCommand.register(dispatcher));
+        safe("PredictBrushablesCommand", () -> PredictBrushablesCommand.register(dispatcher));
+        safe("RelogCommand", () -> RelogCommand.register(dispatcher));
+        safe("RenderCommand", () -> RenderCommand.register(dispatcher));
+        safe("ReplyCommand", () -> ReplyCommand.register(dispatcher));
+        safe("ShrugCommand", () -> ShrugCommand.register(dispatcher));
+        safe("SignSearchCommand", () -> SignSearchCommand.register(dispatcher));
+        safe("SnakeCommand", () -> SnakeCommand.register(dispatcher));
+        safe("SnapCommand", () -> SnapCommand.register(dispatcher));
+        safe("StartupCommand", () -> StartupCommand.register(dispatcher));
+        safe("TaskCommand", () -> TaskCommand.register(dispatcher));
+        safe("TicTacToeCommand", () -> TicTacToeCommand.register(dispatcher));
+        safe("TooltipCommand", () -> TooltipCommand.register(dispatcher, context));
+        safe("TranslateCommand", () -> TranslateCommand.register(dispatcher));
+        safe("UsageTreeCommand", () -> UsageTreeCommand.register(dispatcher));
+        safe("UuidCommand", () -> UuidCommand.register(dispatcher));
+        safe("VarCommand", () -> VarCommand.register(dispatcher));
+        safe("WeatherCommand", () -> WeatherCommand.register(dispatcher));
+        safe("WhisperEncryptedCommand", () -> WhisperEncryptedCommand.register(dispatcher));
+        safe("WikiCommand", () -> WikiCommand.register(dispatcher));
+        safe("WindowSizeCommand", () -> WindowSizeCommand.register(dispatcher));
 
         Calendar calendar = Calendar.getInstance();
         boolean registerChatCommand = calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DAY_OF_MONTH) == 1;
