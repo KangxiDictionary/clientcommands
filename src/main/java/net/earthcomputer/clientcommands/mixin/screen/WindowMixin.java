@@ -12,7 +12,7 @@ public class WindowMixin {
     @ModifyExpressionValue(method = "calculateScale", at = @At(value = "CONSTANT", args = "intValue=" + Window.BASE_WIDTH))
     private int getSafeZoneWidth(int original) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.gui.screen() instanceof ISafeZoneScreen safeZone) {
+        if (mc != null && mc.gui != null && mc.gui.screen() instanceof ISafeZoneScreen safeZone) {
             original = Math.max(original, safeZone.getSafeZoneWidth());
         }
         return original;
@@ -21,7 +21,7 @@ public class WindowMixin {
     @ModifyExpressionValue(method = "calculateScale", at = @At(value = "CONSTANT", args = "intValue=" + Window.BASE_HEIGHT))
     private int getSafeZoneHeight(int original) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.gui.screen() instanceof ISafeZoneScreen safeZone) {
+        if (mc != null && mc.gui != null && mc.gui.screen() instanceof ISafeZoneScreen safeZone) {
             original = Math.max(original, safeZone.getSafeZoneHeight());
         }
         return original;
