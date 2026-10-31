@@ -4,7 +4,6 @@ plugins {
 }
 
 group = 'net.earthcomputer'
-version = "${project.mod_version}+mc${project.minecraft_version}"
 base {
 	archivesName = 'clientcommands'
 }
