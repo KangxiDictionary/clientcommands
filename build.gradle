@@ -78,14 +78,49 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 
-// Temporary: bundle the seedfinding/latticg libraries into the mod jar.
-// TODO: replace with NeoForge JarJar once the build is on ModDevGradle.
+// NeoForge JarJar: bundle the seedfinding/latticg libraries as nested jars instead of
+// shading them into the mod jar. Fabric's "include" has no equivalent on NeoForge, and
+// shading used to shadow unrelated classes such as Kotlin's stdlib.
+def jarJarOutput = layout.buildDirectory.dir('jarjar')
+
+tasks.register('prepareJarJar') {
+    description = 'Stages nested jars and META-INF/jarjar/metadata.json for JarJar.'
+    def embedConfig = configurations.embed
+    inputs.files(embedConfig)
+    outputs.dir(jarJarOutput)
+    doLast {
+        File outDir = jarJarOutput.get().dir('META-INF/jarjar').asFile
+        outDir.deleteDir()
+        outDir.mkdirs()
+        def entries = []
+        embedConfig.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+            def id = artifact.moduleVersion.id
+            File target = new File(outDir, artifact.file.name)
+            target.bytes = artifact.file.bytes
+            entries << [
+                group   : id.group,
+                artifact: id.name,
+                version : id.version,
+                path    : "META-INF/jarjar/${artifact.file.name}"
+            ]
+        }
+        def builder = new groovy.json.JsonBuilder([
+            jars: entries.collect { entry ->
+                [
+                    identifier  : [group: entry.group, artifact: entry.artifact],
+                    version     : [range: "[${entry.version},)".toString(), artifactVersion: entry.version],
+                    path        : entry.path,
+                    isObfuscated: false
+                ]
+            }
+        ])
+        new File(outDir, 'metadata.json').text = builder.toPrettyString()
+    }
+}
+
 jar {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	from {
-		configurations.embed.collect { zipTree(it) }
-	}
-	exclude 'META-INF/MANIFEST.MF', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
-	// Do not shadow Kotlin's own classes (KotlinLangForge provides them).
-	exclude 'kotlin/**', 'META-INF/*.kotlin_module'
+    dependsOn 'prepareJarJar'
+    from(jarJarOutput) {
+        include 'META-INF/jarjar/**'
+    }
 }
