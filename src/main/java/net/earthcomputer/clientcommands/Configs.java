@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Configs {
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Set<String> NOT_PERSISTED = Set.of("calcAnswer", "enchCrackState", "playerCrackState");
 
@@ -52,8 +53,15 @@ public class Configs {
 
     private static boolean isOption(Field field) {
         int mods = field.getModifiers();
-        return Modifier.isStatic(mods) && !Modifier.isTransient(mods) && !field.isSynthetic()
-            && !NOT_PERSISTED.contains(field.getName());
+        return Modifier.isStatic(mods) && !Modifier.isTransient(mods) && !Modifier.isFinal(mods)
+            && !field.isSynthetic() && !NOT_PERSISTED.contains(field.getName())
+            && isSupportedType(field.getType());
+    }
+
+    private static boolean isSupportedType(Class<?> type) {
+        return type == boolean.class || type == int.class || type == long.class
+            || type == float.class || type == double.class || type == String.class
+            || type.isEnum();
     }
 
     private static Field findOption(String name) {
@@ -127,10 +135,11 @@ public class Configs {
 
     private static Object parseValue(Class<?> type, String raw) {
         if (type == boolean.class || type == Boolean.class) {
-            if (!raw.equalsIgnoreCase("true") && !raw.equalsIgnoreCase("false")) {
-                throw new IllegalArgumentException("not a boolean");
-            }
-            return Boolean.parseBoolean(raw);
+            return switch (raw.toLowerCase(Locale.ROOT)) {
+                case "true", "1", "yes", "on" -> true;
+                case "false", "0", "no", "off" -> false;
+                default -> throw new IllegalArgumentException("not a boolean: " + raw);
+            };
         } else if (type == int.class || type == Integer.class) {
             return Integer.parseInt(raw);
         } else if (type == float.class || type == Float.class) {
@@ -152,10 +161,7 @@ public class Configs {
     public static void save() {
         Map<String, Object> values = new LinkedHashMap<>();
         for (Field field : Configs.class.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                continue;
-            }
-            if (NOT_PERSISTED.contains(field.getName())) {
+            if (!isOption(field)) {
                 continue;
             }
             try {
@@ -168,8 +174,8 @@ public class Configs {
             Path file = configFile();
             Files.createDirectories(file.getParent());
             Files.writeString(file, GSON.toJson(values));
-        } catch (IOException e) {
-            // ignore
+        } catch (IOException | RuntimeException e) {
+            LOGGER.warn("Failed to save clientcommands config", e);
         }
     }
 
