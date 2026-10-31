@@ -17,6 +17,7 @@ public final class ClientCommandManager {
     private static final CommandDispatcher<CClientCommandSource> DISPATCHER = new CommandDispatcher<>();
     private static boolean registered;
     private static boolean registrationFailed;
+    private static boolean loggedMerge;
     private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
     private ClientCommandManager() {
@@ -37,6 +38,7 @@ public final class ClientCommandManager {
         try {
             ClientCommands.registerCommands(DISPATCHER, CommandBuildContext.simple(level.registryAccess(), level.enabledFeatures()));
             registered = true;
+            LOGGER.info("[clientcommands] registered {} root commands", DISPATCHER.getRoot().getChildren().size());
         } catch (Throwable t) {
             registrationFailed = true;
             LOGGER.error("Failed to register client commands", t);
@@ -60,11 +62,17 @@ public final class ClientCommandManager {
                 return;
             }
             CommandDispatcher rawTarget = target;
+            int added = 0;
             for (Object node : DISPATCHER.getRoot().getChildren()) {
                 com.mojang.brigadier.tree.CommandNode rawNode = (com.mojang.brigadier.tree.CommandNode) node;
                 if (rawTarget.getRoot().getChild(rawNode.getName()) == null) {
                     rawTarget.getRoot().addChild(rawNode);
+                    added++;
                 }
+            }
+            if (added > 0 && !loggedMerge) {
+                loggedMerge = true;
+                LOGGER.info("[clientcommands] merged {} command nodes into the suggestion dispatcher", added);
             }
         } catch (Throwable t) {
             LOGGER.error("Failed to merge client command suggestions", t);
