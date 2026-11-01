@@ -1,5 +1,8 @@
 package net.earthcomputer.clientcommands;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.earthcomputer.clientcommands.platform.ConfigSpecs;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.earthcomputer.clientcommands.command.ReplyCommand;
@@ -14,6 +17,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -229,6 +234,44 @@ public class Configs {
             }
         }
         return value;
+    }
+
+    /**
+     * Imports a config written by the pre-ModConfigSpec build ({@code config/clientcommands/config.json})
+     * once, then renames it so it is not imported again.
+     */
+    public static void migrateLegacyJsonConfig() {
+        Path legacy = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands").resolve("config.json");
+        if (!Files.exists(legacy)) {
+            return;
+        }
+        try {
+            Map<String, Object> values = new Gson().fromJson(Files.readString(legacy),
+                new TypeToken<LinkedHashMap<String, Object>>() {}.getType());
+            if (values != null) {
+                for (Map.Entry<String, Object> entry : values.entrySet()) {
+                    if (!getOptionNames().contains(entry.getKey())) {
+                        continue;
+                    }
+                    Object value = entry.getValue();
+                    String raw;
+                    if (value instanceof Number number) {
+                        String type = getOptionTypeName(entry.getKey());
+                        raw = "integer".equals(type) ? String.valueOf(number.intValue())
+                            : "float".equals(type) || "double".equals(type) ? String.valueOf(number.floatValue())
+                            : String.valueOf(value);
+                    } else {
+                        raw = String.valueOf(value);
+                    }
+                    setOptionValue(entry.getKey(), raw);
+                }
+            }
+            Path migrated = legacy.resolveSibling("config.json.migrated");
+            Files.move(legacy, migrated);
+            LOGGER.info("Imported legacy clientcommands config, old file moved to {}", migrated);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to import legacy clientcommands config", e);
+        }
     }
 
     /** Applies the values loaded from the NeoForge config to the runtime fields. */

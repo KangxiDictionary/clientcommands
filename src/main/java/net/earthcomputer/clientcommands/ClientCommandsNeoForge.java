@@ -29,7 +29,10 @@ public class ClientCommandsNeoForge {
         container.registerConfig(ModConfig.Type.CLIENT, net.earthcomputer.clientcommands.platform.ConfigSpecs.SPEC);
         container.registerExtensionPoint(IConfigScreenFactory.class,
             (mod, parent) -> new ConfigurationScreen(mod, parent));
-        modBus.addListener(ModConfigEvent.Loading.class, event -> Configs.load());
+        modBus.addListener(ModConfigEvent.Loading.class, event -> {
+            Configs.load();
+            Configs.migrateLegacyJsonConfig();
+        });
         modBus.addListener(ModConfigEvent.Reloading.class, event -> Configs.load());
 
         modBus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> {
