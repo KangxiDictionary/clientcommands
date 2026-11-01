@@ -142,6 +142,8 @@ tasks.register('generateBuildInfo') {
 	def commit = gitOutput('rev-parse', 'HEAD')
 	def branch = gitOutput('rev-parse', '--abbrev-ref', 'HEAD')
 	def outputDir = buildInfoDir
+	// re-run when the checked out revision changes, so the jar always names its own commit
+	inputs.property('gitCommit', commit)
 	outputs.dir(outputDir)
 	doLast {
 		def file = outputDir.get().file('clientcommands-buildinfo.properties').asFile
