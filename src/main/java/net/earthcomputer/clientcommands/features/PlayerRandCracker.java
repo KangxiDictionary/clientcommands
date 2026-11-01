@@ -430,17 +430,23 @@ public class PlayerRandCracker {
     }
 
     private static void handleToolBreakWarning(int amount, ItemStack stack, LocalPlayer player) {
-        if (Configs.toolBreakWarning && stack.getDamageValue() + amount >= stack.getMaxDamage() - 30) {
-            if (stack.getDamageValue() + amount >= stack.getMaxDamage() - 15) {
-                player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 10, 0.1f);
-            }
-
-            MutableComponent durability = Component.literal(String.valueOf(stack.getMaxDamage() - stack.getDamageValue() - 1)).withStyle(ChatFormatting.RED);
-
-            Minecraft.getInstance().gui.hud.setOverlayMessage(
-                Component.translatable("playerManip.toolBreakWarning", durability).withStyle(ChatFormatting.GOLD),
-                false);
+        if (!Configs.toolBreakWarning || amount <= 0) {
+            return;
         }
+        // Durability left after this hit. If it is already gone the tool is breaking right now, and a
+        // reminder would only be noise, so stay quiet in that case.
+        int remaining = stack.getMaxDamage() - stack.getDamageValue() - amount;
+        if (remaining > 30 || remaining <= 0) {
+            return;
+        }
+        if (remaining <= 15) {
+            player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 10, 0.1f);
+        }
+
+        MutableComponent durability = Component.literal(String.valueOf(remaining)).withStyle(ChatFormatting.RED);
+        Minecraft.getInstance().gui.hud.setOverlayMessage(
+            Component.translatable("playerManip.toolBreakWarning", durability).withStyle(ChatFormatting.GOLD),
+            false);
     }
 
     public static void onEnchantedItem() {

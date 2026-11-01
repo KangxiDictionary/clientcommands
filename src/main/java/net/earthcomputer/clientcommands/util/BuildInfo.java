@@ -7,7 +7,7 @@ public final class BuildInfo {
     }
 
     public static final String VERSION;
-    public static final String BRANCH = "neoforge";
+    public static final String BRANCH = "neoforge-clean";
     public static final String SHORT_COMMIT_HASH = "unknown";
     public static final String COMMIT_HASH = "unknown";
 

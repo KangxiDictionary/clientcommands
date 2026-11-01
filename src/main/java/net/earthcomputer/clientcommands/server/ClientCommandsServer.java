@@ -23,7 +23,7 @@ public class ClientCommandsServer {
         event.registrar("1").playToServer(OptInPayload.TYPE, OptInPayload.CODEC, (payload, context) -> {});
     }
 
-    private static final URI WHY_URI = URI.create("https://github.com/Earthcomputer/clientcommands/blob/" + BuildInfo.COMMIT_HASH + "/docs/server_installation.md");
+    private static final URI WHY_URI = URI.create("https://github.com/KangxiDictionary/clientcommands/blob/" + BuildInfo.BRANCH + "/docs/server_installation.md");
     private static final SimpleCommandExceptionType MUST_BE_INSTALLED_EXCEPTION = new SimpleCommandExceptionType(
         Component.translatable(
             "commands.client.mustBeInstalledOnServer",
