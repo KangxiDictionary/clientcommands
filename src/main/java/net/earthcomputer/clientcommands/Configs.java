@@ -212,6 +212,25 @@ public class Configs {
         ConfigSpecs.SPEC.save();
     }
 
+    /**
+     * NightConfig stores every number as a {@link Double} unless the spec enforces a type, so a
+     * float option would otherwise be assigned a Double and throw. Convert to the field type.
+     */
+    public static Object coerce(Class<?> type, Object value) {
+        if (value instanceof Number number) {
+            if (type == int.class) {
+                return number.intValue();
+            } else if (type == long.class) {
+                return number.longValue();
+            } else if (type == float.class) {
+                return number.floatValue();
+            } else if (type == double.class) {
+                return number.doubleValue();
+            }
+        }
+        return value;
+    }
+
     /** Applies the values loaded from the NeoForge config to the runtime fields. */
     public static void load() {
         if (!ConfigSpecs.SPEC.isLoaded()) {
@@ -223,7 +242,7 @@ public class Configs {
                 continue;
             }
             try {
-                field.set(null, entry.getValue().get());
+                field.set(null, coerce(field.getType(), entry.getValue().get()));
             } catch (IllegalAccessException e) {
                 // ignore
             }
