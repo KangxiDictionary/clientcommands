@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandBuildContext;
@@ -43,7 +42,6 @@ public class GhostBlockCommand {
     }
 
     private static int setGhostBlock(CClientCommandSource source, BlockPos pos, BlockState state) throws CommandSyntaxException {
-        ClientCommandsServer.requirePrivileges();
         ClientLevel level = source.getClientLevel();
         assert level != null;
 
@@ -59,7 +57,6 @@ public class GhostBlockCommand {
     }
 
     private static int fillGhostBlocks(CClientCommandSource source, BlockPos from, BlockPos to, BlockState state, Predicate<BlockInWorld> filter) throws CommandSyntaxException {
-        ClientCommandsServer.requirePrivileges();
         ClientLevel level = source.getClientLevel();
         assert level != null;
 

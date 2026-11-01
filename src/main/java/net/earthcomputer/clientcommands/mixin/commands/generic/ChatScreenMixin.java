@@ -24,10 +24,6 @@ public class ChatScreenMixin {
         }
 
         String command = VarCommand.replaceVariables(prefix + instance);
-        if (command.startsWith("/")) {
-            ClientCommands.sendCommandExecutionToServer(command.substring(1));
-        }
-
         message.set(command);
         return command;
     }

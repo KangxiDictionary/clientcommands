@@ -250,7 +250,6 @@ public class ClientCommandFunctions {
     private record ParsedEntry(String commandString, ParseResults<CClientCommandSource> command) implements Entry {
         @Override
         public void execute(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source) throws CommandSyntaxException {
-            ClientCommands.sendCommandExecutionToServer(commandString);
             dispatcher.execute(command);
         }
     }
@@ -259,7 +258,6 @@ public class ClientCommandFunctions {
         @Override
         public void execute(CommandDispatcher<CClientCommandSource> dispatcher, CClientCommandSource source) throws CommandSyntaxException {
             String replacedCommand = VarCommand.replaceVariables(command);
-            ClientCommands.sendCommandExecutionToServer(replacedCommand);
             dispatcher.execute(replacedCommand, source);
         }
     }

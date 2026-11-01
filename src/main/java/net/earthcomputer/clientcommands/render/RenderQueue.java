@@ -80,6 +80,20 @@ public class RenderQueue {
         add(layer, key, new Line(from, to, color), life);
     }
 
+    /** @return whether a shape with this key is currently queued (applied or pending) */
+    public static boolean contains(Layer layer, Object key) {
+        Map<Object, Shape> shapes = queue.get(layer);
+        if (shapes != null && shapes.containsKey(key)) {
+            return true;
+        }
+        for (AddQueueEntry entry : addQueue) {
+            if (entry.layer() == layer && entry.key().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void remove(Layer layer, Object key) {
         removeQueue.add(new RemoveQueueEntry(layer, key));
     }

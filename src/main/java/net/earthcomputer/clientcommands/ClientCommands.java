@@ -7,7 +7,6 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.logging.LogUtils;
 import net.earthcomputer.clientcommands.command.*;
 import net.earthcomputer.clientcommands.event.ClientConnectionEvents;
-import net.earthcomputer.clientcommands.features.CommandExecutionCustomPayload;
 import net.earthcomputer.clientcommands.features.EnchantmentCracker;
 import net.earthcomputer.clientcommands.features.FishingCracker;
 import net.earthcomputer.clientcommands.features.PlayerRandCracker;
@@ -15,7 +14,6 @@ import net.earthcomputer.clientcommands.features.Relogger;
 import net.earthcomputer.clientcommands.features.ServerBrandManager;
 import net.earthcomputer.clientcommands.render.RenderQueue;
 import net.earthcomputer.clientcommands.platform.CClientCommandSource;
-import net.earthcomputer.clientcommands.platform.CNetworking;
 
 import net.earthcomputer.clientcommands.platform.CPlatform;
 import net.minecraft.client.Minecraft;
@@ -35,7 +33,6 @@ public class ClientCommands {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final Path CONFIG_DIR = CPlatform.INSTANCE.getConfigDir().resolve("clientcommands");
     private static final Set<String> clientcommandsCommands = new HashSet<>();
-    private static final Set<String> COMMANDS_TO_NOT_SEND_TO_SERVER = Set.of("cwe", "cnote"); // could contain private information
 
     public static boolean scrambleWindowTitle = false;
 
@@ -99,17 +96,6 @@ public class ClientCommands {
 
     private static Set<String> getCommands(CommandDispatcher<?> dispatcher) {
         return dispatcher.getRoot().getChildren().stream().flatMap(node -> node instanceof LiteralCommandNode<?> literal ? Stream.of(literal.getLiteral()) : Stream.empty()).collect(Collectors.toSet());
-    }
-
-    public static void sendCommandExecutionToServer(String command) {
-        StringReader reader = new StringReader(command);
-        reader.skipWhitespace();
-        String theCommand = reader.readUnquotedString();
-        if (clientcommandsCommands.contains(theCommand) && !COMMANDS_TO_NOT_SEND_TO_SERVER.contains(theCommand)) {
-            if (CNetworking.canSend(CommandExecutionCustomPayload.TYPE)) {
-                CNetworking.send(new CommandExecutionCustomPayload(command));
-            }
-        }
     }
 
 

@@ -186,8 +186,6 @@
   "commands.client.invalidClickAction": "无效的点击事件操作‘%s’",
   "commands.client.invalidHoverAction": "无效的点击事件操作‘%s’",
   "commands.client.invalidHoverEvent": "无效的悬浮事件‘%s’",
-  "commands.client.mustBeInstalledOnServer": "要使用此命令，必须在服务器上安装clientcommands，或者您必须是服务器管理员。%s",
-  "commands.client.mustBeInstalledOnServer.why": "了解原因",
   "commands.client.notClient": "不是客户端指令",
   "commands.client.regexTooSlow": "正则表达式“%s”太慢而无法匹配",
   "commands.client.requiresRestart": "此更改将在你重新启动客户端后生效",

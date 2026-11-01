@@ -5,9 +5,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.xpple.clientarguments.arguments.CEntitySelector;
+import net.earthcomputer.clientcommands.event.ClientLevelEvents;
 import net.earthcomputer.clientcommands.interfaces.IEntity_Glowable;
 import net.earthcomputer.clientcommands.render.RenderQueue;
-import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.earthcomputer.clientcommands.task.SimpleTask;
 import net.earthcomputer.clientcommands.task.TaskManager;
 import net.earthcomputer.clientcommands.util.CComponentUtil;
@@ -20,7 +20,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.*;
 import static dev.xpple.clientarguments.arguments.CBlockPosArgument.*;
@@ -34,6 +36,24 @@ public class GlowCommand {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("commands.cglow.entity.failed"));
 
     private static final Flag<Boolean> FLAG_KEEP_SEARCHING = Flag.ofFlag("keep-searching").build();
+
+    /** Render keys of single-block outlines, so they can be dropped when the block changes. */
+    private static final Map<BlockPos, List<Object>> GLOWING_BLOCK_KEYS = new HashMap<>();
+
+    static {
+        ClientLevelEvents.registerChunkUpdate((level, pos, oldState, newState) -> {
+            List<Object> keys = GLOWING_BLOCK_KEYS.remove(pos);
+            if (keys != null) {
+                for (Object key : keys) {
+                    RenderQueue.remove(RenderQueue.Layer.ON_TOP, key);
+                }
+            }
+            if (GLOWING_BLOCK_KEYS.size() > 1024) {
+                GLOWING_BLOCK_KEYS.entrySet().removeIf(entry -> entry.getValue().stream()
+                    .noneMatch(key -> RenderQueue.contains(RenderQueue.Layer.ON_TOP, key)));
+            }
+        });
+    }
 
     public static void register(CommandDispatcher<CClientCommandSource> dispatcher) {
         var cglow = dispatcher.register(literal("cglow")
@@ -75,7 +95,6 @@ public class GlowCommand {
     }
 
     private static int glowEntities(CClientCommandSource source, CEntitySelector entitySelector, int seconds, int color) throws CommandSyntaxException {
-        ClientCommandsServer.requirePrivileges();
         boolean keepSearching = getFlag(source, FLAG_KEEP_SEARCHING);
         if (keepSearching) {
             String taskName = TaskManager.addTask("cglow", new SimpleTask() {
@@ -134,8 +153,17 @@ public class GlowCommand {
             boundingBoxes.add(AABB.encapsulatingFullBlocks(pos1, pos2));
         }
 
-        for (AABB box : boundingBoxes) {
-            RenderQueue.addCuboid(RenderQueue.Layer.ON_TOP, box, box, color, seconds * 20);
+        if (pos2 == null) {
+            List<Object> keys = GLOWING_BLOCK_KEYS.computeIfAbsent(pos1, k -> new ArrayList<>());
+            for (AABB box : boundingBoxes) {
+                Object key = new Object();
+                keys.add(key);
+                RenderQueue.addCuboid(RenderQueue.Layer.ON_TOP, key, box, color, seconds * 20);
+            }
+        } else {
+            for (AABB box : boundingBoxes) {
+                RenderQueue.addCuboid(RenderQueue.Layer.ON_TOP, box, box, color, seconds * 20);
+            }
         }
 
         source.sendFeedback(Component.translatable("commands.cglow.area.success", boundingBoxes.size()));

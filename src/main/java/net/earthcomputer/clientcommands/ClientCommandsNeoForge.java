@@ -1,7 +1,5 @@
 package net.earthcomputer.clientcommands;
 
-import net.earthcomputer.clientcommands.features.CommandExecutionCustomPayload;
-import net.earthcomputer.clientcommands.server.ClientCommandsServer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -24,7 +22,6 @@ public class ClientCommandsNeoForge {
     public ClientCommandsNeoForge(IEventBus modBus, ModContainer container) {
         LOGGER.info("[clientcommands] constructing mod entrypoint");
         new ClientCommands().onInitializeClient();
-        new ClientCommandsServer().onInitialize();
 
         container.registerConfig(ModConfig.Type.CLIENT, net.earthcomputer.clientcommands.platform.ConfigSpecs.SPEC);
         container.registerExtensionPoint(IConfigScreenFactory.class,
@@ -34,11 +31,6 @@ public class ClientCommandsNeoForge {
             Configs.migrateLegacyJsonConfig();
         });
         modBus.addListener(ModConfigEvent.Reloading.class, event -> Configs.load());
-
-        modBus.addListener(net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent.class, event -> {
-            event.registrar("1").playToServer(CommandExecutionCustomPayload.TYPE, CommandExecutionCustomPayload.CODEC, (payload, context) -> {});
-            ClientCommandsServer.registerPayloads(event);
-        });
 
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> {
             if (tickCount++ == 0) {

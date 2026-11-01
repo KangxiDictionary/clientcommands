@@ -188,8 +188,6 @@
   "commands.client.invalidClickAction": "Invalid click event action '%s'",
   "commands.client.invalidHoverAction": "Invalid hover event action '%s'",
   "commands.client.invalidHoverEvent": "Invalid hover event '%s'",
-  "commands.client.mustBeInstalledOnServer": "To use this command, clientcommands must be installed on the server, or you must be a server operator. %s",
-  "commands.client.mustBeInstalledOnServer.why": "Find out why",
   "commands.client.notClient": "Not a client-side command",
   "commands.client.regexTooSlow": "Regex '%s' was too slow to match",
   "commands.client.requiresRestart": "This change will take effect after you restart your client",
