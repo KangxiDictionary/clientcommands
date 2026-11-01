@@ -20,7 +20,7 @@ clientcommands 诊断
 模组 2.16.3-neoforge+mc26.3 | Minecraft 26.3 | NeoForge 26.3.0.99
 已注册命令 69 条 | 执行源 OK | 补全源 OK
 访问转换器：OK
-近战 RNG 钩子：disabled      ← 已知限制，见文末
+近战攻击追踪：enabled
 配置：22 个选项，位于 .../config/clientcommands/config.json
 随机数：玩家种子 uncracked | 附魔 uncracked | 维护 OK
 世界 minecraft:overworld @ (0, 64, 0)，实体 120 个
@@ -111,8 +111,10 @@ clientcommands 诊断
 | 发光时间不一致 | 分批执行或实体停止 tick | 同一条命令、`seconds` 参数一致时应当同步 |
 | `cdiag` 显示 `MISSING` | 平台层未生效 | 确认用的是 NeoForge 版 jar 且未被其他模组覆盖 |
 
-## 已知限制
+## 关于近战攻击
 
-- 近战攻击的 RNG 消耗未追踪（`rngevents.PlayerMixin` 因 MixinExtras `VerifyError` 暂时禁用）：
-  攻击后玩家 RNG 会偏移，`/ccrackrng` 需要重新跑。
-- 没有配置 GUI，只有 `/cconfig` 命令界面。
+- 1.21 起近战攻击不再消耗玩家 RNG（耐久损耗与节肢杀手都不再调用随机数），所以攻击**不会**让
+  `/ccrackrng` 的种子偏移。
+- 近战攻击追踪（`rngevents.PlayerMixin`）仍然启用，用途是让「武器即将损坏」的提示与实际耐久
+  损耗一致。若它显示 `disabled`，说明 mixin 没应用，只是少了这个提示。
+- 配置同时提供 `/cconfig` 命令界面和 NeoForge 内置的配置界面（模组列表 → Config）。

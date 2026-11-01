@@ -43,6 +43,7 @@
     "rngevents.LivingEntityMixin",
     "rngevents.LocalPlayerMixin",
     "rngevents.MultiPlayerGameModeMixin",
+    "rngevents.PlayerMixin",
     "rngevents.MushroomCowSheepAndSnowGolemMixin",
     "rngevents.PumpkinBlockMixin",
     "rngevents.ServerboundContainerClosePacketMixin",

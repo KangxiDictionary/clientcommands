@@ -14,6 +14,22 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull;
+import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.item.component.Weapon;
+import net.minecraft.world.phys.Vec3;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -292,6 +308,109 @@ public class PlayerRandCracker {
                 }
             }
         }
+    }
+
+    /**
+     * Called while the client is about to apply an attack, with the final damage vanilla computed.
+     * Predicts whether the server will actually hurt the target, and if so records the weapon wear
+     * (which drives the tool break warning and /cglow-style durability bookkeeping).
+     *
+     * <p>Since 1.21 neither Unbreaking nor Bane of Arthropods consume the player RNG any more, so on
+     * 26.3 this is not required for seed cracking; it is still what keeps durability warnings correct.
+     */
+    public static void onAttack(Player attacker, Entity target, DamageSource source, float amount) {
+        if (!(target instanceof LivingEntity) || !willHurt(attacker, target, source, amount)) {
+            return;
+        }
+        ItemStack heldStack = attacker.getWeaponItem();
+        if (heldStack.isEmpty()) {
+            return;
+        }
+        Weapon weaponComponent = heldStack.get(DataComponents.WEAPON);
+        if (weaponComponent != null) {
+            onItemDamage(weaponComponent.itemDamagePerAttack(), attacker, heldStack);
+        }
+        if (target.is(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)) {
+            attacker.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(Enchantments.BANE_OF_ARTHROPODS)
+                .ifPresent(baneOfArthropods -> {
+                    if (EnchantmentHelper.getItemEnchantmentLevel(baneOfArthropods, heldStack) > 0) {
+                        onBaneOfArthropods();
+                    }
+                });
+        }
+    }
+
+    /**
+     * Mirrors the checks {@code LivingEntity.hurtServer} performs before it applies damage, as far as
+     * they can be evaluated on the client.
+     */
+    private static boolean willHurt(Player attacker, Entity target, DamageSource source, float amount) {
+        if (target.isInvulnerableToBase(source)) {
+            return false;
+        }
+        if (target instanceof ArmorStand armorStand) {
+            if (armorStand.isRemoved() || armorStand.isInvisible() || armorStand.isMarker()) {
+                return false;
+            }
+            if (!attacker.getAbilities().mayBuild || source.isCreativePlayer()) {
+                return false;
+            }
+        } else if (target instanceof Player player) {
+            if (player.getAbilities().invulnerable) {
+                return false;
+            }
+        } else if (target instanceof SmallFireball || target instanceof WitherSkull) {
+            return false;
+        } else if (target instanceof WitherBoss wither && wither.getInvulnerableTicks() > 0) {
+            return false;
+        }
+
+        if (target instanceof LivingEntity living) {
+            if (living.isDeadOrDying()) {
+                return false;
+            }
+            if (source.is(DamageTypeTags.IS_FIRE) && living.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                return false;
+            }
+            if (resolveBlockedDamage(living, source, amount) >= amount) {
+                return false;
+            }
+            if (living.damageCooldownTime > 10.0F && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)
+                && amount <= living.lastHurt) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Port of the blocking calculation from {@code LivingEntity.applyItemBlocking}. */
+    private static float resolveBlockedDamage(LivingEntity entity, DamageSource source, float damage) {
+        if (damage <= 0) {
+            return 0;
+        }
+        ItemStack blockingWith = entity.getItemBlockingWith();
+        if (blockingWith == null) {
+            return 0;
+        }
+        BlocksAttacks blocksAttacks = blockingWith.get(DataComponents.BLOCKS_ATTACKS);
+        if (blocksAttacks == null
+            || blocksAttacks.bypassedBy().map(bypassedBy -> bypassedBy.contains(source.typeHolder())).orElse(false)) {
+            return 0;
+        }
+        if (source.getDirectEntity() instanceof AbstractArrow arrow && arrow.getPierceLevel() > 0) {
+            return 0;
+        }
+        Vec3 sourcePos = source.getSourcePosition();
+        double angle;
+        if (sourcePos != null) {
+            Vec3 viewVector = entity.calculateViewVector(0, entity.getYHeadRot());
+            Vec3 vecToSource = sourcePos.subtract(entity.position());
+            vecToSource = new Vec3(vecToSource.x, 0, vecToSource.z).normalize();
+            angle = Math.acos(vecToSource.dot(viewVector));
+        } else {
+            angle = Math.PI;
+        }
+        return blocksAttacks.resolveBlockedDamage(source, damage, angle);
     }
 
     public static void onItemDamageUncertain(int minAmount, int maxAmount, LivingEntity holder, ItemStack stack) {

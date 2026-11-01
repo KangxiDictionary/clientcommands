@@ -437,7 +437,7 @@
   "commands.cdiag.versions": "mod %s | Minecraft %s | NeoForge %s",
   "commands.cdiag.platform": "commands: %s | execution source: %s | completion source: %s",
   "commands.cdiag.accessTransformer": "access transformer: %s",
-  "commands.cdiag.meleeHook": "melee RNG hook: %s",
+  "commands.cdiag.meleeHook": "melee attack tracking: %s",
   "commands.cdiag.config": "config: %s options at %s",
   "commands.cdiag.rng": "rng: player seed %s | enchantment %s | maintenance %s",
   "commands.cdiag.world": "world %s @ (%s, %s, %s), %s entities",
